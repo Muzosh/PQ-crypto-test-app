@@ -1,2 +1,2 @@
 # KRY_project
-School project focussed around post-quantum cryptography
+School project orientated around post-quantum cryptography
