@@ -7,10 +7,17 @@ from Cryptodome.Random import get_random_bytes
 
 class PasswordManager:
 
-    __secretsFileName = "secrets"
+    # file of secrets/keys
+    __secretsFileName = "secrets" 
+    # file for masterPassword
     __keyChainFileName = "keychain"
 
     def __init__(self, masterPassword):
+        '''
+        Constructor
+        Secrets file is created, if it is not.
+        Calling method for creating hash of masterPassword.
+        '''
         # Create or check secrets file
         if not os.path.exists(self.__secretsFileName):
             open(self.__secretsFileName, 'w').close()
@@ -18,20 +25,30 @@ class PasswordManager:
         self.__writeKeyChain(masterPassword)
         
     def __readKeyChainBytes(self):
+        ''' 
+        Read masterPassword from the the file. 
+        '''
         with open(self.__keyChainFileName, 'rb') as file:
             return file.read()
 
     def __writeKeyChain(self, masterPassword):
+        '''
+        Write hash of masterPassword to the file.
+        ''' 
         hash = hashlib.sha512()
         hash.update(masterPassword.encode())
         with open(self.__keyChainFileName, 'wb') as file:
             file.write(hash.digest())
 
     def __readSecrets(self):
+        '''
+        Read secrets/uploaded keys from the file.
+        '''
         with open(self.__secretsFileName, 'r') as file:
             encrypteList = base64.b85decode(file.readline().encode()).decode()
             secrets = json.loads(str(encrypteList).replace("'", "\""))
             
+            # list of secrets
             decryptedList = []
             for x in secrets:
                 decryptedList.append(self.__aesDecrypt(x).decode())
@@ -39,6 +56,9 @@ class PasswordManager:
             return decryptedList
 
     def __writeSecrets(self, secretsList):
+        '''
+        Write encrypted secrets/uploaded keys to the file.
+        '''
         encryptedList = []
         for x in secretsList:
             encryptedList.append(self.__aesEncrypt(x))
@@ -47,14 +67,18 @@ class PasswordManager:
             file.write(base64.b85encode(str(encryptedList).encode()).decode())
 
     def __aesEncrypt(self, plain_text):
+        '''
+        Encrypt secret/key bytes using AES.
+        '''
         # generate a random salt
         salt = get_random_bytes(AES.block_size)
 
-        # use the Scrypt KDF to get a private key from the password
+        # use the Scrypt KDF to get a private key from the masterPassword = PBKDF2 (Password Based Key Derivation Function)
         private_key = hashlib.scrypt(
-            self.__readKeyChainBytes(), salt=salt, n=2**14, r=8, p=1, dklen=32)
+            self.__readKeyChainBytes(), salt=salt, n=2**14, r=8, p=1, dklen=32) # aka je dlzka klucu pre sifrovanie AES??
 
         # create cipher config
+        # GCM mode used for authenticated encryption --> authenticated tag
         cipher_config = AES.new(private_key, AES.MODE_GCM)
 
         # return a dictionary with the encrypted text
@@ -67,6 +91,9 @@ class PasswordManager:
         }
     
     def __aesDecrypt(self, enc_dict):
+        '''
+        Decrypt secret/key bytes.
+        '''
         # decode the dictionary entries from base64
         salt = base64.b64decode(enc_dict['salt'])
         cipher_text = base64.b64decode(enc_dict['cipher_text'])
@@ -74,7 +101,7 @@ class PasswordManager:
         tag = base64.b64decode(enc_dict['tag'])
         
 
-        # generate the private key from the password and salt
+        # generate the private key from the masterPassword and salt
         private_key = hashlib.scrypt(
             self.__readKeyChainBytes(), salt=salt, n=2**14, r=8, p=1, dklen=32)
 
@@ -87,28 +114,43 @@ class PasswordManager:
         return decrypted
 
     def authenticate(self, password):
+        '''
+        Auhthentication - hash checking.
+        '''
         hash = hashlib.sha512()
         hash.update(password.encode())
         return hash.digest() == self.__readKeyChainBytes()
 
     def changeMasterPassword(self, old, new):
+        '''
+        Change masterPassword of the application.
+        '''
         if not self.authenticate(old):
             raise ValueError("Old password does not match!")
         else:
+            # save currenty used secrets to variable
             secrets = self.__readSecrets()
+            # write new masterPassword to file
             self.__writeKeyChain(new)
+            # re-encrypt secrets/keys using new passphrase = new masterPassword
             self.__writeSecrets(secrets)
 
-    def addPassword(self, password):
+    def addPassword(self, password): # premenovat na addSecret
+        '''
+        A new secret/key is added to the file.
+        '''
         self.__writeSecrets(self.__readSecrets()+[password])
 
-    def deletePassword(self, password):
+    def deletePassword(self, password): # premenovat na deleteSecret
+        '''
+        Remove secret/key from the file.
+        '''
         secrets = self.__readSecrets()
         if password in secrets:
             secrets.remove(password)
             self.__writeSecrets(secrets)
     
-    def loadPasswordList(self):
+    def loadPasswordList(self): # je potrebna ?? ci ma znazornovat akoze public metodu
         return self.__readSecrets()
 
 # TEST AREA
