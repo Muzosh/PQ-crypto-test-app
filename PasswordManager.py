@@ -6,36 +6,47 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
 
 class PasswordManager:
-
+    """
+    This class handles everything around user authentication, user-defined password storing, changing, adding, deleting secrets, etc...
+        Constructor takes masterPassword:str
+    
+    Available public methods:
+        changeMasterPassword(old:str, new:str):None
+        addSecret(user-defined-password:bytes):None
+        deleteSecret(user-defined-password:bytes):None
+        loadSecretList():[bytes]
+    """
+        
     # file of secrets/keys
     __secretsFileName = "secrets" 
     # file for masterPassword
     __keyChainFileName = "keychain"
+    
+    # masterPassword in plaintext
+    __masterPassword = b""
 
     def __init__(self, masterPassword):
-        '''
-        Constructor
-        Secrets file is created, if it is not.
-        Calling method for creating hash of masterPassword.
-        '''
         # Create or check secrets file
         if not os.path.exists(self.__secretsFileName):
             open(self.__secretsFileName, 'w').close()
             
-        self.__writeKeyChain(masterPassword)
-        
-    def __readKeyChainBytes(self):
-        ''' 
-        Read masterPassword from the the file. 
-        '''
-        with open(self.__keyChainFileName, 'rb') as file:
-            return file.read()
+        # Create or check keyChain file
+        if not os.path.exists(self.__keyChainFileName):
+            open(self.__keyChainFileName, 'w').close()
+            self.__writeKeyChain(masterPassword)
+            
+        # Authenticate - this will write 2x hashed password into memory
+        if not self.__authenticate(masterPassword):
+            raise ValueError("Passwords don't match!")
 
     def __writeKeyChain(self, masterPassword):
         '''
         Write hash of masterPassword to the file.
         ''' 
+        # Using triple hashing to hide passoword into file
         hash = hashlib.sha512()
+        hash.update(masterPassword.encode())
+        hash.update(masterPassword.encode())
         hash.update(masterPassword.encode())
         with open(self.__keyChainFileName, 'wb') as file:
             file.write(hash.digest())
@@ -45,13 +56,13 @@ class PasswordManager:
         Read secrets/uploaded keys from the file.
         '''
         with open(self.__secretsFileName, 'r') as file:
-            encrypteList = base64.b85decode(file.readline().encode()).decode()
-            secrets = json.loads(str(encrypteList).replace("'", "\""))
+            encryptedList = base64.b85decode(file.readline().encode()).decode()
+            secrets = json.loads(str(encryptedList).replace("'", "\""))
             
             # list of secrets
             decryptedList = []
             for x in secrets:
-                decryptedList.append(self.__aesDecrypt(x).decode())
+                decryptedList.append(self.__aesDecrypt(x))
                 
             return decryptedList
 
@@ -73,16 +84,16 @@ class PasswordManager:
         # generate a random salt
         salt = get_random_bytes(AES.block_size)
 
-        # use the Scrypt KDF to get a private key from the masterPassword = PBKDF2 (Password Based Key Derivation Function)
+        # use the Scrypt KDF to get a private key from the 2x hashed masterPassword = PBKDF2 (Password Based Key Derivation Function)
         private_key = hashlib.scrypt(
-            self.__readKeyChainBytes(), salt=salt, n=2**14, r=8, p=1, dklen=32) # aka je dlzka klucu pre sifrovanie AES??
+            self.__masterPassword, salt=salt, n=2**14, r=8, p=1, dklen=32) # aka je dlzka klucu pre sifrovanie AES??
 
         # create cipher config
         # GCM mode used for authenticated encryption --> authenticated tag
         cipher_config = AES.new(private_key, AES.MODE_GCM)
 
         # return a dictionary with the encrypted text
-        cipher_text, tag = cipher_config.encrypt_and_digest(bytes(plain_text, 'utf-8'))
+        cipher_text, tag = cipher_config.encrypt_and_digest(plain_text)
         return {
             'cipher_text': base64.b64encode(cipher_text).decode('utf-8'),
             'salt': base64.b64encode(salt).decode('utf-8'),
@@ -100,10 +111,9 @@ class PasswordManager:
         nonce = base64.b64decode(enc_dict['nonce'])
         tag = base64.b64decode(enc_dict['tag'])
         
-
-        # generate the private key from the masterPassword and salt
+        # generate the private key from the 2x hashed masterPassword and salt
         private_key = hashlib.scrypt(
-            self.__readKeyChainBytes(), salt=salt, n=2**14, r=8, p=1, dklen=32)
+            self.__masterPassword, salt=salt, n=2**14, r=8, p=1, dklen=32)
 
         # create the cipher config
         cipher = AES.new(private_key, AES.MODE_GCM, nonce=nonce)
@@ -113,35 +123,59 @@ class PasswordManager:
 
         return decrypted
 
-    def authenticate(self, password):
+    def __authenticate(self, password):
         '''
         Auhthentication - hash checking.
         '''
+        # 3x hash password to compare it with 3x hashed masterPassword from file
         hash = hashlib.sha512()
         hash.update(password.encode())
-        return hash.digest() == self.__readKeyChainBytes()
+        hash.update(password.encode())
+        hash.update(password.encode())
+        digest = hash.digest()
+        
+        with open(self.__keyChainFileName, 'rb') as file:
+            keyChainBytes = file.read()
+        
+        if digest == keyChainBytes:
+            # Authentication successful, write 2x hashed password into memory
+            hash = hashlib.sha512()
+            hash.update(password.encode())
+            hash.update(password.encode())
+            self.__masterPassword = hash.digest()
+            return True
+        else:
+            return False
 
     def changeMasterPassword(self, old, new):
         '''
         Change masterPassword of the application.
         '''
-        if not self.authenticate(old):
+        if not self.__authenticate(old):
             raise ValueError("Old password does not match!")
         else:
             # save currenty used secrets to variable
             secrets = self.__readSecrets()
+            
             # write new masterPassword to file
             self.__writeKeyChain(new)
+            
+            # write new 2x hashedmasterPassword to memory
+            hash = hashlib.sha512()
+            hash.update(new.encode())
+            hash.update(new.encode())
+            self.__masterPassword = hash.digest()
+            
             # re-encrypt secrets/keys using new passphrase = new masterPassword
             self.__writeSecrets(secrets)
 
-    def addPassword(self, password): # premenovat na addSecret
+    def addSecret(self, password):
         '''
         A new secret/key is added to the file.
         '''
         self.__writeSecrets(self.__readSecrets()+[password])
 
-    def deletePassword(self, password): # premenovat na deleteSecret
+    def deleteSecret(self, password):
         '''
         Remove secret/key from the file.
         '''
@@ -150,23 +184,26 @@ class PasswordManager:
             secrets.remove(password)
             self.__writeSecrets(secrets)
     
-    def loadPasswordList(self): # je potrebna ?? ci ma znazornovat akoze public metodu
+    # Public method for creating list of user-stored passwords
+    def loadSecretList(self):
         return self.__readSecrets()
 
 # TEST AREA
 # Initialize with "masterPassword" as masterPassword
 x = PasswordManager("masterPassword")
 # Add user defined passwords (strings for now)
-x._PasswordManager__writeSecrets(["heslo1", "heslo2", "heslo3", "heslo4", "heslo5"])
+x._PasswordManager__writeSecrets([b"heslo1", b"heslo2", b"heslo3toBeDeleted", b"heslo4", b"heslo5"])
 # print first list
-print("after init: ", x.loadPasswordList())
+print("after init: ", x.loadSecretList())
 # change master password
 x.changeMasterPassword("masterPassword", "newPassword")
 # add "added" password
-x.addPassword("added")
+x.addSecret(b"added")
 # delete thrird password
-x.deletePassword("heslo3")
+x.deleteSecret(b"heslo3toBeDeleted")
 # final print
-print("final print: ", x.loadPasswordList())
+print("final print: ", x.loadSecretList())
+# change master password
+x.changeMasterPassword("newPassword", "masterPassword")
 
 # Program should generate two "keychain" and "secrets" obfuscated files
