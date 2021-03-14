@@ -33,14 +33,14 @@ from pqcrypto.kem.mceliece8192128 import generate_keypair, encrypt, decrypt
 public_key, secret_key = generate_keypair()
 
 # Bob derives a secret (the plaintext) and encrypts it with Alice's public key to produce a ciphertext
-ciphertext, plaintext_original = encrypt(public_key)
+ciphertext, symmetric_key = encrypt(public_key)
 
-print("Original plain text: \t", plaintext_original)
+print("Original symmetric key: \t", symmetric_key)
 
 # Alice decrypts Bob's ciphertext to derive the now shared secret
-plaintext_recovered = decrypt(secret_key, ciphertext)
+symmetric_key_recovered = decrypt(secret_key, ciphertext)
 
 # Compare the original and recovered secrets in constant time
-assert compare_digest(plaintext_original, plaintext_recovered)
+assert compare_digest(symmetric_key, symmetric_key_recovered)
 
-print("Recovered plain text: \t", plaintext_recovered)
+print("Recovered symmetric key: \t", symmetric_key_recovered)
