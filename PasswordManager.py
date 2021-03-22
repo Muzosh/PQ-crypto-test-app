@@ -7,18 +7,18 @@ from Cryptodome.Random import get_random_bytes
 
 class PasswordManager:
     """
-    This class handles everything around user authentication, user-defined password storing, changing, adding, deleting secrets, etc...
+    This class handles everything around user authentication, user-defined password storing, changing, adding, deleting keyPairs, etc...
         Constructor takes masterPassword:str
     
     Available public methods:
         changeMasterPassword(old:str, new:str):None
-        addSecret(user-defined-password:bytes):None
-        deleteSecret(user-defined-password:bytes):None
-        loadSecretList():[bytes]
+        addKeyPair(publicKey:bytes, secretKey:bytes):None
+        deleteKeyPair(ublicKey:bytes, secretKey:bytes):None
+        loadKeyPairList():[tuple(bytes, bytes)]
     """
         
-    # file of secrets/keys
-    __secretsFileName = "secrets" 
+    # file for keyPairs
+    __keyPairsFileName = "secrets" 
     # file for masterPassword
     __keyChainFileName = "keychain"
     
@@ -26,9 +26,9 @@ class PasswordManager:
     __masterPassword = b""
 
     def __init__(self, masterPassword):
-        # Create or check secrets file
-        if not os.path.exists(self.__secretsFileName):
-            open(self.__secretsFileName, 'w').close()
+        # Create or check keyPairs file
+        if not os.path.exists(self.__keyPairsFileName):
+            open(self.__keyPairsFileName, 'w').close()
             
         # Create or check keyChain file
         if not os.path.exists(self.__keyChainFileName):
@@ -51,36 +51,39 @@ class PasswordManager:
         with open(self.__keyChainFileName, 'wb') as file:
             file.write(hash.digest())
 
-    def __readSecrets(self):
+    def __readKeyPairs(self):
         '''
-        Read secrets/uploaded keys from the file.
+        Read keyPairs from the file.
         '''
-        with open(self.__secretsFileName, 'r') as file:
+        with open(self.__keyPairsFileName, 'r') as file:
             encryptedList = base64.b85decode(file.readline().encode()).decode()
-            secrets = json.loads(str(encryptedList).replace("'", "\""))
+            keyPairs = json.loads(str(encryptedList).replace("'", "\""))
             
-            # list of secrets
+            # list of keyPairs
             decryptedList = []
-            for x in secrets:
+            for x in keyPairs:
                 decryptedList.append(self.__aesDecrypt(x))
                 
             return decryptedList
 
-    def __writeSecrets(self, secretsList):
+    def __writeKeyPairs(self, keyPairsList):
         '''
-        Write encrypted secrets/uploaded keys to the file.
+        Write encrypted keyPairs keys to the file.
         '''
         encryptedList = []
-        for x in secretsList:
+        for x in keyPairsList:
             encryptedList.append(self.__aesEncrypt(x))
             
-        with open(self.__secretsFileName, 'w') as file:
+        with open(self.__keyPairsFileName, 'w') as file:
             file.write(base64.b85encode(str(encryptedList).encode()).decode())
 
-    def __aesEncrypt(self, plain_text):
+    def __aesEncrypt(self, keyPair):
         '''
-        Encrypt secret/key bytes using AES.
+        Encrypt keyPair bytes using AES.
         '''
+        # transform keyPair into one bytes object
+        bytesObject = keyPair[0] + b"\0\0\0" + keyPair[1]
+        
         # generate a random salt
         salt = get_random_bytes(AES.block_size)
 
@@ -93,7 +96,7 @@ class PasswordManager:
         cipher_config = AES.new(private_key, AES.MODE_GCM)
 
         # return a dictionary with the encrypted text
-        cipher_text, tag = cipher_config.encrypt_and_digest(plain_text)
+        cipher_text, tag = cipher_config.encrypt_and_digest(bytesObject)
         return {
             'cipher_text': base64.b64encode(cipher_text).decode('utf-8'),
             'salt': base64.b64encode(salt).decode('utf-8'),
@@ -103,7 +106,7 @@ class PasswordManager:
     
     def __aesDecrypt(self, enc_dict):
         '''
-        Decrypt secret/key bytes.
+        Decrypt keyPair bytes.
         '''
         # decode the dictionary entries from base64
         salt = base64.b64decode(enc_dict['salt'])
@@ -120,8 +123,10 @@ class PasswordManager:
 
         # decrypt the cipher text
         decrypted = cipher.decrypt_and_verify(cipher_text, tag)
-
-        return decrypted
+        
+        keyPair = tuple(decrypted.split(b"\0\0\0"))
+        
+        return keyPair
 
     def __authenticate(self, password):
         '''
@@ -154,8 +159,8 @@ class PasswordManager:
         if not self.__authenticate(old):
             raise ValueError("Old password does not match!")
         else:
-            # save currenty used secrets to variable
-            secrets = self.__readSecrets()
+            # save currenty used keyPairs to variable
+            keyPairs = self.__readKeyPairs()
             
             # write new masterPassword to file
             self.__writeKeyChain(new)
@@ -166,43 +171,46 @@ class PasswordManager:
             hash.update(new.encode())
             self.__masterPassword = hash.digest()
             
-            # re-encrypt secrets/keys using new passphrase = new masterPassword
-            self.__writeSecrets(secrets)
+            # re-encrypt keyPairs using new passphrase = new masterPassword
+            self.__writeKeyPairs(keyPairs)
 
-    def addSecret(self, password):
+    def addKeyPair(self, publicKey, secretKey):
         '''
-        A new secret/key is added to the file.
+        A new keyPair is added to the file.
         '''
-        self.__writeSecrets(self.__readSecrets()+[password])
+        self.__writeKeyPairs(self.__readKeyPairs()+[(publicKey, secretKey)])
 
-    def deleteSecret(self, password):
+    def deleteKeyPair(self, publicKey, secretKey):
         '''
-        Remove secret/key from the file.
+        Remove keyPair from the file.
         '''
-        secrets = self.__readSecrets()
-        if password in secrets:
-            secrets.remove(password)
-            self.__writeSecrets(secrets)
+        
+        keyPair = (publicKey, secretKey)
+        
+        keyPairs = self.__readKeyPairs()
+        if keyPair in keyPairs:
+            keyPairs.remove(keyPair)
+            self.__writeKeyPairs(keyPairs)
     
     # Public method for creating list of user-stored passwords
-    def loadSecretList(self):
-        return self.__readSecrets()
+    def loadKeyPairList(self):
+        return self.__readKeyPairs()
 
 # TEST AREA
 # Initialize with "masterPassword" as masterPassword
 x = PasswordManager("masterPassword")
 # Add user defined passwords (strings for now)
-x._PasswordManager__writeSecrets([b"heslo1", b"heslo2", b"heslo3toBeDeleted", b"heslo4", b"heslo5"])
+x._PasswordManager__writeKeyPairs([[b"publicKey1", b"secretKey1"],[b"publicKey2", b"secretKey2"],[b"publicKey3", b"secretKey3"],[b"publicKey4", b"secretKey4"]])
 # print first list
-print("after init: ", x.loadSecretList())
+print("after init: ", x.loadKeyPairList())
 # change master password
 x.changeMasterPassword("masterPassword", "newPassword")
 # add "added" password
-x.addSecret(b"added")
-# delete thrird password
-x.deleteSecret(b"heslo3toBeDeleted")
+x.addKeyPair(b"addedPublicKey", b"addedSecretKey")
+# delete third password
+x.deleteKeyPair(b"publicKey3", b"secretKey3")
 # final print
-print("final print: ", x.loadSecretList())
+print("final print: ", x.loadKeyPairList())
 # change master password
 x.changeMasterPassword("newPassword", "masterPassword")
 
