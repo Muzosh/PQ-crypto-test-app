@@ -89,7 +89,7 @@ class PasswordManager:
 
         # use the Scrypt KDF to get a private key from the 2x hashed masterPassword = PBKDF2 (Password Based Key Derivation Function)
         private_key = hashlib.scrypt(
-            self.__masterPassword, salt=salt, n=2**14, r=8, p=1, dklen=32) # aka je dlzka klucu pre sifrovanie AES??
+            self.__masterPassword, salt=salt, n=2**14, r=8, p=1, dklen=32)
 
         # create cipher config
         # GCM mode used for authenticated encryption --> authenticated tag
