@@ -35,7 +35,7 @@ from pqcrypto.kem.saber import encrypt_saber, decrypt_saber
 class PqEncryptionManager:
     
     @staticmethod
-    def aesEncrypt(self, dataBytes, symmetricKey):        
+    def aesEncrypt(dataBytes, symmetricKey):        
         # generate a random salt
         salt = get_random_bytes(AES.block_size)
 
@@ -56,7 +56,7 @@ class PqEncryptionManager:
         }
     
     @staticmethod
-    def aesDecrypt(self, encryptedData, symmetricKey):
+    def aesDecrypt(encryptedData, symmetricKey):
         # decode the dictionary entries from base64
         salt = base64.b64decode(encryptedData['salt'])
         cipher_text = base64.b64decode(encryptedData['cipher_text'])
@@ -76,42 +76,42 @@ class PqEncryptionManager:
         return decrypted
     
     #mceliece
-    def encapsulation_mceliece8192128(public_key):
+    def encapsulation_mceliece8192128(self, public_key):
         ciphertext, secret_key = encrypt_mceliece8192128(public_key)
         #print("Plain text bytes\n" + str(secret_key) + "\n")
         return ciphertext, secret_key
 
-    def decapsulation_mceliece8192128(ciphertext, private_key):
+    def decapsulation_mceliece8192128(self, ciphertext, private_key):
         secret_key_recovered = decrypt_mceliece8192128(private_key, ciphertext)
         return secret_key_recovered
     
     #saber
-    def encapsulation_saber(public_key):
+    def encapsulation_saber(self, public_key):
         ciphertext, secret_key = encrypt_saber(public_key)
         #print("Plain text bytes\n" + str(secret_key) + "\n")
         return ciphertext, secret_key
 
-    def decapsulation_saber(ciphertext, private_key):
+    def decapsulation_saber(self, ciphertext, private_key):
         secret_key_recovered = decrypt_saber(private_key, ciphertext)
         return secret_key_recovered
     
     #kyber
-    def encapsulation_kyber1024(public_key):
+    def encapsulation_kyber1024(self, public_key):
         ciphertext, secret_key = encrypt_kyber1024(public_key)
         #print("Plain text bytes\n" + str(secret_key) + "\n")
         return ciphertext, secret_key
     
-    def decapsulation_kyber1024(ciphertext, private_key):
+    def decapsulation_kyber1024(self, ciphertext, private_key):
         secret_key_recovered = decrypt_kyber1024(private_key, ciphertext)
         return secret_key_recovered
 
     #ntruhps
-    def encapsulation_ntruhps2048509(public_key):
+    def encapsulation_ntruhps2048509(self, public_key):
         ciphertext, secret_key = encrypt_ntruhps2048509(public_key)
         #print("Plain text bytes\n" + str(secret_key) + "\n")
         return ciphertext, secret_key
     
-    def decapsulation_ntruhps2048509(ciphertext, private_key):
+    def decapsulation_ntruhps2048509(self, ciphertext, private_key):
         secret_key_recovered = decrypt_ntruhps2048509(private_key, ciphertext)
         return secret_key_recovered
     
