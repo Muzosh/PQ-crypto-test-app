@@ -31,16 +31,16 @@ from pqcrypto.kem.saber import generate_keypair as gen_saber
 
 class PqKeyGenManager:
     
-    def generate_keypair_mceliece8192128():
+    def generate_keypair_mceliece8192128(self):
         return gen_mceliece()
     
-    def generate_keypair_saber():
+    def generate_keypair_saber(self):
         return gen_saber()
     
-    def generate_keypair_kyber1024():
+    def generate_keypair_kyber1024(self):
         return gen_kyber1024()
     
-    def generate_keypair_ntruhps2048509():
+    def generate_keypair_ntruhps2048509(self):
         return gen_ntruhps2048509()
     
     
