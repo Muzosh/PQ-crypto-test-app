@@ -62,7 +62,7 @@ class PqEncryptionManager:
         salt = base64.b64decode(encryptedData['salt'])
         cipher_text = base64.b64decode(encryptedData['cipher_text'])
         nonce = base64.b64decode(encryptedData['nonce'])
-        tag = base64.b64decode(enc_encryptedDatadict['tag'])
+        tag = base64.b64decode(encryptedData['tag'])
         
         # generate the private key from the 2x hashed masterPassword and salt
         private_key = hashlib.scrypt(
