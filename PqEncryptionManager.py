@@ -30,6 +30,7 @@ from pqcrypto.kem.ntruhps2048509 import encrypt_ntruhps2048509, decrypt_ntruhps2
 from pqcrypto.kem.saber import encrypt_saber, decrypt_saber
 class PqEncryptionManager:
     
+    @staticmethod
     def aesEncrypt(self, dataBytes, symmetricKey):        
         # generate a random salt
         salt = get_random_bytes(AES.block_size)
@@ -50,6 +51,7 @@ class PqEncryptionManager:
             'tag': base64.b64encode(tag).decode('utf-8')
         }
     
+    @staticmethod
     def aesDecrypt(self, encryptedData, symmetricKey):
         # decode the dictionary entries from base64
         salt = base64.b64decode(encryptedData['salt'])
