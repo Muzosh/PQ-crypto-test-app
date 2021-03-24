@@ -3,8 +3,6 @@ import json
 import base64
 import hashlib
 from PqEncryptionManager import aesEncrypt, aesDecrypt
-from Cryptodome.Cipher import AES
-from Cryptodome.Random import get_random_bytes
 
 class PasswordManager:
     """
