@@ -10,7 +10,7 @@ from secrets import compare_digest
 # from pqcrypto.kem.frodokem640shake import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem976aes import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem976shake import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.kyber1024 import encrypt_kyber1024, decrypt_kyber1024
+from pqcrypto.kem.kyber1024 import encrypt as encrypt_kyber1024, decrypt as decrypt_kyber1024
 # from pqcrypto.kem.kyber1024_90s import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.kyber512 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.kyber512_90s import generate_keypair, encrypt, decrypt
@@ -25,13 +25,14 @@ from pqcrypto.kem.kyber1024 import encrypt_kyber1024, decrypt_kyber1024
 # from pqcrypto.kem.mceliece6688128f import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.mceliece6960119 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.mceliece6960119f import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.mceliece8192128 import encrypt_mceliece8192128, decrypt_mceliece8192128
+from pqcrypto.kem.mceliece8192128 import encrypt as encrypt_mceliece8192128, decrypt as decrypt_mceliece8192128
 # from pqcrypto.kem.mceliece8192128f import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.ntruhps2048509 import encrypt_ntruhps2048509, decrypt_ntruhps2048509
+from pqcrypto.kem.ntruhps2048509 import encrypt as encrypt_ntruhps2048509, decrypt as decrypt_ntruhps2048509
 # from pqcrypto.kem.ntruhps2048677 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.ntruhps4096821 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.ntruhrss701 import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.saber import encrypt_saber, decrypt_saber
+from pqcrypto.kem.saber import encrypt as encrypt_saber, decrypt as decrypt_saber
+
 class PqEncryptionManager:
     
     @staticmethod
