@@ -2,6 +2,7 @@ import os
 import json
 import base64
 import hashlib
+from PqEncryptionManager import aesEncrypt, aesDecrypt
 from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
 
@@ -62,7 +63,7 @@ class PasswordManager:
             # list of keyPairs
             decryptedList = []
             for x in keyPairs:
-                decryptedList.append(self.__aesDecrypt(x))
+                decryptedList.append(tuple(aesDecrypt(x).split(b"\0\0\0")))
                 
             return decryptedList
 
@@ -72,61 +73,10 @@ class PasswordManager:
         '''
         encryptedList = []
         for x in keyPairsList:
-            encryptedList.append(self.__aesEncrypt(x))
+            encryptedList.append(aesEncrypt(x[0] + b"\0\0\0" + x[1]))
             
         with open(self.__keyPairsFileName, 'w') as file:
             file.write(base64.b85encode(str(encryptedList).encode()).decode())
-
-    def __aesEncrypt(self, keyPair):
-        '''
-        Encrypt keyPair bytes using AES.
-        '''
-        # transform keyPair into one bytes object
-        bytesObject = keyPair[0] + b"\0\0\0" + keyPair[1]
-        
-        # generate a random salt
-        salt = get_random_bytes(AES.block_size)
-
-        # use the Scrypt KDF to get a private key from the 2x hashed masterPassword = PBKDF2 (Password Based Key Derivation Function)
-        private_key = hashlib.scrypt(
-            self.__masterPassword, salt=salt, n=2**14, r=8, p=1, dklen=32)
-
-        # create cipher config
-        # GCM mode used for authenticated encryption --> authenticated tag
-        cipher_config = AES.new(private_key, AES.MODE_GCM)
-
-        # return a dictionary with the encrypted text
-        cipher_text, tag = cipher_config.encrypt_and_digest(bytesObject)
-        return {
-            'cipher_text': base64.b64encode(cipher_text).decode('utf-8'),
-            'salt': base64.b64encode(salt).decode('utf-8'),
-            'nonce': base64.b64encode(cipher_config.nonce).decode('utf-8'),
-            'tag': base64.b64encode(tag).decode('utf-8')
-        }
-    
-    def __aesDecrypt(self, enc_dict):
-        '''
-        Decrypt keyPair bytes.
-        '''
-        # decode the dictionary entries from base64
-        salt = base64.b64decode(enc_dict['salt'])
-        cipher_text = base64.b64decode(enc_dict['cipher_text'])
-        nonce = base64.b64decode(enc_dict['nonce'])
-        tag = base64.b64decode(enc_dict['tag'])
-        
-        # generate the private key from the 2x hashed masterPassword and salt
-        private_key = hashlib.scrypt(
-            self.__masterPassword, salt=salt, n=2**14, r=8, p=1, dklen=32)
-
-        # create the cipher config
-        cipher = AES.new(private_key, AES.MODE_GCM, nonce=nonce)
-
-        # decrypt the cipher text
-        decrypted = cipher.decrypt_and_verify(cipher_text, tag)
-        
-        keyPair = tuple(decrypted.split(b"\0\0\0"))
-        
-        return keyPair
 
     def __authenticate(self, password):
         '''
