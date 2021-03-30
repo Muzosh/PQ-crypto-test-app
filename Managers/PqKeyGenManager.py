@@ -110,4 +110,27 @@ class PqKeyGenManager:
     def generate_keypair_sphincs_shake256_256s_simple(self):
         return gen_sphincs_shake256_256s_simple()
     
-    
+
+# TEMP
+p = PqKeyGenManager()
+
+mcleice = p.generate_keypair_mceliece8192128()
+print("KEM - mceliece: ", type(mcleice), len(mcleice[0]), len(mcleice[1]))
+
+saber = p.generate_keypair_saber()
+print("KEM - saber: ", type(saber), len(saber[0]), len(saber[1]))
+
+kyber = p.generate_keypair_kyber1024()
+print("KEM - kyber: ", type(kyber), len(kyber[0]), len(kyber[1]))
+
+ntruhps = p.generate_keypair_ntruhps2048509()
+print("KEM - ntruhps: ", type(ntruhps), len(ntruhps[0]), len(ntruhps[1]))
+
+dilithium = p.generate_keypair_dilithium4()
+print("DSA - dilithium: ", type(dilithium), len(dilithium[0]), len(dilithium[1]))
+
+rainbow = p.generate_keypair_rainbowVc_classic()
+print("DSA - rainbow: ", type(rainbow), len(rainbow[0]), len(rainbow[1]))
+
+sphincs = p.generate_keypair_sphincs_shake256_256s_simple()
+print("DSA - sphincs: ", type(sphincs), len(sphincs[0]), len(sphincs[1]))
