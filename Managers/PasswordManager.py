@@ -6,27 +6,35 @@ from PqEncryptionManager import aesEncrypt, aesDecrypt
 
 class PasswordManager:
     """
-    This class handles everything around user authentication, user-defined password storing, changing, adding, deleting keyPairs, etc...
+    This class handles everything around user authentication, user-defined password storing, changing, adding, deleting keyStores, etc...
         Constructor takes masterPassword:str
     
     Available public methods:
         changeMasterPassword(old:str, new:str):None
-        addKeyPair(publicKey:bytes, secretKey:bytes):None
-        deleteKeyPair(ublicKey:bytes, secretKey:bytes):None
-        loadKeyPairList():[tuple(bytes, bytes)]
+        addKeyStore(name:string, alg:string, type:string, value:bytes):None
+        deleteKeyStore(name:string, alg:string, type:string, value:bytes):None
+        loadKeyStoreList():[tuple(name:string, alg:string, type:string, value:bytes)]
     """
-    # file for keyPairs
-    __keyPairsFileName = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/secrets" 
+    
+    # database folder
+    __databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database"
+    
+    # file for keyStores
+    __keyStoresFileName = __databaseFolder + "/secrets" 
     # file for masterPassword
-    __keyChainFileName = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/keychain"
+    __keyChainFileName = __databaseFolder + "/keychain"
     
     # masterPassword in plaintext
     __masterPassword = b""
 
     def __init__(self, masterPassword):
-        # Create or check keyPairs file
-        if not os.path.exists(self.__keyPairsFileName):
-            open(self.__keyPairsFileName, 'w').close()
+        # Create or check database folder
+        if not os.path.exists(self.__databaseFolder):
+            os.mkdir(self.__databaseFolder)
+        
+        # Create or check keyStores file
+        if not os.path.exists(self.__keyStoresFileName):
+            open(self.__keyStoresFileName, 'w').close()
             
         # Create or check keyChain file
         if not os.path.exists(self.__keyChainFileName):
@@ -46,33 +54,45 @@ class PasswordManager:
         hash.update(masterPassword.encode())
         hash.update(masterPassword.encode())
         hash.update(masterPassword.encode())
+        
+        # Write result from hash function into keychain file
         with open(self.__keyChainFileName, 'wb') as file:
             file.write(hash.digest())
 
-    def __readKeyPairs(self):
+    def __readKeyStores(self):
         '''
-        Read keyPairs from the file.
+        Read keyStores from the file.
         '''
-        with open(self.__keyPairsFileName, 'r') as file:
+        with open(self.__keyStoresFileName, 'r') as file:
+            # read file contents as string and convert that string into list type using json.loads()
             encryptedList = base64.b85decode(file.readline().encode()).decode()
-            keyPairs = json.loads(str(encryptedList).replace("'", "\""))
+            keyStores = json.loads(str(encryptedList).replace("'", "\""))
             
-            # list of keyPairs
+            # create list of keyStores - decrypt with aes and create (string, string, string bytes) tuple and add it to the list
             decryptedList = []
-            for x in keyPairs:
-                decryptedList.append(tuple(aesDecrypt(x, self.__masterPassword).split(b"\0\0\0")))
+            for x in keyStores:
+                decryptedStore = aesDecrypt(x, self.__masterPassword).split(b"\0\0\0\0")
+                
+                decryptedList.append(
+                    (decryptedStore[0].decode(), decryptedStore[1].decode(), decryptedStore[2].decode(), decryptedStore[3]))
                 
             return decryptedList
 
-    def __writeKeyPairs(self, keyPairsList):
+    def __writeKeyStores(self, keyStoresList):
         '''
-        Write encrypted keyPairs keys to the file.
+        Write encrypted keyStores keys to the file.
         '''
         encryptedList = []
-        for x in keyPairsList:
-            encryptedList.append(aesEncrypt(x[0] + b"\0\0\0" + x[1], self.__masterPassword))
+        
+        # for each tuple create bytes object by encoding strings and concatenating them together with separator
+        # encrypt the result and add it to the list
+        for x in keyStoresList:
+            encryptedList.append(
+                aesEncrypt(
+                    x[0].encode() + b"\0\0\0\0" + x[1].encode() + b"\0\0\0\0" + x[2].encode() + b"\0\0\0\0" + x[3],
+                    self.__masterPassword))
             
-        with open(self.__keyPairsFileName, 'w') as file:
+        with open(self.__keyStoresFileName, 'w') as file:
             file.write(base64.b85encode(str(encryptedList).encode()).decode())
 
     def __authenticate(self, password):
@@ -106,8 +126,8 @@ class PasswordManager:
         if not self.__authenticate(old):
             raise ValueError("Old password does not match!")
         else:
-            # save currenty used keyPairs to variable
-            keyPairs = self.__readKeyPairs()
+            # save currenty used keyStores to variable
+            keyStores = self.__readKeyStores()
             
             # write new masterPassword to file
             self.__writeKeyChain(new)
@@ -118,46 +138,44 @@ class PasswordManager:
             hash.update(new.encode())
             self.__masterPassword = hash.digest()
             
-            # re-encrypt keyPairs using new passphrase = new masterPassword
-            self.__writeKeyPairs(keyPairs)
+            # re-encrypt keyStores using new passphrase = new masterPassword
+            self.__writeKeyStores(keyStores)
 
-    def addKeyPair(self, publicKey, secretKey):
+    def addKeyStore(self, name, alg, type, value):
         '''
-        A new keyPair is added to the file.
+        A new keyStore is added to the file.
         '''
-        self.__writeKeyPairs(self.__readKeyPairs()+[(publicKey, secretKey)])
+        self.__writeKeyStores(self.__readKeyStores()+[(name, alg, type, value)])
 
-    def deleteKeyPair(self, publicKey, secretKey):
+    def deleteKeyStore(self, name, alg, type, value):
         '''
-        Remove keyPair from the file.
+        Remove keyStore from the file.
         '''
         
-        keyPair = (publicKey, secretKey)
+        keyStore = (name, alg, type, value)
         
-        keyPairs = self.__readKeyPairs()
-        if keyPair in keyPairs:
-            keyPairs.remove(keyPair)
-            self.__writeKeyPairs(keyPairs)
+        keyStores = self.__readKeyStores()
+        self.__writeKeyStores([x for x in keyStores if x not in {keyStore}])
     
     # Public method for creating list of user-stored passwords
-    def loadKeyPairList(self):
-        return self.__readKeyPairs()
+    def loadKeyStoreList(self):
+        return self.__readKeyStores()
 
 # TEST AREA
 # Initialize with "masterPassword" as masterPassword
 x = PasswordManager("masterPassword")
 # Add user defined passwords (strings for now)
-x._PasswordManager__writeKeyPairs([[b"publicKey1", b"secretKey1"],[b"publicKey2", b"secretKey2"],[b"publicKey3", b"secretKey3"],[b"publicKey4", b"secretKey4"]])
+x._PasswordManager__writeKeyStores([["name1", "alg1", "type1", b"value1"],["name2", "alg2", "type2", b"value2"],["name3", "alg3", "type3", b"value3"],["name4", "alg4", "type4", b"value4"]])
 # print first list
-print("after init: ", x.loadKeyPairList())
+print("after init: ", x.loadKeyStoreList())
 # change master password
 x.changeMasterPassword("masterPassword", "newPassword")
 # add "added" password
-x.addKeyPair(b"addedPublicKey", b"addedSecretKey")
+x.addKeyStore("nameX", "algX", "typeX", b"valueX")
 # delete third password
-x.deleteKeyPair(b"publicKey3", b"secretKey3")
+x.deleteKeyStore("name3", "alg3", "type3", b"value3")
 # final print
-print("final print: ", x.loadKeyPairList())
+print("final print: ", x.loadKeyStoreList())
 # change master password
 x.changeMasterPassword("newPassword", "masterPassword")
 
