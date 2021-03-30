@@ -2,7 +2,8 @@ import os
 import json
 import base64
 import hashlib
-from PqEncryptionManager import PqEncryptionManager
+from PqEncryptionManager import aesEncrypt, aesDecrypt
+
 class PasswordManager:
     """
     This class handles everything around user authentication, user-defined password storing, changing, adding, deleting keyPairs, etc...
@@ -15,9 +16,9 @@ class PasswordManager:
         loadKeyPairList():[tuple(bytes, bytes)]
     """
     # file for keyPairs
-    __keyPairsFileName = "secrets" 
+    __keyPairsFileName = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/secrets" 
     # file for masterPassword
-    __keyChainFileName = "keychain"
+    __keyChainFileName = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/keychain"
     
     # masterPassword in plaintext
     __masterPassword = b""
@@ -59,7 +60,7 @@ class PasswordManager:
             # list of keyPairs
             decryptedList = []
             for x in keyPairs:
-                decryptedList.append(tuple(PqEncryptionManager.aesDecrypt(x, self.__masterPassword).split(b"\0\0\0")))
+                decryptedList.append(tuple(aesDecrypt(x, self.__masterPassword).split(b"\0\0\0")))
                 
             return decryptedList
 
@@ -69,7 +70,7 @@ class PasswordManager:
         '''
         encryptedList = []
         for x in keyPairsList:
-            encryptedList.append(PqEncryptionManager.aesEncrypt(x[0] + b"\0\0\0" + x[1], self.__masterPassword))
+            encryptedList.append(aesEncrypt(x[0] + b"\0\0\0" + x[1], self.__masterPassword))
             
         with open(self.__keyPairsFileName, 'w') as file:
             file.write(base64.b85encode(str(encryptedList).encode()).decode())

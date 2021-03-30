@@ -51,7 +51,7 @@ from pqcrypto.sign.rainbowVc_classic import sign as sign_rainbowVc_classic, veri
 # from pqcrypto.sign.sphincs_shake256_256s_robust import generate_keypair, sign, verify
 from pqcrypto.sign.sphincs_shake256_256s_simple import sign as sign_sphincs_shake256_256s_simple, verify as verify_sphincs_shake256_256s_simple
 
-class PqDSAManager:
+class PqSigningManager:
     
     # dilithium4
     def signature_dilithium4(self, private_key, plaintext):
