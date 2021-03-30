@@ -82,55 +82,64 @@ from pqcrypto.sign.rainbowVc_classic import generate_keypair as gen_rainbowVc_cl
 # from pqcrypto.sign.sphincs_shake256_256f_robust import generate_keypair, sign, verify
 # from pqcrypto.sign.sphincs_shake256_256f_simple import generate_keypair, sign, verify
 # from pqcrypto.sign.sphincs_shake256_256s_robust import generate_keypair, sign, verify
-from pqcrypto.sign.sphincs_shake256_256s_simple import generate_keypair as gen_sphincs_shake256_256s_simple
+from pqcrypto.sign.sphincs_shake256_256s_simple import generate_keypair as gen_sphincs_shake256_256s_simple    
+from PasswordManager import PasswordManager
+from datetime import datetime
 
+class PqKeyGenManager: 
+    """
+    This class generates key pairs using PQ algorithms and saves them into the database. It is recommended to reload keyStores list after generating keyPair.
+        Constructor takes passwordManager:PasswordManager
+    
+    Available public methods:
+        generate_keypair_mceliece8192128(name=""):None
+        generate_keypair_saber(name=""):None
+        generate_keypair_kyber1024(name=""):None
+        generate_keypair_ntruhps2048509(name=""):None
+        generate_keypair_dilithium4(name=""):None
+        generate_keypair_rainbowVc_classic(name=""):None
+        generate_keypair_sphincs_shake256_256s_simple(name=""):None
+    """
+       
+    def __init__(self, passwordManager:PasswordManager):
+        self.__passwordManager = passwordManager
 
-class PqKeyGenManager:
-    
-    # KEM
-    def generate_keypair_mceliece8192128(self):
-        return gen_mceliece()
-    
-    def generate_keypair_saber(self):
-        return gen_saber()
-    
-    def generate_keypair_kyber1024(self):
-        return gen_kyber1024()
-    
-    def generate_keypair_ntruhps2048509(self):
-        return gen_ntruhps2048509()
-    
-    # DSA
-    def generate_keypair_dilithium4(self):
-        return gen_dilithium4()
-    
-    def generate_keypair_rainbowVc_classic(self):
-            return gen_rainbowVc_classic()
+    def __SaveToDatabase(self, keyPair, alg, name):
+        nameText = "|" + str(datetime.now()) + "|" + name
         
-    def generate_keypair_sphincs_shake256_256s_simple(self):
-        return gen_sphincs_shake256_256s_simple()
-    
+        self.__passwordManager.addKeyStore(nameText, alg, "Public", keyPair[0])
+        self.__passwordManager.addKeyStore(nameText, alg, "Private", keyPair[1])
 
-# TEMP
-p = PqKeyGenManager()
+    # KEM
+    def generate_keypair_mceliece8192128(self, name=""):
+        self.__SaveToDatabase(gen_mceliece(), "McLiece", name)
 
-mcleice = p.generate_keypair_mceliece8192128()
-print("KEM - mceliece: ", type(mcleice), len(mcleice[0]), len(mcleice[1]))
+    def generate_keypair_saber(self, name=""):
+        self.__SaveToDatabase(gen_saber(), "Saber", name)
 
-saber = p.generate_keypair_saber()
-print("KEM - saber: ", type(saber), len(saber[0]), len(saber[1]))
+    def generate_keypair_kyber1024(self, name=""):
+        self.__SaveToDatabase(gen_kyber1024(), "Kyber", name)
 
-kyber = p.generate_keypair_kyber1024()
-print("KEM - kyber: ", type(kyber), len(kyber[0]), len(kyber[1]))
+    def generate_keypair_ntruhps2048509(self, name=""):
+        self.__SaveToDatabase(gen_ntruhps2048509(), "Nthrups", name)
 
-ntruhps = p.generate_keypair_ntruhps2048509()
-print("KEM - ntruhps: ", type(ntruhps), len(ntruhps[0]), len(ntruhps[1]))
+    # DSA
+    def generate_keypair_dilithium4(self, name=""):
+        self.__SaveToDatabase(gen_dilithium4(), "Dilithium", name)
 
-dilithium = p.generate_keypair_dilithium4()
-print("DSA - dilithium: ", type(dilithium), len(dilithium[0]), len(dilithium[1]))
+    def generate_keypair_rainbowVc_classic(self, name=""):
+        self.__SaveToDatabase(gen_rainbowVc_classic(), "RainbowVc", name)
 
-rainbow = p.generate_keypair_rainbowVc_classic()
-print("DSA - rainbow: ", type(rainbow), len(rainbow[0]), len(rainbow[1]))
+    def generate_keypair_sphincs_shake256_256s_simple(self, name=""):
+        self.__SaveToDatabase(gen_sphincs_shake256_256s_simple(), "Sphincs", name)
 
-sphincs = p.generate_keypair_sphincs_shake256_256s_simple()
-print("DSA - sphincs: ", type(sphincs), len(sphincs[0]), len(sphincs[1]))
+# # TEST AREA
+# pm = PasswordManager("masterPassword")
+# p = PqKeyGenManager(pm)
+
+# print("____________________________________________")
+# p.generate_keypair_kyber1024("testName1")
+# p.generate_keypair_rainbowVc_classic("testName2")
+# p.generate_keypair_sphincs_shake256_256s_simple()
+
+# print(pm.loadKeyStoreList())

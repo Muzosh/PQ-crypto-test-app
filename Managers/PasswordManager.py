@@ -27,7 +27,7 @@ class PasswordManager:
     # masterPassword in plaintext
     __masterPassword = b""
 
-    def __init__(self, masterPassword):
+    def __init__(self, masterPassword:str):
         # Create or check database folder
         if not os.path.exists(self.__databaseFolder):
             os.mkdir(self.__databaseFolder)
@@ -119,7 +119,7 @@ class PasswordManager:
         else:
             return False
 
-    def changeMasterPassword(self, old, new):
+    def changeMasterPassword(self, old:str, new:str):
         '''
         Change masterPassword of the application.
         '''
@@ -141,13 +141,13 @@ class PasswordManager:
             # re-encrypt keyStores using new passphrase = new masterPassword
             self.__writeKeyStores(keyStores)
 
-    def addKeyStore(self, name, alg, type, value):
+    def addKeyStore(self, name:str, alg:str, type:str, value:bytes):
         '''
         A new keyStore is added to the file.
         '''
         self.__writeKeyStores(self.__readKeyStores()+[(name, alg, type, value)])
 
-    def deleteKeyStore(self, name, alg, type, value):
+    def deleteKeyStore(self, name:str, alg:str, type:str, value:bytes):
         '''
         Remove keyStore from the file.
         '''
@@ -161,22 +161,23 @@ class PasswordManager:
     def loadKeyStoreList(self):
         return self.__readKeyStores()
 
-# TEST AREA
-# Initialize with "masterPassword" as masterPassword
-x = PasswordManager("masterPassword")
-# Add user defined passwords (strings for now)
-x._PasswordManager__writeKeyStores([["name1", "alg1", "type1", b"value1"],["name2", "alg2", "type2", b"value2"],["name3", "alg3", "type3", b"value3"],["name4", "alg4", "type4", b"value4"]])
-# print first list
-print("after init: ", x.loadKeyStoreList())
-# change master password
-x.changeMasterPassword("masterPassword", "newPassword")
-# add "added" password
-x.addKeyStore("nameX", "algX", "typeX", b"valueX")
-# delete third password
-x.deleteKeyStore("name3", "alg3", "type3", b"value3")
-# final print
-print("final print: ", x.loadKeyStoreList())
-# change master password
-x.changeMasterPassword("newPassword", "masterPassword")
 
-# Program should generate two "keychain" and "secrets" obfuscated files
+# # TEST AREA
+# # Initialize with "masterPassword" as masterPassword
+# x = PasswordManager("masterPassword")
+# # Add user defined passwords (strings for now)
+# x._PasswordManager__writeKeyStores([["name1", "alg1", "type1", b"value1"],["name2", "alg2", "type2", b"value2"],["name3", "alg3", "type3", b"value3"],["name4", "alg4", "type4", b"value4"]])
+# # print first list
+# print("after init: ", x.loadKeyStoreList())
+# # change master password
+# x.changeMasterPassword("masterPassword", "newPassword")
+# # add "added" password
+# x.addKeyStore("nameX", "algX", "typeX", b"valueX")
+# # delete third password
+# x.deleteKeyStore("name3", "alg3", "type3", b"value3")
+# # final print
+# print("final print: ", x.loadKeyStoreList())
+# # change master password
+# x.changeMasterPassword("newPassword", "masterPassword")
+
+# # Program should generate two "keychain" and "secrets" obfuscated files
