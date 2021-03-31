@@ -82,14 +82,18 @@ from pqcrypto.sign.rainbowVc_classic import generate_keypair as gen_rainbowVc_cl
 # from pqcrypto.sign.sphincs_shake256_256f_robust import generate_keypair, sign, verify
 # from pqcrypto.sign.sphincs_shake256_256f_simple import generate_keypair, sign, verify
 # from pqcrypto.sign.sphincs_shake256_256s_robust import generate_keypair, sign, verify
-from pqcrypto.sign.sphincs_shake256_256s_simple import generate_keypair as gen_sphincs_shake256_256s_simple    
+from pqcrypto.sign.sphincs_shake256_256s_simple import generate_keypair as gen_sphincs_shake256_256s_simple
+
+from collections.abc import Callable
 from PasswordManager import PasswordManager
+from StatisticsManager import StatisticsManager
 from datetime import datetime
+import time
 
 class PqKeyGenManager: 
     """
     This class generates key pairs using PQ algorithms and saves them into the database. It is recommended to reload keyStores list after generating keyPair.
-        Constructor takes passwordManager:PasswordManager
+        Constructor takes passwordManager:PasswordManager and statisticsManager:StatisticsManager
     
     Available public methods:
         generate_keypair_mceliece8192128(name=""):None
@@ -101,46 +105,55 @@ class PqKeyGenManager:
         generate_keypair_sphincs_shake256_256s_simple(name=""):None
     """
        
-    def __init__(self, passwordManager:PasswordManager):
+    def __init__(self, passwordManager:PasswordManager, statisticsManager:StatisticsManager):
         self.__passwordManager = passwordManager
+        self.__statisticsManager = statisticsManager
 
-    def __SaveToDatabase(self, keyPair, alg, name):
-        nameText = "|" + str(datetime.now()) + "|" + name
+    def __RunKeyGen(self, function:Callable[[], [bytes]], alg:str, name:str):
+        now = datetime.now()
+        nameText = "|" + str(now) + "|" + name
         
+        start = time.time()
+        keyPair = function()
+        end = time.time()
+        
+        timeDiff = end - start
+        
+        self.__statisticsManager.addKeyGenEntry(now, alg, timeDiff)
         self.__passwordManager.addKeyStore(nameText, alg, "Public", keyPair[0])
         self.__passwordManager.addKeyStore(nameText, alg, "Private", keyPair[1])
 
     # KEM
     def generate_keypair_mceliece8192128(self, name=""):
-        self.__SaveToDatabase(gen_mceliece(), "McLiece", name)
+        self.__RunKeyGen(gen_mceliece, "McLiece", name)
 
     def generate_keypair_saber(self, name=""):
-        self.__SaveToDatabase(gen_saber(), "Saber", name)
+        self.__RunKeyGen(gen_saber, "Saber", name)
 
     def generate_keypair_kyber1024(self, name=""):
-        self.__SaveToDatabase(gen_kyber1024(), "Kyber", name)
+        self.__RunKeyGen(gen_kyber1024, "Kyber", name)
 
     def generate_keypair_ntruhps2048509(self, name=""):
-        self.__SaveToDatabase(gen_ntruhps2048509(), "Nthrups", name)
+        self.__RunKeyGen(gen_ntruhps2048509, "Nthrups", name)
 
     # DSA
     def generate_keypair_dilithium4(self, name=""):
-        self.__SaveToDatabase(gen_dilithium4(), "Dilithium", name)
+        self.__RunKeyGen(gen_dilithium4, "Dilithium", name)
 
     def generate_keypair_rainbowVc_classic(self, name=""):
-        self.__SaveToDatabase(gen_rainbowVc_classic(), "RainbowVc", name)
+        self.__RunKeyGen(gen_rainbowVc_classic, "RainbowVc", name)
 
     def generate_keypair_sphincs_shake256_256s_simple(self, name=""):
-        self.__SaveToDatabase(gen_sphincs_shake256_256s_simple(), "Sphincs", name)
+        self.__RunKeyGen(gen_sphincs_shake256_256s_simple, "Sphincs", name)
 
-# # TEST AREA
-# pm = PasswordManager("masterPassword")
-# p = PqKeyGenManager(pm)
+# TEST AREA
+pm = PasswordManager("masterPassword")
+p = PqKeyGenManager(pm, StatisticsManager())
 
-# print("____________________________________________")
-# p.generate_keypair_mceliece8192128("myName1")
-# p.generate_keypair_kyber1024("testName1")
-# p.generate_keypair_rainbowVc_classic("testName2")
-# p.generate_keypair_sphincs_shake256_256s_simple()
+print("____________________________________________")
+p.generate_keypair_mceliece8192128("myName1")
+p.generate_keypair_kyber1024("testName1")
+p.generate_keypair_rainbowVc_classic("testName2")
+p.generate_keypair_sphincs_shake256_256s_simple()
 
-# print(pm.loadKeyStoreList())
+print(pm.loadKeyStoreList())
