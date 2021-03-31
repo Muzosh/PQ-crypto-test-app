@@ -138,6 +138,7 @@ class PqKeyGenManager:
 # p = PqKeyGenManager(pm)
 
 # print("____________________________________________")
+# p.generate_keypair_mceliece8192128("myName1")
 # p.generate_keypair_kyber1024("testName1")
 # p.generate_keypair_rainbowVc_classic("testName2")
 # p.generate_keypair_sphincs_shake256_256s_simple()

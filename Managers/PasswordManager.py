@@ -65,8 +65,8 @@ class PasswordManager:
         '''
         with open(self.__keyStoresFileName, 'r') as file:
             # read file contents as string and convert that string into list type using json.loads()
-            encryptedList = base64.b85decode(file.readline().encode()).decode()
-            keyStores = json.loads(str(encryptedList).replace("'", "\""))
+            encryptedList = base64.b64decode(file.readline().encode()).decode()
+            keyStores = json.loads(str(encryptedList).replace("'", "\"") or "[]")
             
             # create list of keyStores - decrypt with aes and create (string, string, string bytes) tuple and add it to the list
             decryptedList = []
@@ -93,7 +93,7 @@ class PasswordManager:
                     self.__masterPassword))
             
         with open(self.__keyStoresFileName, 'w') as file:
-            file.write(base64.b85encode(str(encryptedList).encode()).decode())
+            file.write(base64.b64encode(str(encryptedList).encode()).decode())
 
     def __authenticate(self, password):
         '''
@@ -145,7 +145,23 @@ class PasswordManager:
         '''
         A new keyStore is added to the file.
         '''
-        self.__writeKeyStores(self.__readKeyStores()+[(name, alg, type, value)])
+        with open(self.__keyStoresFileName, 'r') as file:
+            # read file contents as string
+            encryptedListString = base64.b64decode(file.readline().encode()).decode()
+        
+        encryptedKeyStoreString = str(aesEncrypt(
+            name.encode() + b"\0\0\0\0" + alg.encode() + b"\0\0\0\0" + type.encode() + b"\0\0\0\0" + value,
+            self.__masterPassword))
+           
+        if not encryptedListString:
+            encryptedListString = "[" + encryptedKeyStoreString + "]"
+        else:
+            encryptedListString = encryptedListString[:-1] + ", " + (str(aesEncrypt(
+                name.encode() + b"\0\0\0\0" + alg.encode() + b"\0\0\0\0" + type.encode() + b"\0\0\0\0" + value,
+                self.__masterPassword)) + "]")
+        
+        with open(self.__keyStoresFileName, 'w') as file:
+            file.write(base64.b64encode(encryptedListString.encode()).decode())
 
     def deleteKeyStore(self, name:str, alg:str, type:str, value:bytes):
         '''
@@ -170,7 +186,7 @@ class PasswordManager:
 # # print first list
 # print("after init: ", x.loadKeyStoreList())
 # # change master password
-# x.changeMasterPassword("masterPassword", "newPassword")
+# #x.changeMasterPassword("masterPassword", "newPassword")
 # # add "added" password
 # x.addKeyStore("nameX", "algX", "typeX", b"valueX")
 # # delete third password
@@ -178,6 +194,6 @@ class PasswordManager:
 # # final print
 # print("final print: ", x.loadKeyStoreList())
 # # change master password
-# x.changeMasterPassword("newPassword", "masterPassword")
+# #x.changeMasterPassword("newPassword", "masterPassword")
 
 # # Program should generate two "keychain" and "secrets" obfuscated files

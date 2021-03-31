@@ -1,1 +1,1 @@
-// python script which will ensure start of a wholes application
+// python script which will ensure start of a whole application
