@@ -3,11 +3,13 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import "btn"
 
+
 Window {
     id: login
     width: 720
     height: 400
     visible: true
+
 
     Rectangle {
         id: loginScreen
@@ -97,6 +99,7 @@ Window {
             y: 205
             height: 50
             background: Rectangle{
+                id: loginBg
                 radius: 10
                 color: "#a0c2ff"
             }
@@ -120,17 +123,6 @@ Window {
             anchors.leftMargin: 120
             placeholderText: qsTr("Enter masterpass")
             echoMode: TextInput.Password
-
-            Connections {
-                target: loginInput
-                onClicked: console.log("clicked")
-            }
-
-            Connections {
-                target: loginInput
-                onTextEdited: console.log("pisem heslo, nevyrusuj")
-            }
-
         }
 
         Text {
@@ -160,7 +152,38 @@ Window {
             anchors.rightMargin: 250
             anchors.leftMargin: 250
             rotation: 0
+            onClicked: {
+                password.checkingPass(loginInput.text)
+            }
         }
+
+        function delay(delayTime, cb) {
+            timer = new Timer();
+            timer.interval = delayTime;
+            timer.repeat = false;
+            timer.triggered.connect(cb);
+            timer.start();
+        }
+
+        Connections{
+            target: password
+
+            function onCheckPass(stringText){
+                if(stringText === "true"){
+                    //copyright.text = "Correct pass"
+                    loginBg.color = "#008000"
+                    login.close()
+
+                }else{
+                    copyright.text = "False pass"
+                    loginBg.color = "#FF0000"
+                }
+            }
+
+
+        }
+
+
 
 
     }
