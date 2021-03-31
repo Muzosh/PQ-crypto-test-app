@@ -88,7 +88,7 @@ from collections.abc import Callable
 from PasswordManager import PasswordManager
 from StatisticsManager import StatisticsManager
 from datetime import datetime
-import time
+import time, random
 
 class PqKeyGenManager: 
     """
@@ -111,15 +111,13 @@ class PqKeyGenManager:
 
     def __RunKeyGen(self, function:Callable[[], [bytes]], alg:str, name:str):
         now = datetime.now()
-        nameText = "|" + str(now) + "|" + name
+        nameText = "|"+ random.randint(0,999) + "|" + str(now) + "|" + name
         
         start = time.time()
         keyPair = function()
-        end = time.time()
+        keyGenTime = time.time() - start
         
-        timeDiff = end - start
-        
-        self.__statisticsManager.addKeyGenEntry(now, alg, timeDiff)
+        self.__statisticsManager.addKeyGenEntry(now, alg, keyGenTime)
         self.__passwordManager.addKeyStore(nameText, alg, "Public", keyPair[0])
         self.__passwordManager.addKeyStore(nameText, alg, "Private", keyPair[1])
 

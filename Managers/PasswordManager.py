@@ -156,9 +156,7 @@ class PasswordManager:
         if not encryptedListString:
             encryptedListString = "[" + encryptedKeyStoreString + "]"
         else:
-            encryptedListString = encryptedListString[:-1] + ", " + (str(aesEncrypt(
-                name.encode() + b"\0\0\0\0" + alg.encode() + b"\0\0\0\0" + type.encode() + b"\0\0\0\0" + value,
-                self.__masterPassword)) + "]")
+            encryptedListString = encryptedListString[:-1] + ", " + encryptedKeyStoreString + "]"
         
         with open(self.__keyStoresFileName, 'w') as file:
             file.write(base64.b64encode(encryptedListString.encode()).decode())

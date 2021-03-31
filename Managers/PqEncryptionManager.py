@@ -10,7 +10,7 @@ from secrets import compare_digest
 # from pqcrypto.kem.frodokem640shake import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem976aes import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem976shake import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.kyber1024 import encrypt as encrypt_kyber1024, decrypt as decrypt_kyber1024
+from pqcrypto.kem.kyber1024 import encrypt as encapsulate_kyber1024, decrypt as decapsulate_kyber1024
 # from pqcrypto.kem.kyber1024_90s import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.kyber512 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.kyber512_90s import generate_keypair, encrypt, decrypt
@@ -25,13 +25,17 @@ from pqcrypto.kem.kyber1024 import encrypt as encrypt_kyber1024, decrypt as decr
 # from pqcrypto.kem.mceliece6688128f import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.mceliece6960119 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.mceliece6960119f import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.mceliece8192128 import encrypt as encrypt_mceliece8192128, decrypt as decrypt_mceliece8192128
+from pqcrypto.kem.mceliece8192128 import encrypt as encapsulate_mceliece8192128, decrypt as decapsulate_mceliece8192128
 # from pqcrypto.kem.mceliece8192128f import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.ntruhps2048509 import encrypt as encrypt_ntruhps2048509, decrypt as decrypt_ntruhps2048509
+from pqcrypto.kem.ntruhps2048509 import encrypt as encapsulate_ntruhps2048509, decrypt as decapsulate_ntruhps2048509
 # from pqcrypto.kem.ntruhps2048677 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.ntruhps4096821 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.ntruhrss701 import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.saber import encrypt as encrypt_saber, decrypt as decrypt_saber
+from pqcrypto.kem.saber import encrypt as encapsulate_saber, decrypt as decapsulate_saber
+
+import time
+from datetime import datetime
+from StatisticsManager import StatisticsManager
 
 # this method is defined out of the class because it is being used in multiple classes
 def aesEncrypt(dataBytes, symmetricKey):        
@@ -74,48 +78,55 @@ def aesDecrypt(encryptedData, symmetricKey):
     
     return decrypted
 
-
 class PqEncryptionManager:    
-    #mceliece
-    def encapsulation_mceliece8192128(self, public_key):
-        ciphertext, secret_key = encrypt_mceliece8192128(public_key)
-        #print("Plain text bytes\n" + str(secret_key) + "\n")
-        return ciphertext, secret_key
+    def __init__(self, statisticsManager:StatisticsManager):
+        self.__statisticsManager = statisticsManager
+        
+        self.encFuncDict = {
+            "McLiece": encapsulate_mceliece8192128,
+            "Saber": encapsulate_saber,
+            "Kyber": encapsulate_kyber1024,
+            "Nthrups": encapsulate_ntruhps2048509
+        }
+        
+        self.decFuncDict = {
+            "McLiece": decapsulate_mceliece8192128,
+            "Saber": decapsulate_saber,
+            "Kyber": decapsulate_kyber1024,
+            "Nthrups": decapsulate_ntruhps2048509
+        }
+    
+    def encryptFile(self, file:bytes, publicKeyStore:tuple) -> (bytes, bytes):
+        if publicKeyStore[2] != "Public":
+            raise ValueError("Public key is needed for encryption.")
+        
+        encapsulationFunction = self.encFuncDict[publicKeyStore[1]]
+        
+        start = time.time()
+        ciphertext, secret_key = encapsulationFunction(publicKeyStore[3])
+        kemTime = time.time() - start
+        
+        start = time.time()
+        encryptedFile = aesEncrypt(file, secret_key)
+        aesTime = time.time() - start
 
-    def decapsulation_mceliece8192128(self, ciphertext, private_key):
-        secret_key_recovered = decrypt_mceliece8192128(private_key, ciphertext)
-        return secret_key_recovered
+        self.__statisticsManager.addKemAesEntry(datetime.now(), publicKeyStore[1], "Encrypt", 256, kemTime, aesTime)
+        return ciphertext, encryptedFile
     
-    #saber
-    def encapsulation_saber(self, public_key):
-        ciphertext, secret_key = encrypt_saber(public_key)
-        #print("Plain text bytes\n" + str(secret_key) + "\n")
-        return ciphertext, secret_key
+    def decryptFile(self, encryptedFile:bytes, ciphertext:bytes, privateKeyStore:tuple):
+        if privateKeyStore[2] != "Private":
+            raise ValueError("Private key is needed for decryption.")
+        
+        decapsulationFunction = self.decFuncDict[privateKeyStore[1]]
+        
+        start = time.time()
+        secret_key = decapsulationFunction(privateKeyStore[3], ciphertext)
+        kemTime = time.time() - start
+        
+        start = time.time()
+        decryptedFile = aesDecrypt(encryptedFile, secret_key)
+        aesTime = time.time() - start
 
-    def decapsulation_saber(self, ciphertext, private_key):
-        secret_key_recovered = decrypt_saber(private_key, ciphertext)
-        return secret_key_recovered
-    
-    #kyber
-    def encapsulation_kyber1024(self, public_key):
-        ciphertext, secret_key = encrypt_kyber1024(public_key)
-        #print("Plain text bytes\n" + str(secret_key) + "\n")
-        return ciphertext, secret_key
-    
-    def decapsulation_kyber1024(self, ciphertext, private_key):
-        secret_key_recovered = decrypt_kyber1024(private_key, ciphertext)
-        return secret_key_recovered
-
-    #ntruhps
-    def encapsulation_ntruhps2048509(self, public_key):
-        ciphertext, secret_key = encrypt_ntruhps2048509(public_key)
-        #print("Plain text bytes\n" + str(secret_key) + "\n")
-        return ciphertext, secret_key
-    
-    def decapsulation_ntruhps2048509(self, ciphertext, private_key):
-        secret_key_recovered = decrypt_ntruhps2048509(private_key, ciphertext)
-        return secret_key_recovered
-    
-    
-
-    
+        self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, kemTime, aesTime)
+        return ciphertext, encryptedFile
+        
