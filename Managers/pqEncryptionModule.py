@@ -1,7 +1,3 @@
-import base64
-import hashlib
-from Cryptodome.Cipher import AES
-from Cryptodome.Random import get_random_bytes
 from secrets import compare_digest
 # from pqcrypto.kem.firesaber import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem1344aes import generate_keypair, encrypt, decrypt
@@ -35,51 +31,10 @@ from pqcrypto.kem.saber import encrypt as encapsulate_saber, decrypt as decapsul
 
 import time
 from datetime import datetime
-from StatisticsManager import StatisticsManager
-
-# this method is defined out of the class because it is being used in multiple classes
-def aesEncrypt(dataBytes, symmetricKey):        
-    # generate a random salt
-    salt = get_random_bytes(AES.block_size)
-
-    # use the Scrypt KDF to get a private key from the 2x hashed masterPassword = PBKDF2 (Password Based Key Derivation Function)
-    private_key = hashlib.scrypt(
-        symmetricKey, salt=salt, n=2**14, r=8, p=1, dklen=32)
-
-    # GCM mode used for authenticated encryption --> authenticated tag
-    cipher_config = AES.new(private_key, AES.MODE_GCM)
-
-    # return a dictionary with the encrypted text
-    cipher_text, tag = cipher_config.encrypt_and_digest(dataBytes)
-    return {
-        'cipher_text': base64.b64encode(cipher_text).decode('utf-8'),
-        'salt': base64.b64encode(salt).decode('utf-8'),
-        'nonce': base64.b64encode(cipher_config.nonce).decode('utf-8'),
-        'tag': base64.b64encode(tag).decode('utf-8')
-    }
-
-# this method is defined out of the class because it is being used in multiple classes
-def aesDecrypt(encryptedData, symmetricKey):
-    # decode the dictionary entries from base64
-    salt = base64.b64decode(encryptedData['salt'])
-    cipher_text = base64.b64decode(encryptedData['cipher_text'])
-    nonce = base64.b64decode(encryptedData['nonce'])
-    tag = base64.b64decode(encryptedData['tag'])
-    
-    # generate the private key from the 2x hashed masterPassword and salt
-    private_key = hashlib.scrypt(
-        symmetricKey, salt=salt, n=2**14, r=8, p=1, dklen=32)
-
-    # create the cipher config
-    cipher = AES.new(private_key, AES.MODE_GCM, nonce=nonce)
-
-    # decrypt the cipher text
-    decrypted = cipher.decrypt_and_verify(cipher_text, tag)
-    
-    return decrypted
+from aesModule import aesEncrypt, aesDecrypt
 
 class PqEncryptionManager:    
-    def __init__(self, statisticsManager:StatisticsManager):
+    def __init__(self, statisticsManager):
         self.__statisticsManager = statisticsManager
         
         self.encFuncDict = {
@@ -130,3 +85,26 @@ class PqEncryptionManager:
         self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, kemTime, aesTime)
         return decryptedFile
         
+# # TEST AREA
+# from statisticsModule import StatisticsManager
+# from passwordsModule import PasswordManager
+# from pqKeyGenModule import PqKeyGenManager
+# import os
+# pe = PqEncryptionManager(StatisticsManager())
+
+# pm = PasswordManager("masterPassword")
+# p = PqKeyGenManager(pm, StatisticsManager())
+# with open(os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/secrets", 'w') as file:
+#     file.write("")
+# p.generate_keypair_saber("myName1")
+
+
+# storeList = pm.loadKeyStoreList()
+
+# publicLen = len(storeList[0][3])
+# privateLen = len(storeList[1][3])
+
+# encryptionOutput = pe.encryptFile(b"testFile", pm.loadKeyStoreList()[0])
+
+# decryptionOutput = pe.decryptFile(encryptionOutput[1], encryptionOutput[0], pm.loadKeyStoreList()[1])
+# print(decryptionOutput)

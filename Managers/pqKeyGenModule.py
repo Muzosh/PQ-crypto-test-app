@@ -1,5 +1,4 @@
 # KEM
-
 from secrets import compare_digest
 # from pqcrypto.kem.firesaber import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem1344aes import generate_keypair, encrypt, decrypt
@@ -84,11 +83,10 @@ from pqcrypto.sign.rainbowVc_classic import generate_keypair as gen_rainbowVc_cl
 # from pqcrypto.sign.sphincs_shake256_256s_robust import generate_keypair, sign, verify
 from pqcrypto.sign.sphincs_shake256_256s_simple import generate_keypair as gen_sphincs_shake256_256s_simple
 
-from collections.abc import Callable
-from PasswordManager import PasswordManager
-from StatisticsManager import StatisticsManager
-from datetime import datetime
-import time, random
+import time
+import random
+import datetime
+import collections.abc as cols
 
 class PqKeyGenManager: 
     """
@@ -105,12 +103,12 @@ class PqKeyGenManager:
         generate_keypair_sphincs_shake256_256s_simple(name=""):None
     """
        
-    def __init__(self, passwordManager:PasswordManager, statisticsManager:StatisticsManager):
+    def __init__(self, passwordManager, statisticsManager):
         self.__passwordManager = passwordManager
         self.__statisticsManager = statisticsManager
 
-    def __RunKeyGen(self, function:Callable[[], [bytes]], alg:str, name:str):
-        now = datetime.now()
+    def __RunKeyGen(self, function:cols.Callable[[], [bytes]], alg:str, name:str):
+        now = datetime.datetime.now()
         nameText = "|"+ str(random.randint(0,999)) + "|" + str(now) + "|" + name
         
         start = time.time()
@@ -144,14 +142,16 @@ class PqKeyGenManager:
     def generate_keypair_sphincs_shake256_256s_simple(self, name=""):
         self.__RunKeyGen(gen_sphincs_shake256_256s_simple, "Sphincs", name)
 
-# TEST AREA
-pm = PasswordManager("masterPassword")
-p = PqKeyGenManager(pm, StatisticsManager())
+# # TEST AREA
+# from statisticsModule import StatisticsManager
+# from passwordsModule import PasswordManager
+# pm = PasswordManager("masterPassword")
+# p = PqKeyGenManager(pm, StatisticsManager())
 
-print("____________________________________________")
-p.generate_keypair_mceliece8192128("myName1")
-p.generate_keypair_kyber1024("testName1")
-p.generate_keypair_rainbowVc_classic("testName2")
-p.generate_keypair_sphincs_shake256_256s_simple()
+# print("____________________________________________")
+# p.generate_keypair_mceliece8192128("myName1")
+# p.generate_keypair_kyber1024("testName1")
+# p.generate_keypair_rainbowVc_classic("testName2")
+# p.generate_keypair_sphincs_shake256_256s_simple()
 
-print(pm.loadKeyStoreList())
+# print(pm.loadKeyStoreList())

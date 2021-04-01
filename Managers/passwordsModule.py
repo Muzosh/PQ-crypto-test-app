@@ -2,7 +2,8 @@ import os
 import json
 import base64
 import hashlib
-from PqEncryptionManager import aesEncrypt, aesDecrypt
+
+from aesModule import aesEncrypt, aesDecrypt
 
 class PasswordManager:
     """
@@ -67,11 +68,11 @@ class PasswordManager:
             # read file contents as string and convert that string into list type using json.loads()
             encryptedList = base64.b64decode(file.readline().encode()).decode()
             keyStores = json.loads(str(encryptedList).replace("'", "\"") or "[]")
-            
+
             # create list of keyStores - decrypt with aes and create (string, string, string bytes) tuple and add it to the list
             decryptedList = []
             for x in keyStores:
-                decryptedStore = aesDecrypt(x, self.__masterPassword).split(b"\0\0\0\0")
+                decryptedStore = aesDecrypt(x, self.__masterPassword).split(b"\x00"*4, 3)
                 
                 decryptedList.append(
                     (decryptedStore[0].decode(), decryptedStore[1].decode(), decryptedStore[2].decode(), decryptedStore[3]))
@@ -89,7 +90,7 @@ class PasswordManager:
         for x in keyStoresList:
             encryptedList.append(
                 aesEncrypt(
-                    x[0].encode() + b"\0\0\0\0" + x[1].encode() + b"\0\0\0\0" + x[2].encode() + b"\0\0\0\0" + x[3],
+                    x[0].encode() + b"\x00"*4 + x[1].encode() + b"\x00"*4 + x[2].encode() + b"\x00"*4 + x[3],
                     self.__masterPassword))
             
         with open(self.__keyStoresFileName, 'w') as file:
@@ -150,7 +151,7 @@ class PasswordManager:
             encryptedListString = base64.b64decode(file.readline().encode()).decode()
         
         encryptedKeyStoreString = str(aesEncrypt(
-            name.encode() + b"\0\0\0\0" + alg.encode() + b"\0\0\0\0" + type.encode() + b"\0\0\0\0" + value,
+            name.encode() + b"\x00"*4 + alg.encode() + b"\x00"*4 + type.encode() + b"\x00"*4 + value,
             self.__masterPassword))
            
         if not encryptedListString:
@@ -193,5 +194,4 @@ class PasswordManager:
 # print("final print: ", x.loadKeyStoreList())
 # # change master password
 # #x.changeMasterPassword("newPassword", "masterPassword")
-
 # # Program should generate two "keychain" and "secrets" obfuscated files
