@@ -128,5 +128,5 @@ class PqEncryptionManager:
         aesTime = time.time() - start
 
         self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, kemTime, aesTime)
-        return ciphertext, encryptedFile
+        return decryptedFile
         

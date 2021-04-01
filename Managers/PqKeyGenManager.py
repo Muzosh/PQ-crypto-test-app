@@ -111,7 +111,7 @@ class PqKeyGenManager:
 
     def __RunKeyGen(self, function:Callable[[], [bytes]], alg:str, name:str):
         now = datetime.now()
-        nameText = "|"+ random.randint(0,999) + "|" + str(now) + "|" + name
+        nameText = "|"+ str(random.randint(0,999)) + "|" + str(now) + "|" + name
         
         start = time.time()
         keyPair = function()
