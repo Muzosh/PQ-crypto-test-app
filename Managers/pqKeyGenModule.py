@@ -1,5 +1,4 @@
 # KEM
-
 from secrets import compare_digest
 # from pqcrypto.kem.firesaber import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem1344aes import generate_keypair, encrypt, decrypt
@@ -84,11 +83,10 @@ from pqcrypto.sign.rainbowVc_classic import generate_keypair as gen_rainbowVc_cl
 # from pqcrypto.sign.sphincs_shake256_256s_robust import generate_keypair, sign, verify
 from pqcrypto.sign.sphincs_shake256_256s_simple import generate_keypair as gen_sphincs_shake256_256s_simple
 
-from collections.abc import Callable
-from PasswordManager import PasswordManager
-from StatisticsManager import StatisticsManager
-from datetime import datetime
 import time
+import random
+import datetime
+import collections.abc as cols
 
 class PqKeyGenManager: 
     """
@@ -105,21 +103,25 @@ class PqKeyGenManager:
         generate_keypair_sphincs_shake256_256s_simple(name=""):None
     """
        
-    def __init__(self, passwordManager:PasswordManager, statisticsManager:StatisticsManager):
+    def __init__(self, passwordManager, statisticsManager):
         self.__passwordManager = passwordManager
         self.__statisticsManager = statisticsManager
 
-    def __RunKeyGen(self, function:Callable[[], [bytes]], alg:str, name:str):
-        now = datetime.now()
-        nameText = "|" + str(now) + "|" + name
+    # cols.Callable[[], [bytes]] specifies that methods takes a function (which returns bytes) as a argument so it can run it later
+    def __RunKeyGen(self, generateFunction:cols.Callable[[], [bytes]], alg:str, name:str):
+        # get current datetime
+        now = datetime.datetime.now()
         
+        # set name - random integer is here for easy private/public key pairing, then date, then user specified name
+        nameText = "|"+ str(random.randint(0,999)) + "|" + str(now) + "|" + name
+        
+        # generate keypair and time it
         start = time.time()
-        keyPair = function()
-        end = time.time()
+        keyPair = generateFunction()
+        keyGenTime = time.time() - start
         
-        timeDiff = end - start
-        
-        self.__statisticsManager.addKeyGenEntry(now, alg, timeDiff)
+        # log operation and add two keys into database
+        self.__statisticsManager.addKeyGenEntry(now, alg, keyGenTime)
         self.__passwordManager.addKeyStore(nameText, alg, "Public", keyPair[0])
         self.__passwordManager.addKeyStore(nameText, alg, "Private", keyPair[1])
 
@@ -146,14 +148,25 @@ class PqKeyGenManager:
     def generate_keypair_sphincs_shake256_256s_simple(self, name=""):
         self.__RunKeyGen(gen_sphincs_shake256_256s_simple, "Sphincs", name)
 
-# TEST AREA
-pm = PasswordManager("masterPassword")
-p = PqKeyGenManager(pm, StatisticsManager())
+# # TEST AREA
+# # init classes
+# import os
+# from statisticsModule import StatisticsManager
+# from passwordsModule import PasswordManager
+# pm = PasswordManager("masterPassword")
+# p = PqKeyGenManager(pm, StatisticsManager())
 
-print("____________________________________________")
-p.generate_keypair_mceliece8192128("myName1")
-p.generate_keypair_kyber1024("testName1")
-p.generate_keypair_rainbowVc_classic("testName2")
-p.generate_keypair_sphincs_shake256_256s_simple()
+# # Clear secrets
+# with open(os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/secrets", 'w') as file:
+#     file.write("")
 
-print(pm.loadKeyStoreList())
+# # generate 4 keypairs
+# p.generate_keypair_mceliece8192128("myName1")
+# p.generate_keypair_kyber1024("testName1")
+# p.generate_keypair_rainbowVc_classic("testName2")
+# p.generate_keypair_sphincs_shake256_256s_simple()
+
+# # print keyStoreList
+# list = pm.loadKeyStoreList()
+# print(list)
+# print("Number of keys in DB: ", len(list)) # should print 8 (2 keys per generation)
