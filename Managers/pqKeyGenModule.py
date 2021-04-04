@@ -91,16 +91,18 @@ import collections.abc as cols
 class PqKeyGenManager: 
     """
     This class generates key pairs using PQ algorithms and saves them into the database. It is recommended to reload keyStores list after generating keyPair.
-        Constructor takes passwordManager:PasswordManager and statisticsManager:StatisticsManager
+    Constructor: 
+        passwordManager (PasswordManager): existing instance of PasswordManager managing keyStores database
+        statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
     
     Available public methods:
-        generate_keypair_mceliece8192128(name=""):None
-        generate_keypair_saber(name=""):None
-        generate_keypair_kyber1024(name=""):None
-        generate_keypair_ntruhps2048509(name=""):None
-        generate_keypair_dilithium4(name=""):None
-        generate_keypair_rainbowVc_classic(name=""):None
-        generate_keypair_sphincs_shake256_256s_simple(name=""):None
+        generate_keypair_mceliece8192128(name="") -> None
+        generate_keypair_saber(name="") -> None
+        generate_keypair_kyber1024(name="") -> None
+        generate_keypair_ntruhps2048509(name="") -> None
+        generate_keypair_dilithium4(name="") -> None
+        generate_keypair_rainbowVc_classic(name="") -> None
+        generate_keypair_sphincs_shake256_256s_simple(name="") -> None
     """
        
     def __init__(self, passwordManager, statisticsManager):

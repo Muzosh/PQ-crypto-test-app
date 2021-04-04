@@ -3,7 +3,17 @@ import hashlib
 from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
 
-def aesEncrypt(dataBytes, symmetricKey):        
+def aesEncrypt(bytes:bytes, symmetricKey:bytes) -> dict:
+    """Encrypts file using AES encryption method.
+
+    Args:
+        bytes (bytes): Data to be encrypted
+        symmetricKey (bytes): Symmetric key used for encryption
+
+    Returns:
+        dict: Dictionary containing cipher_text, salt, nonce and tag keys
+    """
+     
     # generate a random salt
     salt = get_random_bytes(AES.block_size)
 
@@ -15,7 +25,7 @@ def aesEncrypt(dataBytes, symmetricKey):
     cipher_config = AES.new(private_key, AES.MODE_GCM)
 
     # return a dictionary with the encrypted text
-    cipher_text, tag = cipher_config.encrypt_and_digest(dataBytes)
+    cipher_text, tag = cipher_config.encrypt_and_digest(bytes)
     return {
         'cipher_text': base64.b64encode(cipher_text).decode('utf-8'),
         'salt': base64.b64encode(salt).decode('utf-8'),
@@ -23,8 +33,17 @@ def aesEncrypt(dataBytes, symmetricKey):
         'tag': base64.b64encode(tag).decode('utf-8')
     }
 
-# this method is defined out of the class because it is being used in multiple classes
-def aesDecrypt(encryptedData, symmetricKey):
+def aesDecrypt(encryptedData:dict, symmetricKey:bytes):
+    """Decrypts file using AES decryption algorithm method.
+
+    Args:
+        encryptedData (dict): Dictionary containing ciphertext, salt, nonce and tag keys
+        symmetricKey (bytes): Symmetric key used for decryption
+
+    Returns:
+        bytes: Decrypted data
+    """
+    
     # decode the dictionary entries from base64
     salt = base64.b64decode(encryptedData['salt'])
     cipher_text = base64.b64decode(encryptedData['cipher_text'])

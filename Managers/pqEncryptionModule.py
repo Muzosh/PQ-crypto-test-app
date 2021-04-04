@@ -37,6 +37,14 @@ from datetime import datetime
 from aesModule import aesEncrypt, aesDecrypt
 
 class PqEncryptionManager:    
+    """This class handles everything around key en/decapsulation and file en/decryption using pq-algorithms and AES.
+    Constructor:
+        statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
+    Available public methods:
+        encryptFile(fileToEncrypt:bytes, publicKeyStore:tuple) -> (ciphertext:bytes, encryptedFileObf:bytes)
+        decryptFile(encryptedFileObf:bytes, ciphertext:bytes, privateKeyStore:tuple) -> decryptedFile:bytes
+    """
+    
     def __init__(self, statisticsManager):
         self.__statisticsManager = statisticsManager
         
@@ -55,7 +63,7 @@ class PqEncryptionManager:
             "Nthrups": decapsulate_ntruhps2048509
         }
     
-    def encryptFile(self, file:bytes, publicKeyStore:tuple) -> (bytes, bytes):
+    def encryptFile(self, fileToEncrypt:bytes, publicKeyStore:tuple) -> (bytes, bytes):
         if publicKeyStore[2] != "Public":
             raise ValueError("Public key is needed for encryption.")
         
@@ -72,18 +80,18 @@ class PqEncryptionManager:
         
         # encrypt file with symmetric secretkey and time it
         start = time.time()
-        encryptedFile = aesEncrypt(file, secret_key)
+        encryptedFile = aesEncrypt(fileToEncrypt, secret_key)
         aesTime = time.time() - start
 
         # log operations
-        self.__statisticsManager.addKemAesEntry(datetime.now(), publicKeyStore[1], "Encrypt", 256, kemTime, aesTime)
+        self.__statisticsManager.addKemAesEntry(datetime.now(), publicKeyStore[1], "Encrypt", 256, len(fileToEncrypt), kemTime, aesTime)
         
         # obfuscate encrypted file
         encryptedFileObf = base64.b64encode(str(encryptedFile).encode())
         
         return ciphertext, encryptedFileObf
     
-    def decryptFile(self, encryptedFileObf:bytes, ciphertext:bytes, privateKeyStore:tuple):
+    def decryptFile(self, encryptedFileObf:bytes, ciphertext:bytes, privateKeyStore:tuple) -> bytes:
         if privateKeyStore[2] != "Private":
             raise ValueError("Private key is needed for decryption.")
         
@@ -107,7 +115,7 @@ class PqEncryptionManager:
         aesTime = time.time() - start
 
         # log operations and return decrypted file
-        self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, kemTime, aesTime)
+        self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, len(decryptedFile), kemTime, aesTime)
         return decryptedFile
         
 # # TEST AREA

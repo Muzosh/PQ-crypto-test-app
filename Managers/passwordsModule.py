@@ -6,15 +6,17 @@ import hashlib
 from aesModule import aesEncrypt, aesDecrypt
 
 class PasswordManager:
-    """
-    This class handles everything around user authentication, user-defined password storing, changing, adding, deleting keyStores, etc...
-        Constructor takes masterPassword:str
-    
+    """This class handles everything around user authentication, user-defined password storing, changing, adding, deleting keyStores, etc...
+    Constructor:
+        masterPassword (str): The master password that unlocks the database
     Available public methods:
-        changeMasterPassword(old:str, new:str):None
-        addKeyStore(name:string, alg:string, type:string, value:bytes):None
-        deleteKeyStore(name:string, alg:string, type:string, value:bytes):None
-        loadKeyStoreList():[tuple(name:string, alg:string, type:string, value:bytes)]
+        changeMasterPassword(old:str, new:str) -> None
+        addKeyStore(name:string, alg:string, keyType:string, value:bytes)-> None
+        deleteKeyStore(name:string, alg:string, keyType:string, value:bytes)-> None
+        loadKeyStoreList() -> [(name:string, alg:string, keyType:string, value:bytes)]
+    Raises:
+        ValueError: If given masterPassword does't match the existing one in database during class initialization.
+        ValueError: If old password doesn't match the existing one while changing masterPassword.
     """
     
     # database folder
@@ -28,7 +30,7 @@ class PasswordManager:
     # masterPassword in plaintext
     __masterPassword = b""
 
-    def __init__(self, masterPassword:str):
+    def __init__(self, masterPassword:str):        
         # Create or check database folder
         if not os.path.exists(self.__databaseFolder):
             os.mkdir(self.__databaseFolder)
@@ -142,7 +144,7 @@ class PasswordManager:
             # re-encrypt keyStores using new passphrase = new masterPassword
             self.__writeKeyStores(keyStores)
 
-    def addKeyStore(self, name:str, alg:str, type:str, value:bytes):
+    def addKeyStore(self, name:str, alg:str, keyType:str, value:bytes):
         '''
         A new keyStore is added to the file.
         '''
@@ -151,7 +153,7 @@ class PasswordManager:
             encryptedListString = base64.b64decode(file.readline().encode()).decode()
         
         encryptedKeyStoreString = str(aesEncrypt(
-            name.encode() + b"\x00"*4 + alg.encode() + b"\x00"*4 + type.encode() + b"\x00"*4 + value,
+            name.encode() + b"\x00"*4 + alg.encode() + b"\x00"*4 + keyType.encode() + b"\x00"*4 + value,
             self.__masterPassword))
            
         if not encryptedListString:
@@ -162,12 +164,12 @@ class PasswordManager:
         with open(self.__keyStoresFileName, 'w') as file:
             file.write(base64.b64encode(encryptedListString.encode()).decode())
 
-    def deleteKeyStore(self, name:str, alg:str, type:str, value:bytes):
+    def deleteKeyStore(self, name:str, alg:str, keyType:str, value:bytes):
         '''
         Remove keyStore from the file.
         '''
         
-        keyStore = (name, alg, type, value)
+        keyStore = (name, alg, keyType, value)
         
         keyStores = self.__readKeyStores()
         self.__writeKeyStores([x for x in keyStores if x not in {keyStore}])
@@ -181,15 +183,15 @@ class PasswordManager:
 # # Initialize with "masterPassword" as masterPassword
 # x = PasswordManager("masterPassword")
 # # Add user defined passwords (strings for now)
-# x._PasswordManager__writeKeyStores([["name1", "alg1", "type1", b"value1"],["name2", "alg2", "type2", b"value2"],["name3", "alg3", "type3", b"value3"],["name4", "alg4", "type4", b"value4"]])
+# x._PasswordManager__writeKeyStores([["name1", "alg1", "keyType1", b"value1"],["name2", "alg2", "keyType2", b"value2"],["name3", "alg3", "keyType3", b"value3"],["name4", "alg4", "keyType4", b"value4"]])
 # # print first list
 # print("after init: ", x.loadKeyStoreList())
 # # change master password
 # #x.changeMasterPassword("masterPassword", "newPassword")
 # # add "added" password
-# x.addKeyStore("nameX", "algX", "typeX", b"valueX")
+# x.addKeyStore("nameX", "algX", "keyTypeX", b"valueX")
 # # delete third password
-# x.deleteKeyStore("name3", "alg3", "type3", b"value3")
+# x.deleteKeyStore("name3", "alg3", "keyType3", b"value3")
 # # final print
 # print("final print: ", x.loadKeyStoreList())
 # # change master password
