@@ -43,38 +43,41 @@ class MainWindow(QMainWindow):
         ## ==> END ##
 
         ## SET ==> WINDOW TITLE
-        self.setWindowTitle('Project: Post-Quantum Signature App')
-        UIFunctions.labelTitle(self, 'Project: Post-Quantum Signature App')
-        UIFunctions.labelDescription(self, 'Cupcake ipsum dolor sit amet brownie. Carrot cake macaroon dragée icing lollipop dessert.')
+        #self.setWindowTitle('Main Window - Python Base')
+        #UIFunctions.labelTitle(self, 'Main Window - Python Base')
+        #UIFunctions.labelDescription(self, 'Set text')
         ## ==> END ##
 
         ## WINDOW SIZE ==> DEFAULT SIZE
         startSize = QSize(1000, 720)
         self.resize(startSize)
         self.setMinimumSize(startSize)
-        # UIFunctions.enableMaximumSize(self, 500, 720)
+        UIFunctions.enableMaximumSize(self, 500, 720)
         ## ==> END ##
 
         ## ==> CREATE MENUS
         ########################################################################
 
         ## ==> TOGGLE MENU SIZE
-        self.ui.btn_toggle_menu.clicked.connect(lambda: UIFunctions.toggleMenu(self, 220, True))
+        #self.ui.btn_toggle_menu.clicked.connect(lambda: UIFunctions.toggleMenu(self, 220, True))
         ## ==> END ##
 
         ## ==> ADD CUSTOM MENUS
         self.ui.stackedWidget.setMinimumWidth(20)
-        UIFunctions.addNewMenu(self, "HOME", "btn_home", "url(:/16x16/icons/16x16/cil-home.png)", True)
-        #UIFunctions.addNewMenu(self, "Add User", "btn_new_user", "url(:/16x16/icons/16x16/cil-user-follow.png)", True)
-        #UIFunctions.addNewMenu(self, "Custom Widgets", "btn_widgets", "url(:/16x16/icons/16x16/cil-equalizer.png)", False)
+        UIFunctions.addNewMenu(self, "Login", "btn_login", "url(:/16x16/icons/16x16/cil-exit-to-app.png)", True)
+        UIFunctions.addNewMenu(self, "Key", "btn_key", "url(:/16x16/icons/16x16/cil-settings.png)", True)
+        UIFunctions.addNewMenu(self, "ENC", "btn_enc", "url(:/16x16/icons/16x16/cil-user-follow.png)", True)
+        UIFunctions.addNewMenu(self, "Key statistics", "btn_kstatistics", "url(:/16x16/icons/16x16/cil-chart.png)", True)
+        UIFunctions.addNewMenu(self, "ENC/DEC statistics", "btn_estatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
+        UIFunctions.addNewMenu(self, "DSA statistics", "btn_dstatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
         ## ==> END ##
 
         # START MENU => SELECTION
-        UIFunctions.selectStandardMenu(self, "btn_home")
+        UIFunctions.selectStandardMenu(self, "btn_login")
         ## ==> END ##
 
         ## ==> START PAGE
-        self.ui.stackedWidget.setCurrentWidget(self.ui.page_home)
+        self.ui.stackedWidget.setCurrentWidget(self.ui.page_login)
         ## ==> END ##
 
         ## USER ICON ==> SHOW HIDE
@@ -146,25 +149,46 @@ class MainWindow(QMainWindow):
         # GET BT CLICKED
         btnWidget = self.sender()
 
-        # PAGE HOME
-        if btnWidget.objectName() == "btn_home":
-            self.ui.stackedWidget.setCurrentWidget(self.ui.page_home)
-            UIFunctions.resetStyle(self, "btn_home")
-            UIFunctions.labelPage(self, "Home")
+        # PAGE LOGIN
+        if btnWidget.objectName() == "btn_login":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_login)
+            UIFunctions.resetStyle(self, "btn_login")
+            UIFunctions.labelPage(self, "LOGIN")
             btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
 
-        # PAGE NEW USER
-        if btnWidget.objectName() == "btn_new_user":
-            self.ui.stackedWidget.setCurrentWidget(self.ui.page_home)
-            UIFunctions.resetStyle(self, "btn_new_user")
-            UIFunctions.labelPage(self, "New User")
+        # PAGE KEY
+        if btnWidget.objectName() == "btn_key":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_key)
+            UIFunctions.resetStyle(self, "btn_key")
+            UIFunctions.labelPage(self, "Key")
             btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
 
-        # PAGE WIDGETS
-        if btnWidget.objectName() == "btn_widgets":
-            self.ui.stackedWidget.setCurrentWidget(self.ui.page_widgets)
-            UIFunctions.resetStyle(self, "btn_widgets")
-            UIFunctions.labelPage(self, "Custom Widgets")
+        # PAGE DSA STATISTICS
+        if btnWidget.objectName() == "btn_enc":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_enc_dsa)
+            UIFunctions.resetStyle(self, "btn_enc")
+            UIFunctions.labelPage(self, "ENC/DEC/DSA")
+            btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+        # PAGE KEY STATISTICS
+        if btnWidget.objectName() == "btn_kstatistics":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_key_statistics)
+            UIFunctions.resetStyle(self, "btn_kstatistics")
+            UIFunctions.labelPage(self, "Key statistics")
+            btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+        # PAGE ENC STATISTICS
+        if btnWidget.objectName() == "btn_estatistics":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_enc_statistics)
+            UIFunctions.resetStyle(self, "btn_estatistics")
+            UIFunctions.labelPage(self, "Encryption/Decryption statistics")
+            btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+        # PAGE DSA STATISTICS
+        if btnWidget.objectName() == "btn_dstatistics":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_dsa_statistics)
+            UIFunctions.resetStyle(self, "btn_dstatistics")
+            UIFunctions.labelPage(self, "Digital signature statistics")
             btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
 
     ## ==> END ##

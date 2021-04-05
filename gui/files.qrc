@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="16x16">
+    <file>icons/login_gandalf.png</file>
     <file>icons/16x16/cil-arrow-bottom.png</file>
     <file>icons/16x16/cil-arrow-top.png</file>
     <file>icons/16x16/cil-size-grip.png</file>
@@ -250,7 +251,9 @@
     <file>icons/16x16/cil-zoom-in.png</file>
     <file>icons/16x16/cil-zoom-out.png</file>
   </qresource>
+  <qresource prefix="newPrefix"/>
   <qresource prefix="24x24">
+    <file>icons/rocket-emji.png</file>
     <file>icons/24x24/cil-check-alt.png</file>
     <file>icons/24x24/cil-chevron-double-up-alt.png</file>
     <file>icons/24x24/cil-menu.png</file>
