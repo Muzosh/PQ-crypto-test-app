@@ -14,10 +14,61 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
     QRadialGradient)
 from PySide2.QtWidgets import *
-
+import time
 import files_rc
 
+Logged = False
+
+
+
+def change_page(self, param):
+    if param == 1:
+        self.stackedWidget.setCurrentWidget(self.page_key)
+    if param == 2:
+        self.stackedWidget.setCurrentWidget(self.page_enc_dsa)
+    if param == 3:
+        self.stackedWidget.setCurrentWidget(self.page_key_statistics)
+    if param == 4:
+        self.stackedWidget.setCurrentWidget(self.page_enc_statistics)
+    if param == 5:
+        self.stackedWidget.setCurrentWidget(self.page_dsa_statistics)
+    if param == 6:
+        self.stackedWidget.setCurrentWidget(self.page_change_masterpass)
+    else:
+        pass
+
+def unlocked(self):
+    #odomknute vsetky stranky okrem login
+    pass
+
+def locked():
+    #vypnute vsetky stranky okremm login
+    pass
+
+
+
 class Ui_MainWindow(object):
+
+
+    def checking_password(self):
+        master_password = 'key'
+        entered_password = self.login_input_line.text()
+        if master_password == entered_password:
+            Logged = True
+            self.login_input_line.setStyleSheet("QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
+            self.login_status_label.setText("Correct password!")
+            #vypnut moznos kliknutia na page login
+            change_page(self, 1)
+        elif entered_password == '':
+            self.login_input_line.setStyleSheet("QLineEdit{border:2px solid rgb(52,59,72);border-radius:15px;background-color:rgb(52,59,72);color:white;}")
+            self.login_status_label.setText("")
+        else:
+            self.login_input_line.setStyleSheet("QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
+            self.login_status_label.setText("Incorrect password!")
+
+
+
+
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -836,6 +887,10 @@ class Ui_MainWindow(object):
 "}")
         self.login_button.setInputMethodHints(Qt.ImhNone)
         self.login_button.setFlat(True)
+        self.login_button.clicked.connect(self.checking_password)
+
+
+
 
         self.verticalLayout_10.addWidget(self.login_button, 0, Qt.AlignHCenter)
 
@@ -2800,8 +2855,11 @@ class Ui_MainWindow(object):
         self.login_headline_label.setText(QCoreApplication.translate("MainWindow", u"You shall not pass", None))
         self.login_input_line.setInputMask("")
         self.login_input_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter your masterpassword", None))
-        self.login_status_label.setText(QCoreApplication.translate("MainWindow", u"Correct pass", None))
+        #self.login_status_label.setText("Correct pass")
+
+
         self.login_button.setText(QCoreApplication.translate("MainWindow", u"Log me in", None))
+
         self.change_pass_title.setText(QCoreApplication.translate("MainWindow", u"Change master password", None))
         self.change_pass_old_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter your old password", None))
         self.change_pass_new_line1.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter your new password", None))

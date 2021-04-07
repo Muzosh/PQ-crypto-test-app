@@ -70,6 +70,9 @@ class MainWindow(QMainWindow):
         UIFunctions.addNewMenu(self, "Key statistics", "btn_kstatistics", "url(:/16x16/icons/16x16/cil-chart.png)", True)
         UIFunctions.addNewMenu(self, "ENC/DEC statistics", "btn_estatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
         UIFunctions.addNewMenu(self, "DSA statistics", "btn_dstatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
+        UIFunctions.addNewMenu(self, "Change masterpass", "btn_changepass", "url(:/16x16/icons/16x16/cil-chart.png)",
+                               True)
+
         ## ==> END ##
 
         # START MENU => SELECTION
@@ -190,6 +193,15 @@ class MainWindow(QMainWindow):
             UIFunctions.resetStyle(self, "btn_dstatistics")
             UIFunctions.labelPage(self, "Digital signature statistics")
             btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+        # PAGE DSA STATISTICS
+        if btnWidget.objectName() == "btn_changepass":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_change_masterpass)
+            UIFunctions.resetStyle(self, "btn_changepass")
+            UIFunctions.labelPage(self, "Change master password")
+            btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+
 
     ## ==> END ##
 

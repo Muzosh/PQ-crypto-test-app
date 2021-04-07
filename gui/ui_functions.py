@@ -34,6 +34,9 @@ class UIFunctions(MainWindow):
     ## START - GUI FUNCTIONS
     ########################################################################
 
+
+
+
     ## ==> MAXIMIZE/RESTORE
     ########################################################################
     def maximize_restore(self):
