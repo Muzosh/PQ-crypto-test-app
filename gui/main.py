@@ -56,7 +56,7 @@ class MainWindow(QMainWindow):
         UIFunctions.enableMaximumSize(self, 500, 720)
         ## ==> END ##
 
-        self.first_login()
+        self.updateLoginPageButtonText()
 
         ## ==> CREATE MENUS
         ########################################################################
@@ -245,8 +245,13 @@ class MainWindow(QMainWindow):
 
     def resizeFunction(self):
         print('Height: ' + str(self.height()) + ' | Width: ' + str(self.width()))
+    ## ==> END ##
 
-    def first_login(self):
+    ########################################################################
+    ## END ==> APP EVENTS
+    ############################## ---/--/--- ##############################
+    
+    def updateLoginPageButtonText(self):
         __databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/keychain"
         if not os.path.exists(__databaseFolder):
             print("Im not here")
@@ -254,15 +259,6 @@ class MainWindow(QMainWindow):
         else:
             self.ui.login_button.setText("Log me IN NOW")
             print("File exists = not today, bro!")
-
-
-
-
-    ## ==> END ##
-
-    ########################################################################
-    ## END ==> APP EVENTS
-    ############################## ---/--/--- ##############################
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
