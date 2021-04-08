@@ -3,7 +3,7 @@ import json
 import base64
 import hashlib
 
-from aesModule import aesEncrypt, aesDecrypt
+from Managers.aesModule import aesEncrypt, aesDecrypt
 
 class PasswordManager:
     """This class handles everything around user authentication, user-defined password storing, changing, adding, deleting keyStores, etc...
@@ -45,7 +45,7 @@ class PasswordManager:
             self.__writeKeyChain(masterPassword)
             
         # Authenticate - this will write 2x hashed password into memory
-        if not self.__authenticate(masterPassword):
+        if not self.authenticate(masterPassword):
             raise ValueError("Passwords don't match!")
 
     def __writeKeyChain(self, masterPassword):
@@ -98,7 +98,7 @@ class PasswordManager:
         with open(self.__keyStoresFileName, 'w') as file:
             file.write(base64.b64encode(str(encryptedList).encode()).decode())
 
-    def __authenticate(self, password):
+    def authenticate(self, password):
         '''
         Auhthentication - hash checking.
         '''
@@ -126,7 +126,7 @@ class PasswordManager:
         '''
         Change masterPassword of the application.
         '''
-        if not self.__authenticate(old):
+        if not self.authenticate(old):
             raise ValueError("Old password does not match!")
         else:
             # save currenty used keyStores to variable

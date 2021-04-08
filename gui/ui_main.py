@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'GUI_BASExrlNbd.ui'
+## Form generated from reading UI file
 ##
 ## Created by: Qt User Interface Compiler version 5.14.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
+
+from Managers.passwordsModule import PasswordManager
+
 from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
     QRect, QSize, QUrl, Qt, QDir)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
@@ -14,10 +17,13 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QRadialGradient)
 from PySide2.QtWidgets import *
 
+
 #Are you logged in variable
 Logged = False
 
 def change_page(self, param):
+    if param == 0:
+        self.stackedWidget.setCurrentWidget(self.page_login)
     if param == 1:
         self.stackedWidget.setCurrentWidget(self.page_key)
     if param == 2:
@@ -33,36 +39,64 @@ def change_page(self, param):
     else:
         pass
 
-def unlocked(self):
+def unlock(self):
     #odomknute vsetky stranky okrem login
     pass
 
-def locked():
-    #vypnute vsetky stranky okremm login
-    pass
+def lock(self):
+
+    self.change_pass_old_line.setText("")
+    self.change_pass_old_line.setStyleSheet("QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}")
+    self.change_pass_new_line1.setText("")
+    self.change_pass_new_line1.setStyleSheet(
+        "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}")
+    self.change_pass_new_line2.setText("")
+    self.change_pass_new_line2.setStyleSheet(
+        "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}")
+
+
+
+    self.stackedWidget.setCurrentWidget(self.page_login)
+    self.login_input_line.setText("")
+    self.login_status_label.setText("C'mon, you have to enter your real password!")
+    self.login_input_line.setStyleSheet(
+        "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}")
+    Logged = False
+
 
 class Ui_MainWindow(object):
+
     def checking_password(self):
-        master_password = 'key'
         entered_password = self.login_input_line.text()
-        if master_password == entered_password:
-            Logged = True
-            self.login_input_line.setStyleSheet("QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
-            self.login_status_label.setText("Your secrets has been revealed!")
-            #vypnut moznos kliknutia na page login
-            change_page(self, 1)
-        elif entered_password == '':
-            self.login_input_line.setStyleSheet("QLineEdit{border:2px solid rgb(52,59,72);border-radius:15px;background-color:rgb(52,59,72);color:white;}")
-            self.login_status_label.setText("")
+
+        if entered_password == '':
+            print("empty pass")
+            self.login_input_line.setStyleSheet(
+                "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
+            self.login_status_label.setText("You're empty bitch")
         else:
-            self.login_input_line.setStyleSheet("QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
-            self.login_status_label.setText("Incorrect password!")
+            try:
+                global p
+                p = PasswordManager(entered_password)
+                self.login_input_line.setStyleSheet(
+                    "QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
+                self.login_status_label.setText("Your secrets has been revealed!")
+                # vypnut moznos kliknutia na page login\
+                # inicializovat ostatne moduly managers
+                Logged = True
+                change_page(self, 1)
+            except ValueError:
+                Logged = False
+                self.login_input_line.setStyleSheet(
+                    "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
+                self.login_status_label.setText("Incorrect password!")
+
 
 
     def changing_password(self):
-            master_password = "key"
             old_pass = self.change_pass_old_line.text()
-            if old_pass == master_password:
+            if p.authenticate(old_pass):
+                print("som true")
                 self.change_pass_old_line.setStyleSheet(
                     "QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
                 print("Trafil si masterpass, uz ho iba zmenit..")
@@ -76,7 +110,10 @@ class Ui_MainWindow(object):
                     self.change_pass_new_line2.setStyleSheet(
                         "QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
                     print("Obe nove hesla su rovnake, idem ta teda zmenit")
-                    # Change masterpassword return new_pass2
+
+                    p.changeMasterPassword(old_pass,new_pass2)
+                    lock(self)
+
                 elif new_pass is not new_pass2:
                     # polia sa nerovnaju, zmena na cervene pole
                     self.change_pass_new_line1.setStyleSheet(
@@ -884,7 +921,7 @@ class Ui_MainWindow(object):
 "}")
         self.login_input_line.setInputMethodHints(Qt.ImhHiddenText|Qt.ImhNoAutoUppercase|Qt.ImhNoPredictiveText|Qt.ImhSensitiveData)
         self.login_input_line.setFrame(False)
-        self.login_input_line.setEchoMode(QLineEdit.Password)
+        #self.login_input_line.setEchoMode(QLineEdit.Password)
         self.login_input_line.setAlignment(Qt.AlignCenter)
         self.login_input_line.setDragEnabled(False)
         self.login_input_line.setCursorMoveStyle(Qt.LogicalMoveStyle)
@@ -976,7 +1013,7 @@ class Ui_MainWindow(object):
         self.change_pass_old_line.setSizePolicy(sizePolicy7)
         self.change_pass_old_line.setMinimumSize(QSize(0, 40))
         self.change_pass_old_line.setFont(font5)
-        self.change_pass_old_line.setEchoMode(QLineEdit.Password)
+        #self.change_pass_old_line.setEchoMode(QLineEdit.Password)
         self.change_pass_old_line.setClearButtonEnabled(True)
         self.change_pass_old_line.setStyleSheet(u"QLineEdit {\n"
 "	border: 2px solid rgb(52, 59, 72);\n"
@@ -999,7 +1036,7 @@ class Ui_MainWindow(object):
         self.change_pass_new_line1.setSizePolicy(sizePolicy7)
         self.change_pass_new_line1.setMinimumSize(QSize(0, 40))
         self.change_pass_new_line1.setFont(font5)
-        self.change_pass_new_line1.setEchoMode(QLineEdit.Password)
+        #self.change_pass_new_line1.setEchoMode(QLineEdit.Password)
         self.change_pass_new_line1.setClearButtonEnabled(True)
         self.change_pass_new_line1.setStyleSheet(u"QLineEdit {\n"
 "	border: 2px solid rgb(52, 59, 72);\n"
@@ -1022,7 +1059,7 @@ class Ui_MainWindow(object):
         self.change_pass_new_line2.setSizePolicy(sizePolicy7)
         self.change_pass_new_line2.setMinimumSize(QSize(0, 40))
         self.change_pass_new_line2.setFont(font5)
-        self.change_pass_new_line2.setEchoMode(QLineEdit.Password)
+        #self.change_pass_new_line2.setEchoMode(QLineEdit.Password)
         self.change_pass_new_line2.setClearButtonEnabled(True)
         self.change_pass_new_line2.setStyleSheet(u"QLineEdit {\n"
 "	border: 2px solid rgb(52, 59, 72);\n"

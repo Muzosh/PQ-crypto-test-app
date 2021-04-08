@@ -14,6 +14,7 @@
 ##
 ################################################################################
 
+import os
 import sys
 import platform
 from PySide2 import QtCore, QtGui, QtWidgets
@@ -54,6 +55,8 @@ class MainWindow(QMainWindow):
         self.setMinimumSize(startSize)
         UIFunctions.enableMaximumSize(self, 500, 720)
         ## ==> END ##
+
+        self.first_login()
 
         ## ==> CREATE MENUS
         ########################################################################
@@ -242,6 +245,19 @@ class MainWindow(QMainWindow):
 
     def resizeFunction(self):
         print('Height: ' + str(self.height()) + ' | Width: ' + str(self.width()))
+
+    def first_login(self):
+        __databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/keychain"
+        if not os.path.exists(__databaseFolder):
+            print("Im not here")
+            self.ui.login_button.setText("Create your first pass")
+        else:
+            self.ui.login_button.setText("Log me IN NOW")
+            print("File exists = not today, bro!")
+
+
+
+
     ## ==> END ##
 
     ########################################################################
