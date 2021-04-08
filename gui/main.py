@@ -70,7 +70,7 @@ class MainWindow(QMainWindow):
         UIFunctions.addNewMenu(self, "Key statistics", "btn_kstatistics", "url(:/16x16/icons/16x16/cil-chart.png)", True)
         UIFunctions.addNewMenu(self, "ENC/DEC statistics", "btn_estatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
         UIFunctions.addNewMenu(self, "DSA statistics", "btn_dstatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
-        UIFunctions.addNewMenu(self, "Change masterpass", "btn_changepass", "url(:/16x16/icons/16x16/cil-chart.png)",
+        UIFunctions.addNewMenu(self, "Change masterpass", "btn_changepass", "url(:/16x16/icons/16x16/cil-fingerprint.png)",
                                True)
 
         ## ==> END ##

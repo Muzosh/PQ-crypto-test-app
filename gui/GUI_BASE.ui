@@ -1677,7 +1677,7 @@ QPushButton:pressed {
                    <enum>QFrame::Plain</enum>
                   </property>
                   <property name="currentIndex">
-                   <number>7</number>
+                   <number>2</number>
                   </property>
                   <widget class="QWidget" name="page_login">
                    <property name="styleSheet">
@@ -1704,6 +1704,12 @@ QPushButton:pressed {
                     </property>
                     <item>
                      <widget class="QLabel" name="login_image">
+                      <property name="sizePolicy">
+                       <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                       </sizepolicy>
+                      </property>
                       <property name="minimumSize">
                        <size>
                         <width>880</width>
@@ -1721,6 +1727,9 @@ QPushButton:pressed {
                       </property>
                       <property name="text">
                        <string/>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
                       </property>
                      </widget>
                     </item>
@@ -1799,13 +1808,7 @@ QPushButton:pressed {
                        </font>
                       </property>
                       <property name="styleSheet">
-                       <string notr="true">QLineEdit {
-	border: 2px solid rgb(52, 59, 72);
-	border-radius: 15px;	
-	background-color: rgb(52, 59, 72);
-color:white;
-}
-QLineEdit:hover {
+                       <string notr="true">QLineEdit:hover {
 	background-color: rgb(57, 65, 80);
 	border: 2px solid rgb(61, 70, 86);
 color:white;
@@ -1813,7 +1816,14 @@ color:white;
 QLineEdit:pressed {	
 	background-color: rgb(35, 40, 49);
 	border: 2px solid rgb(43, 50, 61);
-}</string>
+}
+QLineEdit {
+	border: 2px solid rgb(170, 0, 0);
+	border-radius: 15px;	
+	background-color: rgb(255, 0, 0);
+color:black;
+}
+</string>
                       </property>
                       <property name="inputMethodHints">
                        <set>Qt::ImhHiddenText|Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhSensitiveData</set>
@@ -2266,7 +2276,7 @@ border-radius: 5px;</string>
                       <rect>
                        <x>20</x>
                        <y>50</y>
-                       <width>840</width>
+                       <width>650</width>
                        <height>40</height>
                       </rect>
                      </property>
@@ -2334,6 +2344,50 @@ QLineEdit:pressed {
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                    <widget class="QPushButton" name="enc_dsa_upload_button">
+                     <property name="geometry">
+                      <rect>
+                       <x>690</x>
+                       <y>50</y>
+                       <width>170</width>
+                       <height>41</height>
+                      </rect>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>150</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Segoe UI</family>
+                       <pointsize>9</pointsize>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid rgb(52, 59, 72);
+border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+}
+QPushButton:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QPushButton:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Open Blender</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="files.qrc">
+                       <normaloff>:/16x16/icons/16x16/cil-folder-open.png</normaloff>:/16x16/icons/16x16/cil-folder-open.png</iconset>
                      </property>
                     </widget>
                    </widget>
@@ -6338,7 +6392,7 @@ QHeaderView::section:vertical
                           <bool>false</bool>
                          </property>
                          <attribute name="horizontalHeaderVisible">
-                          <bool>true</bool>
+                          <bool>false</bool>
                          </attribute>
                          <attribute name="horizontalHeaderCascadingSectionResizes">
                           <bool>true</bool>

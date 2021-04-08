@@ -7,19 +7,15 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-
 from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
-    QRect, QSize, QUrl, Qt)
+    QRect, QSize, QUrl, Qt, QDir)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
     QRadialGradient)
 from PySide2.QtWidgets import *
-import time
-import files_rc
 
+#Are you logged in variable
 Logged = False
-
-
 
 def change_page(self, param):
     if param == 1:
@@ -45,18 +41,14 @@ def locked():
     #vypnute vsetky stranky okremm login
     pass
 
-
-
 class Ui_MainWindow(object):
-
-
     def checking_password(self):
         master_password = 'key'
         entered_password = self.login_input_line.text()
         if master_password == entered_password:
             Logged = True
             self.login_input_line.setStyleSheet("QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
-            self.login_status_label.setText("Correct password!")
+            self.login_status_label.setText("Your secrets has been revealed!")
             #vypnut moznos kliknutia na page login
             change_page(self, 1)
         elif entered_password == '':
@@ -66,6 +58,54 @@ class Ui_MainWindow(object):
             self.login_input_line.setStyleSheet("QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
             self.login_status_label.setText("Incorrect password!")
 
+
+    def changing_password(self):
+            master_password = "key"
+            old_pass = self.change_pass_old_line.text()
+            if old_pass == master_password:
+                self.change_pass_old_line.setStyleSheet(
+                    "QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
+                print("Trafil si masterpass, uz ho iba zmenit..")
+
+                new_pass = self.change_pass_new_line1.text()
+                new_pass2 = self.change_pass_new_line2.text()
+
+                if new_pass == new_pass2 and new_pass != "" and new_pass2 != "" and new_pass != old_pass:
+                    self.change_pass_new_line1.setStyleSheet(
+                        "QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
+                    self.change_pass_new_line2.setStyleSheet(
+                        "QLineEdit {border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}")
+                    print("Obe nove hesla su rovnake, idem ta teda zmenit")
+                    # Change masterpassword return new_pass2
+                elif new_pass is not new_pass2:
+                    # polia sa nerovnaju, zmena na cervene pole
+                    self.change_pass_new_line1.setStyleSheet(
+                        "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
+                    self.change_pass_new_line2.setStyleSheet(
+                        "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
+                    print("Lol, nevies zadat dve rovnake hesla?")
+                elif old_pass == new_pass or old_pass == new_pass2:
+                    self.change_pass_new_line1.setStyleSheet(
+                            "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
+                    self.change_pass_new_line2.setStyleSheet(
+                            "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
+                    print("Nebudes si davat rovnake heslo zas")
+                elif new_pass == "" or new_pass2 == "":
+                    # prazdne polia, styl sa nemeni
+                    print("Neposielaj mi tu prazdne hesla.. Co si to za admina..")
+                else:
+                    pass
+            elif old_pass == '':
+                self.change_pass_old_line.setStyleSheet(
+                    "QLineEdit{border:2px solid rgb(52,59,72);border-radius:15px;background-color:rgb(52,59,72);color:white;}")
+                print("Lol, nic si nezadal")
+            else:
+                self.change_pass_old_line.setStyleSheet(
+                    "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}")
+                print("Myslis si, ze tu budes skuskat spravne masterpass?")
+
+    def openFile(self):
+        print("Snazime sa otvorit subor")
 
 
 
@@ -792,9 +832,13 @@ class Ui_MainWindow(object):
         self.login_image.setObjectName(u"login_image")
         self.login_image.setMinimumSize(QSize(880, 100))
         self.login_image.setMaximumSize(QSize(880, 16777215))
-        self.login_image.setStyleSheet(u"image: url(:/16x16/icons/login_gandalf.png);")
-
-        self.verticalLayout_10.addWidget(self.login_image)
+        pixmap = QPixmap("login.png")
+        pixmap = pixmap.scaledToWidth(128)
+        self.login_image.setPixmap(pixmap)
+        #self.login_image.setScaledContents(True)
+        #self.login_image.setStyleSheet(u"background-image: url(:/16x16/icons/login_gandalf.png);")
+        self.login_image.setAlignment(Qt.AlignCenter)
+        self.verticalLayout_10.addWidget(self.login_image,alignment=Qt.AlignCenter)
 
         self.login_headline_label = QLabel(self.page_login)
         self.login_headline_label.setObjectName(u"login_headline_label")
@@ -932,6 +976,8 @@ class Ui_MainWindow(object):
         self.change_pass_old_line.setSizePolicy(sizePolicy7)
         self.change_pass_old_line.setMinimumSize(QSize(0, 40))
         self.change_pass_old_line.setFont(font5)
+        self.change_pass_old_line.setEchoMode(QLineEdit.Password)
+        self.change_pass_old_line.setClearButtonEnabled(True)
         self.change_pass_old_line.setStyleSheet(u"QLineEdit {\n"
 "	border: 2px solid rgb(52, 59, 72);\n"
 "	border-radius: 15px;	\n"
@@ -953,6 +999,8 @@ class Ui_MainWindow(object):
         self.change_pass_new_line1.setSizePolicy(sizePolicy7)
         self.change_pass_new_line1.setMinimumSize(QSize(0, 40))
         self.change_pass_new_line1.setFont(font5)
+        self.change_pass_new_line1.setEchoMode(QLineEdit.Password)
+        self.change_pass_new_line1.setClearButtonEnabled(True)
         self.change_pass_new_line1.setStyleSheet(u"QLineEdit {\n"
 "	border: 2px solid rgb(52, 59, 72);\n"
 "	border-radius: 15px;	\n"
@@ -974,6 +1022,8 @@ class Ui_MainWindow(object):
         self.change_pass_new_line2.setSizePolicy(sizePolicy7)
         self.change_pass_new_line2.setMinimumSize(QSize(0, 40))
         self.change_pass_new_line2.setFont(font5)
+        self.change_pass_new_line2.setEchoMode(QLineEdit.Password)
+        self.change_pass_new_line2.setClearButtonEnabled(True)
         self.change_pass_new_line2.setStyleSheet(u"QLineEdit {\n"
 "	border: 2px solid rgb(52, 59, 72);\n"
 "	border-radius: 15px;	\n"
@@ -1016,6 +1066,10 @@ class Ui_MainWindow(object):
         icon3.addFile(u":/16x16/icons/login_gandalf.png", QSize(), QIcon.Normal, QIcon.On)
         self.change_pass_button.setIcon(icon3)
         self.change_pass_button.setFlat(True)
+        #prepojenie metody
+        self.change_pass_button.clicked.connect(self.changing_password)
+
+
         self.stackedWidget.addWidget(self.page_change_masterpass)
         self.page_enc_dsa = QWidget()
         self.page_enc_dsa.setObjectName(u"page_enc_dsa")
@@ -1038,25 +1092,26 @@ class Ui_MainWindow(object):
         self.enc_dsa_maintitle_label.setAlignment(Qt.AlignCenter)
         self.enc_dsa_upload_line = QLineEdit(self.enc_title_frame)
         self.enc_dsa_upload_line.setObjectName(u"enc_dsa_upload_line")
-        self.enc_dsa_upload_line.setGeometry(QRect(20, 50, 840, 40))
+        self.enc_dsa_upload_line.setGeometry(QRect(20, 50, 650, 40))
         sizePolicy7.setHeightForWidth(self.enc_dsa_upload_line.sizePolicy().hasHeightForWidth())
         self.enc_dsa_upload_line.setSizePolicy(sizePolicy7)
         self.enc_dsa_upload_line.setMinimumSize(QSize(0, 40))
         self.enc_dsa_upload_line.setFont(font5)
         self.enc_dsa_upload_line.setStyleSheet(u"QLineEdit {\n"
-"	border: 2px solid rgb(52, 59, 72);\n"
-"	border-radius: 15px;	\n"
-"	background-color: rgb(52, 59, 72);\n"
-"color:white;\n"
-"}\n"
-"QLineEdit:hover {\n"
-"	background-color: rgb(57, 65, 80);\n"
-"	border: 2px solid rgb(61, 70, 86);\n"
-"}\n"
-"QLineEdit:pressed {	\n"
-"	background-color: rgb(35, 40, 49);\n"
-"	border: 2px solid rgb(43, 50, 61);\n"
-"}")
+                                               "	border: 2px solid rgb(52, 59, 72);\n"
+                                               "	border-radius: 15px;	\n"
+                                               "	background-color: rgb(52, 59, 72);\n"
+                                               "color:white;\n"
+                                               "}\n"
+                                               "QLineEdit:hover {\n"
+                                               "	background-color: rgb(57, 65, 80);\n"
+                                               "	border: 2px solid rgb(61, 70, 86);\n"
+                                               "}\n"
+                                               "QLineEdit:pressed {	\n"
+                                               "	background-color: rgb(35, 40, 49);\n"
+                                               "	border: 2px solid rgb(43, 50, 61);\n"
+                                               "}")
+
         self.enc_dsa_key_status = QLabel(self.enc_title_frame)
         self.enc_dsa_key_status.setObjectName(u"enc_dsa_key_status")
         self.enc_dsa_key_status.setGeometry(QRect(20, 90, 831, 20))
@@ -1068,6 +1123,34 @@ class Ui_MainWindow(object):
         font9.setItalic(True)
         self.enc_dsa_key_status.setFont(font9)
         self.enc_dsa_key_status.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+
+        self.enc_dsa_upload_button = QPushButton(self.enc_title_frame)
+        self.enc_dsa_upload_button.setObjectName(u"enc_dsa_upload_button")
+        self.enc_dsa_upload_button.setGeometry(QRect(690, 50, 170, 41))
+        self.enc_dsa_upload_button.setMinimumSize(QSize(150, 30))
+        font10 = QFont()
+        font10.setFamily(u"Segoe UI")
+        font10.setPointSize(9)
+        self.enc_dsa_upload_button.setFont(font10)
+        self.enc_dsa_upload_button.setStyleSheet(u"QPushButton {\n"
+                                                 "	border: 2px solid rgb(52, 59, 72);\n"
+                                                 "border-radius: 15px;	\n"
+                                                 "	background-color: rgb(52, 59, 72);\n"
+                                                 "}\n"
+                                                 "QPushButton:hover {\n"
+                                                 "	background-color: rgb(57, 65, 80);\n"
+                                                 "	border: 2px solid rgb(61, 70, 86);\n"
+                                                 "}\n"
+                                                 "QPushButton:pressed {	\n"
+                                                 "	background-color: rgb(35, 40, 49);\n"
+                                                 "	border: 2px solid rgb(43, 50, 61);\n"
+                                                 "}")
+        icon4 = QIcon()
+        icon4.addFile(u":/16x16/icons/16x16/cil-folder-open.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.enc_dsa_upload_button.setIcon(icon4)
+        self.enc_dsa_upload_button.clicked.connect(self.openFile)
+
+
         self.enc_frame = QFrame(self.page_enc_dsa)
         self.enc_frame.setObjectName(u"enc_frame")
         self.enc_frame.setGeometry(QRect(10, 140, 420, 440))
@@ -2867,7 +2950,7 @@ class Ui_MainWindow(object):
         self.change_pass_button.setText(QCoreApplication.translate("MainWindow", u"CHANGE IT", None))
         self.enc_dsa_maintitle_label.setText(QCoreApplication.translate("MainWindow", u"Select a file", None))
         self.enc_dsa_upload_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose your file", None))
-        self.enc_dsa_key_status.setText(QCoreApplication.translate("MainWindow", u"Message bar about choosing key pair", None))
+        self.enc_dsa_upload_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
         self.dec_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Encryption", None))
         self.enc_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Decryption", None))
         self.enc_dec_button1.setText(QCoreApplication.translate("MainWindow", u"AES 128", None))
@@ -3038,6 +3121,7 @@ class Ui_MainWindow(object):
         self.key_statistics_label.setText(QCoreApplication.translate("MainWindow", u"Key statistics", None))
         self.labelBoxBlenderInstalation.setText(QCoreApplication.translate("MainWindow", u"BLENDER INSTALLATION", None))
         self.lineEdit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Your Password", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
         self.labelVersion_3.setText(QCoreApplication.translate("MainWindow", u"Ex: C:Program FilesBlender FoundationBlender 2.82 blender.exe", None))
         self.checkBox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
