@@ -34,7 +34,7 @@ import base64
 import json
 from datetime import datetime
 
-from aesModule import aesEncrypt, aesDecrypt
+from Managers.aesModule import aesEncrypt, aesDecrypt
 
 class PqEncryptionManager:    
     """This class handles everything around key en/decapsulation and file en/decryption using pq-algorithms and AES.
