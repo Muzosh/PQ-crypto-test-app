@@ -20,6 +20,7 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
     QRadialGradient)
 from PySide2.QtWidgets import *
+global passwordManager, pqEncryptionManager, pqKeyGenManager, pqSigningManager, statisticsManager
 
 qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}"
 qLineRed = "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}"
@@ -77,7 +78,6 @@ class Ui_MainWindow(object):
             self.login_status_label.setText("You're empty bitch")
         else:
             try:
-                global passwordManager, pqEncryptionManager, pqKeyGenManager, pqSigningManager, statisticsManager
                 passwordManager = PasswordManager(entered_password)
                 self.login_input_line.setStyleSheet(qLineGreen)
                 self.login_status_label.setText("Your secrets has been revealed!")
@@ -110,7 +110,7 @@ class Ui_MainWindow(object):
                     self.change_pass_new_line2.setStyleSheet(qLineGreen)
                     print("Obe nove hesla su rovnake, idem ta teda zmenit")
 
-                    p.changeMasterPassword(old_pass, new_pass2)
+                    passwordManager.changeMasterPassword(old_pass, new_pass2)
                     lock(self)
 
                 elif new_pass is not new_pass2:

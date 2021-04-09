@@ -22,6 +22,10 @@ from PySide2.QtCore import (QCoreApplication, QPropertyAnimation, QDate, QDateTi
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont, QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter, QPixmap, QRadialGradient)
 from PySide2.QtWidgets import *
 
+# Add project root directory to sys.path so it can find 
+from os.path import dirname, abspath
+sys.path.append(dirname(dirname(abspath(__file__))))
+
 # GUI FILE
 from app_modules import *
 
