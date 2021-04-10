@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         startSize = QSize(1000, 720)
         self.resize(startSize)
         self.setMinimumSize(startSize)
-        #UIFunctions.enableMaximumSize(self, 500, 720)
+        UIFunctions.enableMaximumSize(self, 500, 720)
         ## ==> END ##
 
         self.updateLoginPageButtonText()
@@ -80,8 +80,10 @@ class MainWindow(QMainWindow):
         UIFunctions.addNewMenu(self, "Key statistics", "btn_kstatistics", "url(:/16x16/icons/16x16/cil-chart.png)", True)
         UIFunctions.addNewMenu(self, "ENC/DEC statistics", "btn_estatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
         UIFunctions.addNewMenu(self, "DSA statistics", "btn_dstatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
-        UIFunctions.addNewMenu(self, "Change masterpass", "btn_changepass", "url(:/16x16/icons/16x16/cil-fingerprint.png)",
-                               True)
+        UIFunctions.addNewMenu(self, "Change masterpass", "btn_changepass", "url(:/16x16/icons/16x16/cil-fingerprint.png)",True)
+
+        for x in range(2,8):
+            self.ui.frame_left_menu.children()[1].children()[x].hide()
 
         ## ==> END ##
 

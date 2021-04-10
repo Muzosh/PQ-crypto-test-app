@@ -1677,7 +1677,7 @@ QPushButton:pressed {
                    <enum>QFrame::Plain</enum>
                   </property>
                   <property name="currentIndex">
-                   <number>3</number>
+                   <number>0</number>
                   </property>
                   <widget class="QWidget" name="page_login">
                    <property name="styleSheet">
@@ -1723,7 +1723,7 @@ QPushButton:pressed {
                        </size>
                       </property>
                       <property name="styleSheet">
-                       <string notr="true">image: url(:/16x16/icons/login_gandalf.png);</string>
+                       <string notr="true"/>
                       </property>
                       <property name="text">
                        <string/>
@@ -1808,21 +1808,13 @@ QPushButton:pressed {
                        </font>
                       </property>
                       <property name="styleSheet">
-                       <string notr="true">QLineEdit:hover {
+                       <string notr="true">QLineEdit{
 	background-color: rgb(57, 65, 80);
-	border: 2px solid rgb(61, 70, 86);
+	border: 2px solid rgb(61,70,86);
+border-radius:15px;
 color:white;
 }
-QLineEdit:pressed {	
-	background-color: rgb(35, 40, 49);
-	border: 2px solid rgb(43, 50, 61);
-}
-QLineEdit {
-	border: 2px solid rgb(170, 0, 0);
-	border-radius: 15px;	
-	background-color: rgb(255, 0, 0);
-color:black;
-}
+
 </string>
                       </property>
                       <property name="inputMethodHints">
@@ -1875,7 +1867,7 @@ color:black;
                        </font>
                       </property>
                       <property name="text">
-                       <string>Correct pass</string>
+                       <string/>
                       </property>
                       <property name="alignment">
                        <set>Qt::AlignCenter</set>
@@ -2216,7 +2208,7 @@ QPushButton:pressed {
                       <x>10</x>
                       <y>10</y>
                       <width>880</width>
-                      <height>111</height>
+                      <height>191</height>
                      </rect>
                     </property>
                     <property name="sizePolicy">
@@ -2317,35 +2309,6 @@ QLineEdit:pressed {
                       <string>Choose your file</string>
                      </property>
                     </widget>
-                    <widget class="QLabel" name="enc_dsa_key_status">
-                     <property name="geometry">
-                      <rect>
-                       <x>20</x>
-                       <y>90</y>
-                       <width>831</width>
-                       <height>20</height>
-                      </rect>
-                     </property>
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <family>Open Sans</family>
-                       <pointsize>8</pointsize>
-                       <italic>true</italic>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>Message bar about choosing key pair</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                     </property>
-                    </widget>
                     <widget class="QPushButton" name="enc_dsa_upload_button">
                      <property name="geometry">
                       <rect>
@@ -2390,14 +2353,93 @@ QPushButton:pressed {
                        <normaloff>:/16x16/icons/16x16/cil-folder-open.png</normaloff>:/16x16/icons/16x16/cil-folder-open.png</iconset>
                      </property>
                     </widget>
+                    <widget class="QLineEdit" name="enc_dsa_selected_key_line">
+                     <property name="geometry">
+                      <rect>
+                       <x>20</x>
+                       <y>140</y>
+                       <width>841</width>
+                       <height>40</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Open Sans</family>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QLineEdit {
+	border: 2px solid rgb(52, 59, 72);
+	border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+color:white;
+}
+QLineEdit:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QLineEdit:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                     </property>
+                    </widget>
+                    <widget class="QLabel" name="enc_dsa_maintitle_label_2">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>90</y>
+                       <width>870</width>
+                       <height>50</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Open Sans</family>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>Selected key</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
                    </widget>
                    <widget class="QFrame" name="enc_frame">
                     <property name="geometry">
                      <rect>
                       <x>10</x>
-                      <y>140</y>
+                      <y>219</y>
                       <width>420</width>
-                      <height>440</height>
+                      <height>361</height>
                      </rect>
                     </property>
                     <property name="styleSheet">
@@ -2478,118 +2520,13 @@ border-radius: 5px;</string>
                       </item>
                      </layout>
                     </widget>
-                    <widget class="QWidget" name="verticalLayoutWidget">
-                     <property name="geometry">
-                      <rect>
-                       <x>0</x>
-                       <y>60</y>
-                       <width>411</width>
-                       <height>121</height>
-                      </rect>
-                     </property>
-                     <layout class="QVBoxLayout" name="enc_dec_radiobuttons_type">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item alignment="Qt::AlignHCenter">
-                       <widget class="QRadioButton" name="enc_dec_button1">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>AES 128</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item alignment="Qt::AlignHCenter">
-                       <widget class="QRadioButton" name="enc_dec_button2">
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>AES 256</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item alignment="Qt::AlignHCenter">
-                       <widget class="QRadioButton" name="enc_dec_button3">
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>AES 512</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
-                    <widget class="QTextEdit" name="enc_dec_ciphertext_input">
-                     <property name="geometry">
-                      <rect>
-                       <x>10</x>
-                       <y>190</y>
-                       <width>400</width>
-                       <height>100</height>
-                      </rect>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QTextEdit {
-	border: 2px solid rgb(52, 59, 72);
-	border-radius: 15px;	
-	background-color: rgb(52, 59, 72);
-padding:5px;
-}
-QTextEdit:hover {
-	background-color: rgb(57, 65, 80);
-	border: 2px solid rgb(61, 70, 86);
-}
-QTextEdit:pressed {	
-	background-color: rgb(35, 40, 49);
-	border: 2px solid rgb(43, 50, 61);
-}</string>
-                     </property>
-                     <property name="html">
-                      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="placeholderText">
-                      <string>Enter your secrets here ...</string>
-                     </property>
-                    </widget>
                     <widget class="QPushButton" name="enc_dec_moonit_button">
                      <property name="geometry">
                       <rect>
                        <x>80</x>
-                       <y>320</y>
-                       <width>250</width>
-                       <height>40</height>
+                       <y>180</y>
+                       <width>251</width>
+                       <height>101</height>
                       </rect>
                      </property>
                      <property name="sizePolicy">
@@ -2637,9 +2574,9 @@ QPushButton:pressed {
                     <widget class="QPushButton" name="enc_dec_download_file_button">
                      <property name="geometry">
                       <rect>
-                       <x>80</x>
-                       <y>380</y>
-                       <width>250</width>
+                       <x>10</x>
+                       <y>300</y>
+                       <width>191</width>
                        <height>40</height>
                       </rect>
                      </property>
@@ -2677,7 +2614,148 @@ QPushButton:pressed {
 }</string>
                      </property>
                      <property name="text">
-                      <string>Download a corrupted file</string>
+                      <string>Download encrypted file</string>
+                     </property>
+                     <property name="icon">
+                      <iconset theme=":/16x16/icons/16x16/cil-cloud-download.png">
+                       <normalon>:/16x16/icons/16x16/cil-cloud-download.png</normalon>
+                      </iconset>
+                     </property>
+                    </widget>
+                    <widget class="QLineEdit" name="enc_dec_upload_ciphertext_line">
+                     <property name="geometry">
+                      <rect>
+                       <x>20</x>
+                       <y>70</y>
+                       <width>381</width>
+                       <height>40</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Open Sans</family>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QLineEdit {
+	border: 2px solid rgb(52, 59, 72);
+	border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+color:white;
+}
+QLineEdit:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QLineEdit:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                     </property>
+                     <property name="placeholderText">
+                      <string>Choose ciphertext</string>
+                     </property>
+                    </widget>
+                    <widget class="QPushButton" name="enc_dec_upload_ciphertext_button">
+                     <property name="geometry">
+                      <rect>
+                       <x>120</x>
+                       <y>120</y>
+                       <width>170</width>
+                       <height>41</height>
+                      </rect>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>150</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Segoe UI</family>
+                       <pointsize>9</pointsize>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid rgb(52, 59, 72);
+border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+}
+QPushButton:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QPushButton:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Open Blender</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="files.qrc">
+                       <normaloff>:/16x16/icons/16x16/cil-folder-open.png</normaloff>:/16x16/icons/16x16/cil-folder-open.png</iconset>
+                     </property>
+                    </widget>
+                    <widget class="QPushButton" name="enc_dec_download_file_button_2">
+                     <property name="geometry">
+                      <rect>
+                       <x>210</x>
+                       <y>300</y>
+                       <width>191</width>
+                       <height>40</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Open Sans</family>
+                       <pointsize>10</pointsize>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid rgb(52, 59, 72);
+border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+}
+QPushButton:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QPushButton:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Download ciphertext</string>
                      </property>
                      <property name="icon">
                       <iconset theme=":/16x16/icons/16x16/cil-cloud-download.png">
@@ -2690,9 +2768,9 @@ QPushButton:pressed {
                     <property name="geometry">
                      <rect>
                       <x>470</x>
-                      <y>140</y>
+                      <y>219</y>
                       <width>420</width>
-                      <height>440</height>
+                      <height>361</height>
                      </rect>
                     </property>
                     <property name="styleSheet">
@@ -2773,80 +2851,11 @@ border-radius: 5px;</string>
                       </item>
                      </layout>
                     </widget>
-                    <widget class="QWidget" name="verticalLayoutWidget_2">
-                     <property name="geometry">
-                      <rect>
-                       <x>0</x>
-                       <y>60</y>
-                       <width>411</width>
-                       <height>121</height>
-                      </rect>
-                     </property>
-                     <layout class="QVBoxLayout" name="dsa_radiobuttons_type">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
-                      <item alignment="Qt::AlignHCenter">
-                       <widget class="QRadioButton" name="dsa_button1">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Rainbow</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item alignment="Qt::AlignHCenter">
-                       <widget class="QRadioButton" name="dsa_button2">
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Dilithium</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item alignment="Qt::AlignHCenter">
-                       <widget class="QRadioButton" name="dsa_button3">
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Sphincs</string>
-                        </property>
-                       </widget>
-                      </item>
-                     </layout>
-                    </widget>
                     <widget class="QPushButton" name="dsa_verify_button">
                      <property name="geometry">
                       <rect>
                        <x>90</x>
-                       <y>220</y>
+                       <y>180</y>
                        <width>250</width>
                        <height>40</height>
                       </rect>
@@ -2896,8 +2905,8 @@ QPushButton:pressed {
                     <widget class="QLabel" name="dsa_verify_button_status">
                      <property name="geometry">
                       <rect>
-                       <x>90</x>
-                       <y>270</y>
+                       <x>100</x>
+                       <y>250</y>
                        <width>251</width>
                        <height>20</height>
                       </rect>
@@ -2925,8 +2934,8 @@ QPushButton:pressed {
                     <widget class="QPushButton" name="dsa_download_button">
                      <property name="geometry">
                       <rect>
-                       <x>90</x>
-                       <y>380</y>
+                       <x>100</x>
+                       <y>300</y>
                        <width>250</width>
                        <height>40</height>
                       </rect>
@@ -2965,12 +2974,102 @@ QPushButton:pressed {
 }</string>
                      </property>
                      <property name="text">
-                      <string>Download a corrupted file</string>
+                      <string>Download signature</string>
                      </property>
                      <property name="icon">
                       <iconset theme=":/16x16/icons/16x16/cil-cloud-download.png">
                        <normalon>:/16x16/icons/16x16/cil-cloud-download.png</normalon>
                       </iconset>
+                     </property>
+                    </widget>
+                    <widget class="QPushButton" name="dsa_upload_signature_button">
+                     <property name="geometry">
+                      <rect>
+                       <x>130</x>
+                       <y>120</y>
+                       <width>170</width>
+                       <height>41</height>
+                      </rect>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>150</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Segoe UI</family>
+                       <pointsize>9</pointsize>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid rgb(52, 59, 72);
+border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+}
+QPushButton:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QPushButton:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                     </property>
+                     <property name="text">
+                      <string>Open Blender</string>
+                     </property>
+                     <property name="icon">
+                      <iconset resource="files.qrc">
+                       <normaloff>:/16x16/icons/16x16/cil-folder-open.png</normaloff>:/16x16/icons/16x16/cil-folder-open.png</iconset>
+                     </property>
+                    </widget>
+                    <widget class="QLineEdit" name="dsa_upload_signature_line">
+                     <property name="geometry">
+                      <rect>
+                       <x>30</x>
+                       <y>70</y>
+                       <width>361</width>
+                       <height>40</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Open Sans</family>
+                      </font>
+                     </property>
+                     <property name="styleSheet">
+                      <string notr="true">QLineEdit {
+	border: 2px solid rgb(52, 59, 72);
+	border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+color:white;
+}
+QLineEdit:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QLineEdit:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                     </property>
+                     <property name="placeholderText">
+                      <string>Choose signature</string>
                      </property>
                     </widget>
                    </widget>
@@ -2981,9 +3080,9 @@ QPushButton:pressed {
                     <property name="geometry">
                      <rect>
                       <x>430</x>
-                      <y>140</y>
+                      <y>219</y>
                       <width>40</width>
-                      <height>440</height>
+                      <height>361</height>
                      </rect>
                     </property>
                     <property name="sizePolicy">
@@ -3019,7 +3118,7 @@ QPushButton:pressed {
                     <property name="geometry">
                      <rect>
                       <x>10</x>
-                      <y>10</y>
+                      <y>0</y>
                       <width>870</width>
                       <height>300</height>
                      </rect>
@@ -3080,15 +3179,12 @@ border-radius: 5px;</string>
                          <font>
                           <family>Open Sans</family>
                           <pointsize>10</pointsize>
-                          <weight>75</weight>
-                          <bold>true</bold>
+                          <weight>50</weight>
+                          <bold>false</bold>
                          </font>
                         </property>
                         <property name="styleSheet">
-                         <string notr="true">QRadioButton{
-color:rgb(0, 255, 0);
-font-weight: 600;
-}</string>
+                         <string notr="true"/>
                         </property>
                         <property name="text">
                          <string>KEM - mceliece</string>
@@ -3224,7 +3320,7 @@ font-weight: 600;
                        <x>270</x>
                        <y>10</y>
                        <width>291</width>
-                       <height>201</height>
+                       <height>281</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="layout_setkey_box">
@@ -3337,6 +3433,51 @@ QLineEdit:pressed {
                         </property>
                        </widget>
                       </item>
+                      <item>
+                       <widget class="QPushButton" name="key_generate_button">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                          <pointsize>10</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QPushButton {
+	border: 2px solid rgb(52, 59, 72);
+border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+}
+QPushButton:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QPushButton:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>Generate</string>
+                        </property>
+                        <property name="flat">
+                         <bool>false</bool>
+                        </property>
+                       </widget>
+                      </item>
                      </layout>
                     </widget>
                     <widget class="QWidget" name="horizontalLayoutWidget_4">
@@ -3345,12 +3486,15 @@ QLineEdit:pressed {
                        <x>570</x>
                        <y>10</y>
                        <width>291</width>
-                       <height>201</height>
+                       <height>281</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="layout_key_uploadkey">
                       <property name="spacing">
                        <number>0</number>
+                      </property>
+                      <property name="sizeConstraint">
+                       <enum>QLayout::SetDefaultConstraint</enum>
                       </property>
                       <property name="leftMargin">
                        <number>20</number>
@@ -3392,62 +3536,41 @@ QLineEdit:pressed {
                        </widget>
                       </item>
                       <item>
-                       <widget class="QLineEdit" name="key_upload_line">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>40</height>
-                         </size>
-                        </property>
+                       <widget class="QRadioButton" name="key_public_radio_button">
                         <property name="font">
                          <font>
-                          <family>Open Sans</family>
+                          <pointsize>10</pointsize>
                          </font>
                         </property>
-                        <property name="styleSheet">
-                         <string notr="true">QLineEdit {
-	border: 2px solid rgb(52, 59, 72);
-	border-radius: 15px;	
-	background-color: rgb(52, 59, 72);
-}
-QLineEdit:hover {
-	background-color: rgb(57, 65, 80);
-	border: 2px solid rgb(61, 70, 86);
-}
-QLineEdit:pressed {	
-	background-color: rgb(35, 40, 49);
-	border: 2px solid rgb(43, 50, 61);
-}</string>
+                        <property name="text">
+                         <string>Public</string>
                         </property>
-                        <property name="placeholderText">
-                         <string>Choose your key to upload</string>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QRadioButton" name="key_private_radio_button">
+                        <property name="font">
+                         <font>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Private</string>
                         </property>
                        </widget>
                       </item>
                       <item>
                        <widget class="QPushButton" name="key_upload_button">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
                         <property name="minimumSize">
                          <size>
-                          <width>0</width>
+                          <width>150</width>
                           <height>40</height>
                          </size>
                         </property>
                         <property name="font">
                          <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
+                          <family>Segoe UI</family>
+                          <pointsize>9</pointsize>
                          </font>
                         </property>
                         <property name="styleSheet">
@@ -3466,43 +3589,38 @@ QPushButton:pressed {
 }</string>
                         </property>
                         <property name="text">
-                         <string>Upload</string>
+                         <string>Open Blender</string>
+                        </property>
+                        <property name="icon">
+                         <iconset resource="files.qrc">
+                          <normaloff>:/16x16/icons/16x16/cil-folder-open.png</normaloff>:/16x16/icons/16x16/cil-folder-open.png</iconset>
                         </property>
                        </widget>
                       </item>
-                     </layout>
-                    </widget>
-                    <widget class="QPushButton" name="key_generate_button">
-                     <property name="geometry">
-                      <rect>
-                       <x>290</x>
-                       <y>230</y>
-                       <width>251</width>
-                       <height>40</height>
-                      </rect>
-                     </property>
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <family>Open Sans</family>
-                       <pointsize>10</pointsize>
-                       <weight>75</weight>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {
+                      <item>
+                       <widget class="QPushButton" name="key_generate_button_2">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                          <pointsize>10</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QPushButton {
 	border: 2px solid rgb(52, 59, 72);
 border-radius: 15px;	
 	background-color: rgb(52, 59, 72);
@@ -3515,13 +3633,16 @@ QPushButton:pressed {
 	background-color: rgb(35, 40, 49);
 	border: 2px solid rgb(43, 50, 61);
 }</string>
-                     </property>
-                     <property name="text">
-                      <string>Generate</string>
-                     </property>
-                     <property name="flat">
-                      <bool>false</bool>
-                     </property>
+                        </property>
+                        <property name="text">
+                         <string>Add my key</string>
+                        </property>
+                        <property name="flat">
+                         <bool>false</bool>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </widget>
                    <widget class="QFrame" name="key_table_frame">
@@ -3884,52 +4005,6 @@ QHeaderView::section:vertical
                        <attribute name="verticalHeaderStretchLastSection">
                         <bool>true</bool>
                        </attribute>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Segoe UI</family>
-                         </font>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <column>
-                        <property name="text">
-                         <string>id</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                       </column>
                        <column>
                         <property name="text">
                          <string>Name</string>
@@ -3974,31 +4049,6 @@ QHeaderView::section:vertical
                          </font>
                         </property>
                        </column>
-                       <item row="0" column="0">
-                        <property name="text">
-                         <string>0</string>
-                        </property>
-                       </item>
-                       <item row="0" column="1">
-                        <property name="text">
-                         <string>Test</string>
-                        </property>
-                       </item>
-                       <item row="0" column="2">
-                        <property name="text">
-                         <string>Text</string>
-                        </property>
-                       </item>
-                       <item row="0" column="3">
-                        <property name="text">
-                         <string>Cell</string>
-                        </property>
-                       </item>
-                       <item row="0" column="4">
-                        <property name="text">
-                         <string>Line</string>
-                        </property>
-                       </item>
                       </widget>
                      </item>
                     </layout>
@@ -4348,7 +4398,7 @@ QHeaderView::section:vertical
                         <bool>true</bool>
                        </property>
                        <property name="rowCount">
-                        <number>20</number>
+                        <number>13</number>
                        </property>
                        <attribute name="horizontalHeaderVisible">
                         <bool>false</bool>
@@ -4374,46 +4424,6 @@ QHeaderView::section:vertical
                        <attribute name="verticalHeaderStretchLastSection">
                         <bool>true</bool>
                        </attribute>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Segoe UI</family>
-                         </font>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
                        <row/>
                        <row/>
                        <row/>
@@ -4429,55 +4439,34 @@ QHeaderView::section:vertical
                        <row/>
                        <column>
                         <property name="text">
-                         <string>Algorithm type</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
+                         <string>DatTime</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
-                         <string>Time</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
+                         <string>Alg</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
-                         <string>Size</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
+                         <string>Operation</string>
                         </property>
                        </column>
-                       <item row="0" column="0">
+                       <column>
                         <property name="text">
-                         <string>Noro</string>
+                         <string>Nový sloupec</string>
                         </property>
-                       </item>
-                       <item row="0" column="1">
+                       </column>
+                       <column>
                         <property name="text">
-                         <string>0:08s</string>
+                         <string>KEM time</string>
                         </property>
-                        <property name="textAlignment">
-                         <set>AlignCenter</set>
-                        </property>
-                       </item>
-                       <item row="0" column="2">
+                       </column>
+                       <column>
                         <property name="text">
-                         <string>Typical size</string>
+                         <string>AES time</string>
                         </property>
-                       </item>
+                       </column>
                       </widget>
                      </item>
                     </layout>
@@ -4883,7 +4872,7 @@ QHeaderView::section:vertical
                         <bool>true</bool>
                        </property>
                        <property name="rowCount">
-                        <number>20</number>
+                        <number>13</number>
                        </property>
                        <attribute name="horizontalHeaderVisible">
                         <bool>false</bool>
@@ -4909,46 +4898,6 @@ QHeaderView::section:vertical
                        <attribute name="verticalHeaderStretchLastSection">
                         <bool>true</bool>
                        </attribute>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Segoe UI</family>
-                         </font>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
                        <row/>
                        <row/>
                        <row/>
@@ -4964,55 +4913,29 @@ QHeaderView::section:vertical
                        <row/>
                        <column>
                         <property name="text">
-                         <string>Algorithm type</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
+                         <string>DateTime</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
-                         <string>Time</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
+                         <string>Alg</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
-                         <string>Size</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                         </font>
+                         <string>Operation</string>
                         </property>
                        </column>
-                       <item row="0" column="0">
+                       <column>
                         <property name="text">
-                         <string>Noro</string>
+                         <string>FileSize</string>
                         </property>
-                       </item>
-                       <item row="0" column="1">
+                       </column>
+                       <column>
                         <property name="text">
-                         <string>0:08s</string>
+                         <string>DSA time</string>
                         </property>
-                        <property name="textAlignment">
-                         <set>AlignCenter</set>
-                        </property>
-                       </item>
-                       <item row="0" column="2">
-                        <property name="text">
-                         <string>Typical size</string>
-                        </property>
-                       </item>
+                       </column>
                       </widget>
                      </item>
                     </layout>
@@ -5418,7 +5341,7 @@ QHeaderView::section:vertical
                         <bool>true</bool>
                        </property>
                        <property name="rowCount">
-                        <number>20</number>
+                        <number>13</number>
                        </property>
                        <attribute name="horizontalHeaderVisible">
                         <bool>false</bool>
@@ -5444,46 +5367,6 @@ QHeaderView::section:vertical
                        <attribute name="verticalHeaderStretchLastSection">
                         <bool>true</bool>
                        </attribute>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Segoe UI</family>
-                         </font>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
-                       <row>
-                        <property name="text">
-                         <string>New Row</string>
-                        </property>
-                       </row>
                        <row/>
                        <row/>
                        <row/>
@@ -5499,37 +5382,19 @@ QHeaderView::section:vertical
                        <row/>
                        <column>
                         <property name="text">
-                         <string>Algorithm type</string>
+                         <string>DateTime</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
-                         <string>Time</string>
+                         <string>Alg</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
-                         <string>Size</string>
+                         <string>GEN time</string>
                         </property>
                        </column>
-                       <item row="0" column="0">
-                        <property name="text">
-                         <string>Noro</string>
-                        </property>
-                       </item>
-                       <item row="0" column="1">
-                        <property name="text">
-                         <string>0:08s</string>
-                        </property>
-                        <property name="textAlignment">
-                         <set>AlignCenter</set>
-                        </property>
-                       </item>
-                       <item row="0" column="2">
-                        <property name="text">
-                         <string>Typical size</string>
-                        </property>
-                       </item>
                       </widget>
                      </item>
                     </layout>
@@ -5922,7 +5787,7 @@ QScrollBar:horizontal {
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>218</width>
+                              <width>274</width>
                               <height>218</height>
                              </rect>
                             </property>
@@ -6667,7 +6532,7 @@ QHeaderView::section:vertical
                       <set>Qt::ImhNone</set>
                      </property>
                      <property name="text">
-                      <string>v.2021</string>
+                      <string>v.2022</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
