@@ -164,15 +164,13 @@ class PasswordManager:
         with open(self.__keyStoresFileName, 'w') as file:
             file.write(base64.b64encode(encryptedListString.encode()).decode())
 
-    def deleteKeyStore(self, name:str, alg:str, keyType:str, value:bytes):
+    def deleteKeyStore(self, name:str):
         '''
         Remove keyStore from the file.
         '''
         
-        keyStore = (name, alg, keyType, value)
-        
         keyStores = self.__readKeyStores()
-        self.__writeKeyStores([x for x in keyStores if x not in {keyStore}])
+        self.__writeKeyStores([x for x in keyStores if x[0] != name])
     
     # Public method for creating list of user-stored passwords
     def loadKeyStoreList(self):
@@ -191,7 +189,7 @@ class PasswordManager:
 # # add "added" password
 # x.addKeyStore("nameX", "algX", "keyTypeX", b"valueX")
 # # delete third password
-# x.deleteKeyStore("name3", "alg3", "keyType3", b"value3")
+# x.deleteKeyStore("name3")
 # # final print
 # print("final print: ", x.loadKeyStoreList())
 # # change master password

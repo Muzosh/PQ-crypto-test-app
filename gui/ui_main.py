@@ -7,11 +7,6 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
-from datetime import datetime
-
-import now as now
-
-from Managers import pqKeyGenModule
 from Managers.passwordsModule import PasswordManager
 from Managers.pqEncryptionModule import PqEncryptionManager
 from Managers.pqKeyGenModule import PqKeyGenManager
@@ -36,9 +31,6 @@ qRadioButtonDefault = "QRadioButton{color:#fff}"
 
 #Are you logged in variable
 Logged = False
-global Key_ID
-Key_ID = 0
-
 
 def change_page(self, param):
     if param == 0:
@@ -79,9 +71,6 @@ def lock(self):
     self.stackedWidget.setCurrentWidget(self.page_login)
 
 class Ui_MainWindow(object):
-    global id
-    id = 0
-
     def checking_password(self):
         entered_password = self.login_input_line.text()
 
@@ -154,9 +143,7 @@ class Ui_MainWindow(object):
         
     def generateKey(self):
         print("idzeme generovac klusik")
-        global selected_key
         selected_key = ""
-        global name
         name = ""
 
         keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2, self.key_checkbox4_3, self.key_checkbox4_4]
@@ -170,7 +157,7 @@ class Ui_MainWindow(object):
         if self.key_inputname_line.text() != "":
             name = self.key_inputname_line.text()
             self.key_inputname_line.setStyleSheet(qLineGreen)
-            self.key_checking_name.setText("Your key name is: "+name)
+            self.key_checking_name.setText("Your key name is: " + name)
         else:
             self.key_inputname_line.setStyleSheet(qLineRed)
             self.key_checking_name.setText("No key name entered!")
@@ -198,22 +185,6 @@ class Ui_MainWindow(object):
         else:
             print("Vypln pravdzivo vsetok obsah!")
 
-    def updateTableKey(self):
-        self.key_maintable.clear()
-        for r in range(self.key_maintable.rowCount()+1):
-            self.key_maintable.removeRow(r)
-
-
-
-        list = passwordManager.loadKeyStoreList()
-
-        for r in list:
-            self.key_maintable.insertRow(0)
-            self.key_maintable.setItem(0,0,QTableWidgetItem(r[0]))
-            self.key_maintable.setItem(0, 1, QTableWidgetItem(r[1]))
-            self.key_maintable.setItem(0, 2, QTableWidgetItem(r[2]))
-            self.key_maintable.setItem(0, 3, QTableWidgetItem(str(len(r[3]))))
-
         #reset styles
         keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2,
                 self.key_checkbox4_3, self.key_checkbox4_4]
@@ -222,8 +193,25 @@ class Ui_MainWindow(object):
         self.key_inputname_line.setStyleSheet(qLineDefault)
         self.key_checking_name.setText("")
 
+    def updateTableKey(self):
+        self.key_maintable.setRowCount(0)
 
+        list = passwordManager.loadKeyStoreList()
 
+        for r in list:
+            self.key_maintable.insertRow(0)
+            self.key_maintable.setItem(0, 0, QTableWidgetItem(r[0]))
+            self.key_maintable.setItem(0, 1, QTableWidgetItem(r[1]))
+            self.key_maintable.setItem(0, 2, QTableWidgetItem(r[2]))
+            self.key_maintable.setItem(0, 3, QTableWidgetItem(str(len(r[3]))))
+
+    def itemChangedHandler(self):
+        global selectedName
+        selectedName = self.key_maintable.selectedItems()[0].text()
+
+    def currentWidgetChangedHandler(self):
+        if self.stackedWidget.currentWidget().objectName() == "page_key":
+            self.updateTableKey()
 
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
@@ -926,6 +914,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.verticalLayout_9.setContentsMargins(5, 5, 5, 5)
         self.stackedWidget = QStackedWidget(self.frame_content)
+        self.stackedWidget.currentChanged.connect(self.currentWidgetChangedHandler)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setEnabled(True)
         sizePolicy.setHeightForWidth(self.stackedWidget.sizePolicy().hasHeightForWidth())
@@ -1745,7 +1734,6 @@ class Ui_MainWindow(object):
 "	border: 2px solid rgb(43, 50, 61);\n"
 "}")
         self.key_generate_button.clicked.connect(self.generateKey)
-
         self.key_table_frame = QFrame(self.page_key)
         self.key_table_frame.setObjectName(u"key_table_frame")
         self.key_table_frame.setGeometry(QRect(9, 310, 870, 280))
@@ -1757,8 +1745,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.horizontalLayout_13.setContentsMargins(0, 0, 0, 0)
         self.key_maintable = QTableWidget(self.key_table_frame)
-        if (self.key_maintable.columnCount() < 5):
-            self.key_maintable.setColumnCount(5)
+        self.key_maintable.itemSelectionChanged.connect(self.itemChangedHandler)
+        self.key_maintable.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.key_maintable.setColumnCount(4)
         __qtablewidgetitem = QTableWidgetItem()
         __qtablewidgetitem.setFont(font10);
         self.key_maintable.setHorizontalHeaderItem(0, __qtablewidgetitem)
@@ -1774,8 +1763,7 @@ class Ui_MainWindow(object):
         __qtablewidgetitem4 = QTableWidgetItem()
         __qtablewidgetitem4.setFont(font10);
         self.key_maintable.setHorizontalHeaderItem(4, __qtablewidgetitem4)
-        if (self.key_maintable.rowCount() < 6):
-            self.key_maintable.setRowCount(6)
+        self.key_maintable.setRowCount(0)
         __qtablewidgetitem5 = QTableWidgetItem()
         __qtablewidgetitem5.setFont(font2);
         self.key_maintable.setVerticalHeaderItem(0, __qtablewidgetitem5)
@@ -3070,9 +3058,7 @@ class Ui_MainWindow(object):
         self.enc_dsa_upload_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
         self.dec_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Encryption", None))
         self.enc_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Decryption", None))
-        self.enc_dec_button1.setText(QCoreApplication.translate("MainWindow", u"AES 128", None))
         self.enc_dec_button2.setText(QCoreApplication.translate("MainWindow", u"AES 256", None))
-        self.enc_dec_button3.setText(QCoreApplication.translate("MainWindow", u"AES 512", None))
         self.enc_dec_ciphertext_input.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -3269,4 +3255,3 @@ class Ui_MainWindow(object):
         self.label_credits.setText(QCoreApplication.translate("MainWindow", u"Design: Wanderson M. Pimenta | Created: Bc. Dzad\u00edkov\u00e1, Bc. Janout, Bc. Lovinger, Bc. Muzikant", None))
         self.label_version.setText(QCoreApplication.translate("MainWindow", u"v.2021", None))
     # retranslateUi
-
