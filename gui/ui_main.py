@@ -213,6 +213,9 @@ class Ui_MainWindow(object):
         if self.stackedWidget.currentWidget().objectName() == "page_key":
             self.updateTableKey()
 
+    def keyTableItemDoubleClicked(self):
+        change_page(self, 2)
+
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -1746,6 +1749,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_13.setContentsMargins(0, 0, 0, 0)
         self.key_maintable = QTableWidget(self.key_table_frame)
         self.key_maintable.itemSelectionChanged.connect(self.itemChangedHandler)
+        self.key_maintable.doubleClicked.connect(self.keyTableItemDoubleClicked)
         self.key_maintable.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.key_maintable.setColumnCount(4)
         __qtablewidgetitem = QTableWidgetItem()
