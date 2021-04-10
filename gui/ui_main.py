@@ -7,7 +7,11 @@
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
+from datetime import datetime
 
+import now as now
+
+from Managers import pqKeyGenModule
 from Managers.passwordsModule import PasswordManager
 from Managers.pqEncryptionModule import PqEncryptionManager
 from Managers.pqKeyGenModule import PqKeyGenManager
@@ -20,14 +24,21 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
     QRadialGradient)
 from PySide2.QtWidgets import *
-global passwordManager, pqEncryptionManager, pqKeyGenManager, pqSigningManager, statisticsManager
+
 
 qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}"
 qLineRed = "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}"
 qLineGreen = "QLineEdit{border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}"
 
+qRadioButtonGreen = "QRadioButton{color:rgb(0, 255, 0);font-weight: 600;}"
+qRadioButtonRed = "QRadioButton{color:rgb(255,0,0)}"
+qRadioButtonDefault = "QRadioButton{color:#fff}"
+
 #Are you logged in variable
 Logged = False
+global Key_ID
+Key_ID = 0
+
 
 def change_page(self, param):
     if param == 0:
@@ -68,6 +79,8 @@ def lock(self):
     self.stackedWidget.setCurrentWidget(self.page_login)
 
 class Ui_MainWindow(object):
+    global id
+    id = 0
 
     def checking_password(self):
         entered_password = self.login_input_line.text()
@@ -78,6 +91,7 @@ class Ui_MainWindow(object):
             self.login_status_label.setText("You're empty bitch")
         else:
             try:
+                global passwordManager, pqEncryptionManager, pqKeyGenManager, pqSigningManager, statisticsManager
                 passwordManager = PasswordManager(entered_password)
                 self.login_input_line.setStyleSheet(qLineGreen)
                 self.login_status_label.setText("Your secrets has been revealed!")
@@ -137,6 +151,77 @@ class Ui_MainWindow(object):
 
     def openFile(self):
         print("Snazime sa otvorit subor")
+        
+    def generateKey(self):
+        print("idzeme generovac klusik")
+        global selected_key
+        selected_key = ""
+        global name
+        name = ""
+
+        keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2, self.key_checkbox4_3, self.key_checkbox4_4]
+        for k in keys:
+            if k.isChecked():
+                selected_key = k.text()
+                #print(selected_key)
+                k.setStyleSheet(qRadioButtonGreen)
+            else:
+                k.setStyleSheet(qRadioButtonDefault)
+        if self.key_inputname_line.text() != "":
+            name = self.key_inputname_line.text()
+            self.key_inputname_line.setStyleSheet(qLineGreen)
+            self.key_checking_name.setText("Your key name is: "+name)
+        else:
+            self.key_inputname_line.setStyleSheet(qLineRed)
+            self.key_checking_name.setText("No key name entered!")
+
+        print(name)
+        print(selected_key)
+
+        if name != "" and selected_key != "":
+            print("Generujem us ten kluc naah")
+            if selected_key == "KEM - mceliece":
+                pqKeyGenManager.generate_keypair_mceliece8192128(name)
+            if selected_key == "KEM - saber":
+                pqKeyGenManager.generate_keypair_saber(name)
+            if selected_key == "KEM - kyber":
+                pqKeyGenManager.generate_keypair_kyber1024(name)
+            if selected_key == "KEM - ntruhps":
+                pqKeyGenManager.generate_keypair_ntruhps2048509(name)
+            if selected_key == "DSA - dilithium":
+                pqKeyGenManager.generate_keypair_dilithium4(name)
+            if selected_key == "DSA - rainbow":
+                pqKeyGenManager.generate_keypair_rainbowVc_classic(name)
+            if selected_key == "DSA - sphincs":
+                pqKeyGenManager.generate_keypair_sphincs_shake256_256s_simple(name)
+            self.updateTableKey()
+        else:
+            print("Vypln pravdzivo vsetok obsah!")
+
+    def updateTableKey(self):
+        self.key_maintable.clear()
+        for r in range(self.key_maintable.rowCount()+1):
+            self.key_maintable.removeRow(r)
+
+
+
+        list = passwordManager.loadKeyStoreList()
+
+        for r in list:
+            self.key_maintable.insertRow(0)
+            self.key_maintable.setItem(0,0,QTableWidgetItem(r[0]))
+            self.key_maintable.setItem(0, 1, QTableWidgetItem(r[1]))
+            self.key_maintable.setItem(0, 2, QTableWidgetItem(r[2]))
+            self.key_maintable.setItem(0, 3, QTableWidgetItem(str(len(r[3]))))
+
+        #reset styles
+        keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2,
+                self.key_checkbox4_3, self.key_checkbox4_4]
+        for k in keys:
+            k.setStyleSheet(qRadioButtonDefault)
+        self.key_inputname_line.setStyleSheet(qLineDefault)
+        self.key_checking_name.setText("")
+
 
 
 
@@ -1659,7 +1744,8 @@ class Ui_MainWindow(object):
 "	background-color: rgb(35, 40, 49);\n"
 "	border: 2px solid rgb(43, 50, 61);\n"
 "}")
-        self.key_generate_button.setFlat(False)
+        self.key_generate_button.clicked.connect(self.generateKey)
+
         self.key_table_frame = QFrame(self.page_key)
         self.key_table_frame.setObjectName(u"key_table_frame")
         self.key_table_frame.setGeometry(QRect(9, 310, 870, 280))
@@ -1671,8 +1757,13 @@ class Ui_MainWindow(object):
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.horizontalLayout_13.setContentsMargins(0, 0, 0, 0)
         self.key_maintable = QTableWidget(self.key_table_frame)
-        if (self.key_maintable.columnCount() < 5):
-            self.key_maintable.setColumnCount(5)
+        header = self.key_maintable.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
+        if (self.key_maintable.columnCount() < 4):
+            self.key_maintable.setColumnCount(4)
         __qtablewidgetitem = QTableWidgetItem()
         __qtablewidgetitem.setFont(font10);
         self.key_maintable.setHorizontalHeaderItem(0, __qtablewidgetitem)
@@ -1685,11 +1776,6 @@ class Ui_MainWindow(object):
         __qtablewidgetitem3 = QTableWidgetItem()
         __qtablewidgetitem3.setFont(font10);
         self.key_maintable.setHorizontalHeaderItem(3, __qtablewidgetitem3)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        __qtablewidgetitem4.setFont(font10);
-        self.key_maintable.setHorizontalHeaderItem(4, __qtablewidgetitem4)
-        if (self.key_maintable.rowCount() < 6):
-            self.key_maintable.setRowCount(6)
         __qtablewidgetitem5 = QTableWidgetItem()
         __qtablewidgetitem5.setFont(font2);
         self.key_maintable.setVerticalHeaderItem(0, __qtablewidgetitem5)
@@ -3012,47 +3098,11 @@ class Ui_MainWindow(object):
         self.key_checkbox4_3.setText(QCoreApplication.translate("MainWindow", u"DSA - sphincs", None))
         self.key_setname_label.setText(QCoreApplication.translate("MainWindow", u"Set key name", None))
         self.key_inputname_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter key name", None))
-        self.key_checking_name.setText(QCoreApplication.translate("MainWindow", u"Checking name", None))
         self.key_uploadkey_label.setText(QCoreApplication.translate("MainWindow", u"Upload your key", None))
         self.key_upload_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose your key to upload", None))
         self.key_upload_button.setText(QCoreApplication.translate("MainWindow", u"Upload", None))
         self.key_generate_button.setText(QCoreApplication.translate("MainWindow", u"Generate", None))
-        ___qtablewidgetitem = self.key_maintable.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"id", None));
-        ___qtablewidgetitem1 = self.key_maintable.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"Name", None));
-        ___qtablewidgetitem2 = self.key_maintable.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Alg", None));
-        ___qtablewidgetitem3 = self.key_maintable.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Type", None));
-        ___qtablewidgetitem4 = self.key_maintable.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Value", None));
-        ___qtablewidgetitem5 = self.key_maintable.verticalHeaderItem(0)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem6 = self.key_maintable.verticalHeaderItem(1)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem7 = self.key_maintable.verticalHeaderItem(2)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem8 = self.key_maintable.verticalHeaderItem(3)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem9 = self.key_maintable.verticalHeaderItem(4)
-        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem10 = self.key_maintable.verticalHeaderItem(5)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
 
-        __sortingEnabled = self.key_maintable.isSortingEnabled()
-        self.key_maintable.setSortingEnabled(False)
-        ___qtablewidgetitem11 = self.key_maintable.item(0, 0)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"0", None));
-        ___qtablewidgetitem12 = self.key_maintable.item(0, 1)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Test", None));
-        ___qtablewidgetitem13 = self.key_maintable.item(0, 2)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"Text", None));
-        ___qtablewidgetitem14 = self.key_maintable.item(0, 3)
-        ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"Cell", None));
-        ___qtablewidgetitem15 = self.key_maintable.item(0, 4)
-        ___qtablewidgetitem15.setText(QCoreApplication.translate("MainWindow", u"Line", None));
-        self.key_maintable.setSortingEnabled(__sortingEnabled)
 
         ___qtablewidgetitem16 = self.enc_statistics_table.horizontalHeaderItem(0)
         ___qtablewidgetitem16.setText(QCoreApplication.translate("MainWindow", u"Algorithm type", None));

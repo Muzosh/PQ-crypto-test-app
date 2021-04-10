@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         startSize = QSize(1000, 720)
         self.resize(startSize)
         self.setMinimumSize(startSize)
-        UIFunctions.enableMaximumSize(self, 500, 720)
+        #UIFunctions.enableMaximumSize(self, 500, 720)
         ## ==> END ##
 
         self.updateLoginPageButtonText()

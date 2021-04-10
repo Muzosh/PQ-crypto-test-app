@@ -1677,7 +1677,7 @@ QPushButton:pressed {
                    <enum>QFrame::Plain</enum>
                   </property>
                   <property name="currentIndex">
-                   <number>2</number>
+                   <number>3</number>
                   </property>
                   <widget class="QWidget" name="page_login">
                    <property name="styleSheet">
@@ -3080,7 +3080,15 @@ border-radius: 5px;</string>
                          <font>
                           <family>Open Sans</family>
                           <pointsize>10</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
                          </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QRadioButton{
+color:rgb(0, 255, 0);
+font-weight: 600;
+}</string>
                         </property>
                         <property name="text">
                          <string>KEM - mceliece</string>
@@ -5914,7 +5922,7 @@ QScrollBar:horizontal {
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>274</width>
+                              <width>218</width>
                               <height>218</height>
                              </rect>
                             </property>
