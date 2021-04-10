@@ -1757,13 +1757,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.horizontalLayout_13.setContentsMargins(0, 0, 0, 0)
         self.key_maintable = QTableWidget(self.key_table_frame)
-        header = self.key_maintable.horizontalHeader()
-        header.setSectionResizeMode(0, QHeaderView.Stretch)
-        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        header.setSectionResizeMode(3, QHeaderView.ResizeToContents)
-        if (self.key_maintable.columnCount() < 4):
-            self.key_maintable.setColumnCount(4)
+        if (self.key_maintable.columnCount() < 5):
+            self.key_maintable.setColumnCount(5)
         __qtablewidgetitem = QTableWidgetItem()
         __qtablewidgetitem.setFont(font10);
         self.key_maintable.setHorizontalHeaderItem(0, __qtablewidgetitem)
@@ -1776,6 +1771,11 @@ class Ui_MainWindow(object):
         __qtablewidgetitem3 = QTableWidgetItem()
         __qtablewidgetitem3.setFont(font10);
         self.key_maintable.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        __qtablewidgetitem4.setFont(font10);
+        self.key_maintable.setHorizontalHeaderItem(4, __qtablewidgetitem4)
+        if (self.key_maintable.rowCount() < 6):
+            self.key_maintable.setRowCount(6)
         __qtablewidgetitem5 = QTableWidgetItem()
         __qtablewidgetitem5.setFont(font2);
         self.key_maintable.setVerticalHeaderItem(0, __qtablewidgetitem5)
@@ -1813,9 +1813,9 @@ class Ui_MainWindow(object):
         palette1.setBrush(QPalette.Active, QPalette.Window, brush15)
         brush16 = QBrush(QColor(210, 210, 210, 128))
         brush16.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette1.setBrush(QPalette.Active, QPalette.PlaceholderText, brush16)
-#endif
+        # endif
         palette1.setBrush(QPalette.Inactive, QPalette.WindowText, brush6)
         palette1.setBrush(QPalette.Inactive, QPalette.Button, brush15)
         palette1.setBrush(QPalette.Inactive, QPalette.Text, brush6)
@@ -1824,9 +1824,9 @@ class Ui_MainWindow(object):
         palette1.setBrush(QPalette.Inactive, QPalette.Window, brush15)
         brush17 = QBrush(QColor(210, 210, 210, 128))
         brush17.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette1.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush17)
-#endif
+        # endif
         palette1.setBrush(QPalette.Disabled, QPalette.WindowText, brush6)
         palette1.setBrush(QPalette.Disabled, QPalette.Button, brush15)
         palette1.setBrush(QPalette.Disabled, QPalette.Text, brush6)
@@ -1835,69 +1835,69 @@ class Ui_MainWindow(object):
         palette1.setBrush(QPalette.Disabled, QPalette.Window, brush15)
         brush18 = QBrush(QColor(210, 210, 210, 128))
         brush18.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette1.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush18)
-#endif
+        # endif
         self.key_maintable.setPalette(palette1)
         font12 = QFont()
         font12.setFamily(u"Open Sans")
         font12.setPointSize(8)
         self.key_maintable.setFont(font12)
         self.key_maintable.setStyleSheet(u"QTableWidget {	\n"
-"	background-color: rgb(39, 44, 54);\n"
-"	padding: 10px;\n"
-"	border-radius: 5px;\n"
-"	gridline-color: rgb(44, 49, 60);\n"
-"	border-bottom: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-"QTableWidget::item{\n"
-"	border-color: rgb(44, 49, 60);\n"
-"	padding-left: 5px;\n"
-"	padding-right: 5px;\n"
-"	gridline-color: rgb(44, 49, 60);\n"
-"}\n"
-"QTableWidget::item:selected{\n"
-"	background-color: rgb(85, 170, 255);\n"
-"}\n"
-"QScrollBar:horizontal {\n"
-"    border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    height: 14px;\n"
-"    margin: 0px 21px 0 21px;\n"
-"	border-radius: 0px;\n"
-"}\n"
-" QScrollBar:vertical {\n"
-"	border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    width: 14px;\n"
-"    margin: 21px 0 21px 0;\n"
-"	border-radius: 0px;\n"
-" }\n"
-"QHeaderView::section{\n"
-"	Background-color: rgb(39, 44, 54);\n"
-"	max-width: 30px;\n"
-"	border: 1px solid rgb(44, 49, 60);\n"
-"	border-style: none;\n"
-"    border-bottom: 1px solid rgb(44, 49, 60);\n"
-"    border-right: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-""
-                        "QTableWidget::horizontalHeader {	\n"
-"	background-color: rgb(81, 255, 0);\n"
-"}\n"
-"QHeaderView::section:horizontal\n"
-"{\n"
-"    border: 1px solid rgb(32, 34, 42);\n"
-"	background-color: rgb(27, 29, 35);\n"
-"	padding: 3px;\n"
-"	border-top-left-radius: 7px;\n"
-"    border-top-right-radius: 7px;\n"
-"}\n"
-"QHeaderView::section:vertical\n"
-"{\n"
-"    border: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-"")
+                                         "	background-color: rgb(39, 44, 54);\n"
+                                         "	padding: 10px;\n"
+                                         "	border-radius: 5px;\n"
+                                         "	gridline-color: rgb(44, 49, 60);\n"
+                                         "	border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                         "}\n"
+                                         "QTableWidget::item{\n"
+                                         "	border-color: rgb(44, 49, 60);\n"
+                                         "	padding-left: 5px;\n"
+                                         "	padding-right: 5px;\n"
+                                         "	gridline-color: rgb(44, 49, 60);\n"
+                                         "}\n"
+                                         "QTableWidget::item:selected{\n"
+                                         "	background-color: rgb(85, 170, 255);\n"
+                                         "}\n"
+                                         "QScrollBar:horizontal {\n"
+                                         "    border: none;\n"
+                                         "    background: rgb(52, 59, 72);\n"
+                                         "    height: 14px;\n"
+                                         "    margin: 0px 21px 0 21px;\n"
+                                         "	border-radius: 0px;\n"
+                                         "}\n"
+                                         " QScrollBar:vertical {\n"
+                                         "	border: none;\n"
+                                         "    background: rgb(52, 59, 72);\n"
+                                         "    width: 14px;\n"
+                                         "    margin: 21px 0 21px 0;\n"
+                                         "	border-radius: 0px;\n"
+                                         " }\n"
+                                         "QHeaderView::section{\n"
+                                         "	Background-color: rgb(39, 44, 54);\n"
+                                         "	max-width: 30px;\n"
+                                         "	border: 1px solid rgb(44, 49, 60);\n"
+                                         "	border-style: none;\n"
+                                         "    border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                         "    border-right: 1px solid rgb(44, 49, 60);\n"
+                                         "}\n"
+                                         ""
+                                         "QTableWidget::horizontalHeader {	\n"
+                                         "	background-color: rgb(81, 255, 0);\n"
+                                         "}\n"
+                                         "QHeaderView::section:horizontal\n"
+                                         "{\n"
+                                         "    border: 1px solid rgb(32, 34, 42);\n"
+                                         "	background-color: rgb(27, 29, 35);\n"
+                                         "	padding: 3px;\n"
+                                         "	border-top-left-radius: 7px;\n"
+                                         "    border-top-right-radius: 7px;\n"
+                                         "}\n"
+                                         "QHeaderView::section:vertical\n"
+                                         "{\n"
+                                         "    border: 1px solid rgb(44, 49, 60);\n"
+                                         "}\n"
+                                         "")
         self.key_maintable.setFrameShape(QFrame.NoFrame)
         self.key_maintable.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.key_maintable.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
