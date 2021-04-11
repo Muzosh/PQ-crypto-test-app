@@ -63,7 +63,12 @@ class MainWindow(QMainWindow):
         UIFunctions.enableMaximumSize(self, 500, 720)
         ## ==> END ##
 
+
+        ##CUSTOM CONNECTIONS
         self.updateLoginPageButtonText()
+        self.ui.enc_dsa_upload_button.clicked.connect(self.openFileKey)
+        self.ui.enc_dec_upload_ciphertext_button.clicked.connect(self.openFileCipherText)
+
 
         ## ==> CREATE MENUS
         ########################################################################
@@ -268,6 +273,26 @@ class MainWindow(QMainWindow):
         else:
             self.ui.login_button.setText("Log me IN NOW")
             print("File exists = not today, bro!")
+
+
+    def openFile(self):
+        file_filter = "All Files (*);"
+        response = QFileDialog.getOpenFileName(
+            parent=self,
+            caption='Select a data file',
+            directory=os.getcwd(),
+            filter=file_filter,
+        )
+        return response[0]
+
+    def openFileKey(self):
+        name = self.openFile()
+        self.ui.enc_dsa_upload_line.setText(name)
+
+    def openFileCipherText(self):
+        name = self.openFile()
+        self.ui.enc_dec_upload_ciphertext_line.setText(name)
+
             
 class UIFunctions(MainWindow):
 
@@ -489,6 +514,9 @@ class UIFunctions(MainWindow):
     ########################################################################
     ## END - GUI DEFINITIONS
     ########################################################################
+
+
+
 
 
 class Functions(MainWindow):

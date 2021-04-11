@@ -152,8 +152,7 @@ class Ui_MainWindow(object):
                 self.change_pass_old_line.setStyleSheet(qLineRed)
                 print("Myslis si, ze tu budes skuskat spravne masterpass?")
 
-    def openFile(self):
-        pass
+
    
         
     def generateKey(self):
@@ -317,6 +316,8 @@ class Ui_MainWindow(object):
         self.enc_dsa_selected_key_line.setText(selectedId + " " + selectedName + " " + selectedType)
         self.enc_dsa_selected_key_line.setEnabled(True)
         self.enc_dsa_selected_key_line.setStyleSheet(qLineDefault)
+        self.enc_dsa_upload_button.setEnabled(True)
+        self.enc_dsa_upload_button.setStyleSheet(qPushButtonDefault)
 
 
     def updateKeyLayoutDisable(self):
@@ -327,6 +328,8 @@ class Ui_MainWindow(object):
         self.enc_dsa_selected_key_line.setEnabled(False)
         self.enc_dsa_selected_key_line.setStyleSheet(qLineRed)
         self.enc_dsa_selected_key_line.setPlaceholderText("No key selected ! Return to key page to select your key.")
+        self.enc_dsa_upload_button.setEnabled(False)
+        self.enc_dsa_upload_button.setStyleSheet(qPushButtonDisabled)
         self.dec_radiobutton.setEnabled(False)
         self.dec_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.enc_radiobutton.setEnabled(False)
@@ -498,8 +501,33 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button_2.setEnabled(False)
 
 
+    def decryptFile(self):
+        pass
+        #if self.enc_radiobutton.isChecked():
+        #    file_path = self.enc_dsa_upload_line.text()
+        #    cipher = selectedId
+        #    print(list)
+        #    text_path = self.enc_dec_upload_ciphertext_line.text()
+        #    print(file_path+""+cipher+""+text_path)
+
+        #   with open(file_path, 'rb') as f:
+        #        tmpFile = f.read()
+        #    with open(file_path, 'rb') as f:
+        #        tmpCipherText = f.read()
+
+        #    pqEncryptionManager.decryptFile(tmpFile,tmpCipherText,passwordManager.loadKeyStoreList()[1])
+
+
+
+
     def keyTableItemDoubleClicked(self):
         change_page(self, 2)
+
+
+
+
+
+
 
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
@@ -2216,7 +2244,7 @@ class Ui_MainWindow(object):
         self.page_enc_statistics.setObjectName(u"page_enc_statistics")
         self.enc_statistics_table_frame = QFrame(self.page_enc_statistics)
         self.enc_statistics_table_frame.setObjectName(u"enc_statistics_table_frame")
-        self.enc_statistics_table_frame.setGeometry(QRect(9, 70, 880, 500))
+        self.enc_statistics_table_frame.setGeometry(QRect(8, 329, 881, 261))
         self.enc_statistics_table_frame.setMinimumSize(QSize(0, 150))
         self.enc_statistics_table_frame.setFrameShape(QFrame.StyledPanel)
         self.enc_statistics_table_frame.setFrameShadow(QFrame.Raised)
@@ -2224,27 +2252,27 @@ class Ui_MainWindow(object):
         self.horizontalLayout_16.setSpacing(0)
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
         self.horizontalLayout_16.setContentsMargins(0, 0, 0, 0)
-        self.enc_statistics_table = QTableWidget(self.enc_statistics_table_frame)
-        if (self.enc_statistics_table.columnCount() < 6):
-            self.enc_statistics_table.setColumnCount(6)
+        self.enc_statistics_list_table = QTableWidget(self.enc_statistics_table_frame)
+        if (self.enc_statistics_list_table.columnCount() < 6):
+            self.enc_statistics_list_table.setColumnCount(6)
         __qtablewidgetitem4 = QTableWidgetItem()
-        self.enc_statistics_table.setHorizontalHeaderItem(0, __qtablewidgetitem4)
+        self.enc_statistics_list_table.setHorizontalHeaderItem(0, __qtablewidgetitem4)
         __qtablewidgetitem5 = QTableWidgetItem()
-        self.enc_statistics_table.setHorizontalHeaderItem(1, __qtablewidgetitem5)
+        self.enc_statistics_list_table.setHorizontalHeaderItem(1, __qtablewidgetitem5)
         __qtablewidgetitem6 = QTableWidgetItem()
-        self.enc_statistics_table.setHorizontalHeaderItem(2, __qtablewidgetitem6)
+        self.enc_statistics_list_table.setHorizontalHeaderItem(2, __qtablewidgetitem6)
         __qtablewidgetitem7 = QTableWidgetItem()
-        self.enc_statistics_table.setHorizontalHeaderItem(3, __qtablewidgetitem7)
+        self.enc_statistics_list_table.setHorizontalHeaderItem(3, __qtablewidgetitem7)
         __qtablewidgetitem8 = QTableWidgetItem()
-        self.enc_statistics_table.setHorizontalHeaderItem(4, __qtablewidgetitem8)
+        self.enc_statistics_list_table.setHorizontalHeaderItem(4, __qtablewidgetitem8)
         __qtablewidgetitem9 = QTableWidgetItem()
-        self.enc_statistics_table.setHorizontalHeaderItem(5, __qtablewidgetitem9)
-        if (self.enc_statistics_table.rowCount() < 13):
-            self.enc_statistics_table.setRowCount(13)
-        self.enc_statistics_table.setObjectName(u"enc_statistics_table")
-        sizePolicy.setHeightForWidth(self.enc_statistics_table.sizePolicy().hasHeightForWidth())
-        self.enc_statistics_table.setSizePolicy(sizePolicy)
-        self.enc_statistics_table.setMinimumSize(QSize(0, 0))
+        self.enc_statistics_list_table.setHorizontalHeaderItem(5, __qtablewidgetitem9)
+        if (self.enc_statistics_list_table.rowCount() < 13):
+            self.enc_statistics_list_table.setRowCount(13)
+        self.enc_statistics_list_table.setObjectName(u"enc_statistics_list_table")
+        sizePolicy.setHeightForWidth(self.enc_statistics_list_table.sizePolicy().hasHeightForWidth())
+        self.enc_statistics_list_table.setSizePolicy(sizePolicy)
+        self.enc_statistics_list_table.setMinimumSize(QSize(0, 0))
         palette2 = QPalette()
         palette2.setBrush(QPalette.Active, QPalette.WindowText, brush6)
         palette2.setBrush(QPalette.Active, QPalette.Button, brush15)
@@ -2254,9 +2282,9 @@ class Ui_MainWindow(object):
         palette2.setBrush(QPalette.Active, QPalette.Window, brush15)
         brush19 = QBrush(QColor(210, 210, 210, 128))
         brush19.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette2.setBrush(QPalette.Active, QPalette.PlaceholderText, brush19)
-#endif
+        # endif
         palette2.setBrush(QPalette.Inactive, QPalette.WindowText, brush6)
         palette2.setBrush(QPalette.Inactive, QPalette.Button, brush15)
         palette2.setBrush(QPalette.Inactive, QPalette.Text, brush6)
@@ -2265,9 +2293,9 @@ class Ui_MainWindow(object):
         palette2.setBrush(QPalette.Inactive, QPalette.Window, brush15)
         brush20 = QBrush(QColor(210, 210, 210, 128))
         brush20.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette2.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush20)
-#endif
+        # endif
         palette2.setBrush(QPalette.Disabled, QPalette.WindowText, brush6)
         palette2.setBrush(QPalette.Disabled, QPalette.Button, brush15)
         palette2.setBrush(QPalette.Disabled, QPalette.Text, brush6)
@@ -2276,93 +2304,93 @@ class Ui_MainWindow(object):
         palette2.setBrush(QPalette.Disabled, QPalette.Window, brush15)
         brush21 = QBrush(QColor(210, 210, 210, 128))
         brush21.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette2.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush21)
-#endif
-        self.enc_statistics_table.setPalette(palette2)
-        self.enc_statistics_table.setFont(font10)
-        self.enc_statistics_table.setStyleSheet(u"QTableWidget {	\n"
-"	background-color: rgb(39, 44, 54);\n"
-"	padding: 10px;\n"
-"	border-radius: 5px;\n"
-"	gridline-color: rgb(44, 49, 60);\n"
-"	border-bottom: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-"QTableWidget::item{\n"
-"	border-color: rgb(44, 49, 60);\n"
-"	padding-left: 5px;\n"
-"	padding-right: 5px;\n"
-"	gridline-color: rgb(44, 49, 60);\n"
-"}\n"
-"QTableWidget::item:selected{\n"
-"	background-color: rgb(85, 170, 255);\n"
-"}\n"
-"QScrollBar:horizontal {\n"
-"    border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    height: 14px;\n"
-"    margin: 0px 21px 0 21px;\n"
-"	border-radius: 0px;\n"
-"}\n"
-" QScrollBar:vertical {\n"
-"	border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    width: 14px;\n"
-"    margin: 21px 0 21px 0;\n"
-"	border-radius: 0px;\n"
-" }\n"
-"QHeaderView::section{\n"
-"	Background-color: rgb(39, 44, 54);\n"
-"	max-width: 30px;\n"
-"	border: 1px solid rgb(44, 49, 60);\n"
-"	border-style: none;\n"
-"    border-bottom: 1px solid rgb(44, 49, 60);\n"
-"    border-right: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-""
-                        "QTableWidget::horizontalHeader {	\n"
-"	background-color: rgb(81, 255, 0);\n"
-"}\n"
-"QHeaderView::section:horizontal\n"
-"{\n"
-"    border: 1px solid rgb(32, 34, 42);\n"
-"	background-color: rgb(27, 29, 35);\n"
-"	padding: 3px;\n"
-"	border-top-left-radius: 7px;\n"
-"    border-top-right-radius: 7px;\n"
-"}\n"
-"QHeaderView::section:vertical\n"
-"{\n"
-"    border: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-"")
-        self.enc_statistics_table.setFrameShape(QFrame.NoFrame)
-        self.enc_statistics_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.enc_statistics_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
-        self.enc_statistics_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.enc_statistics_table.setAlternatingRowColors(False)
-        self.enc_statistics_table.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.enc_statistics_table.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.enc_statistics_table.setShowGrid(True)
-        self.enc_statistics_table.setGridStyle(Qt.SolidLine)
-        self.enc_statistics_table.setSortingEnabled(True)
-        self.enc_statistics_table.setRowCount(13)
-        self.enc_statistics_table.horizontalHeader().setVisible(False)
-        self.enc_statistics_table.horizontalHeader().setCascadingSectionResizes(True)
-        self.enc_statistics_table.horizontalHeader().setDefaultSectionSize(200)
-        self.enc_statistics_table.horizontalHeader().setStretchLastSection(True)
-        self.enc_statistics_table.verticalHeader().setVisible(False)
-        self.enc_statistics_table.verticalHeader().setCascadingSectionResizes(False)
-        self.enc_statistics_table.verticalHeader().setHighlightSections(False)
-        self.enc_statistics_table.verticalHeader().setStretchLastSection(True)
+        # endif
+        self.enc_statistics_list_table.setPalette(palette2)
+        self.enc_statistics_list_table.setFont(font10)
+        self.enc_statistics_list_table.setStyleSheet(u"QTableWidget {	\n"
+                                                     "	background-color: rgb(39, 44, 54);\n"
+                                                     "	padding: 10px;\n"
+                                                     "	border-radius: 5px;\n"
+                                                     "	gridline-color: rgb(44, 49, 60);\n"
+                                                     "	border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "QTableWidget::item{\n"
+                                                     "	border-color: rgb(44, 49, 60);\n"
+                                                     "	padding-left: 5px;\n"
+                                                     "	padding-right: 5px;\n"
+                                                     "	gridline-color: rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "QTableWidget::item:selected{\n"
+                                                     "	background-color: rgb(85, 170, 255);\n"
+                                                     "}\n"
+                                                     "QScrollBar:horizontal {\n"
+                                                     "    border: none;\n"
+                                                     "    background: rgb(52, 59, 72);\n"
+                                                     "    height: 14px;\n"
+                                                     "    margin: 0px 21px 0 21px;\n"
+                                                     "	border-radius: 0px;\n"
+                                                     "}\n"
+                                                     " QScrollBar:vertical {\n"
+                                                     "	border: none;\n"
+                                                     "    background: rgb(52, 59, 72);\n"
+                                                     "    width: 14px;\n"
+                                                     "    margin: 21px 0 21px 0;\n"
+                                                     "	border-radius: 0px;\n"
+                                                     " }\n"
+                                                     "QHeaderView::section{\n"
+                                                     "	Background-color: rgb(39, 44, 54);\n"
+                                                     "	max-width: 30px;\n"
+                                                     "	border: 1px solid rgb(44, 49, 60);\n"
+                                                     "	border-style: none;\n"
+                                                     "    border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                     "    border-right: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     ""
+                                                     "QTableWidget::horizontalHeader {	\n"
+                                                     "	background-color: rgb(81, 255, 0);\n"
+                                                     "}\n"
+                                                     "QHeaderView::section:horizontal\n"
+                                                     "{\n"
+                                                     "    border: 1px solid rgb(32, 34, 42);\n"
+                                                     "	background-color: rgb(27, 29, 35);\n"
+                                                     "	padding: 3px;\n"
+                                                     "	border-top-left-radius: 7px;\n"
+                                                     "    border-top-right-radius: 7px;\n"
+                                                     "}\n"
+                                                     "QHeaderView::section:vertical\n"
+                                                     "{\n"
+                                                     "    border: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "")
+        self.enc_statistics_list_table.setFrameShape(QFrame.NoFrame)
+        self.enc_statistics_list_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.enc_statistics_list_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.enc_statistics_list_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.enc_statistics_list_table.setAlternatingRowColors(False)
+        self.enc_statistics_list_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.enc_statistics_list_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.enc_statistics_list_table.setShowGrid(True)
+        self.enc_statistics_list_table.setGridStyle(Qt.SolidLine)
+        self.enc_statistics_list_table.setSortingEnabled(True)
+        self.enc_statistics_list_table.setRowCount(13)
+        self.enc_statistics_list_table.horizontalHeader().setVisible(False)
+        self.enc_statistics_list_table.horizontalHeader().setCascadingSectionResizes(True)
+        self.enc_statistics_list_table.horizontalHeader().setDefaultSectionSize(200)
+        self.enc_statistics_list_table.horizontalHeader().setStretchLastSection(True)
+        self.enc_statistics_list_table.verticalHeader().setVisible(False)
+        self.enc_statistics_list_table.verticalHeader().setCascadingSectionResizes(False)
+        self.enc_statistics_list_table.verticalHeader().setHighlightSections(False)
+        self.enc_statistics_list_table.verticalHeader().setStretchLastSection(True)
 
-        self.horizontalLayout_16.addWidget(self.enc_statistics_table)
+        self.horizontalLayout_16.addWidget(self.enc_statistics_list_table)
 
         self.enc_statistics_title_frame = QFrame(self.page_enc_statistics)
         self.enc_statistics_title_frame.setObjectName(u"enc_statistics_title_frame")
         self.enc_statistics_title_frame.setGeometry(QRect(10, 10, 880, 50))
         self.enc_statistics_title_frame.setStyleSheet(u"background-color: rgb(39, 44, 54);\n"
-"border-radius: 5px;")
+                                                      "border-radius: 5px;")
         self.enc_statistics_title_frame.setFrameShape(QFrame.StyledPanel)
         self.enc_statistics_title_frame.setFrameShadow(QFrame.Raised)
         self.enc_statistics_label = QLabel(self.enc_statistics_title_frame)
@@ -2373,12 +2401,156 @@ class Ui_MainWindow(object):
         self.enc_statistics_label.setMinimumSize(QSize(0, 40))
         self.enc_statistics_label.setFont(font8)
         self.enc_statistics_label.setAlignment(Qt.AlignCenter)
+        self.enc_statistics_data_frame = QFrame(self.page_enc_statistics)
+        self.enc_statistics_data_frame.setObjectName(u"enc_statistics_data_frame")
+        self.enc_statistics_data_frame.setGeometry(QRect(10, 70, 879, 251))
+        self.enc_statistics_data_frame.setStyleSheet(u"background-color: rgb(39, 44, 54);\n"
+                                                     "border-radius: 5px;")
+        self.enc_statistics_data_frame.setFrameShape(QFrame.StyledPanel)
+        self.enc_statistics_data_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayoutWidget = QWidget(self.enc_statistics_data_frame)
+        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
+        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 621, 241))
+        self.enc_statistics_layout_data_box = QVBoxLayout(self.verticalLayoutWidget)
+        self.enc_statistics_layout_data_box.setSpacing(10)
+        self.enc_statistics_layout_data_box.setObjectName(u"enc_statistics_layout_data_box")
+        self.enc_statistics_layout_data_box.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.enc_statistics_layout_data_box.setContentsMargins(55, 15, 20, 0)
+        self.enc_statistics_data_label = QLabel(self.verticalLayoutWidget)
+        self.enc_statistics_data_label.setObjectName(u"enc_statistics_data_label")
+        self.enc_statistics_data_label.setFont(font4)
+        self.enc_statistics_data_label.setAlignment(Qt.AlignCenter)
+
+        self.enc_statistics_layout_data_box.addWidget(self.enc_statistics_data_label)
+
+        self.enc_statistics_data_table = QTableWidget(self.verticalLayoutWidget)
+        if (self.enc_statistics_data_table.columnCount() < 4):
+            self.enc_statistics_data_table.setColumnCount(4)
+        __qtablewidgetitem10 = QTableWidgetItem()
+        self.enc_statistics_data_table.setHorizontalHeaderItem(0, __qtablewidgetitem10)
+        __qtablewidgetitem11 = QTableWidgetItem()
+        self.enc_statistics_data_table.setHorizontalHeaderItem(1, __qtablewidgetitem11)
+        __qtablewidgetitem12 = QTableWidgetItem()
+        self.enc_statistics_data_table.setHorizontalHeaderItem(2, __qtablewidgetitem12)
+        __qtablewidgetitem13 = QTableWidgetItem()
+        self.enc_statistics_data_table.setHorizontalHeaderItem(3, __qtablewidgetitem13)
+        if (self.enc_statistics_data_table.rowCount() < 4):
+            self.enc_statistics_data_table.setRowCount(4)
+        __qtablewidgetitem14 = QTableWidgetItem()
+        self.enc_statistics_data_table.setVerticalHeaderItem(0, __qtablewidgetitem14)
+        __qtablewidgetitem15 = QTableWidgetItem()
+        self.enc_statistics_data_table.setVerticalHeaderItem(1, __qtablewidgetitem15)
+        __qtablewidgetitem16 = QTableWidgetItem()
+        self.enc_statistics_data_table.setVerticalHeaderItem(2, __qtablewidgetitem16)
+        __qtablewidgetitem17 = QTableWidgetItem()
+        self.enc_statistics_data_table.setVerticalHeaderItem(3, __qtablewidgetitem17)
+        font16 = QFont()
+        font16.setKerning(True)
+        __qtablewidgetitem18 = QTableWidgetItem()
+        __qtablewidgetitem18.setTextAlignment(Qt.AlignCenter);
+        __qtablewidgetitem18.setFont(font16);
+        self.enc_statistics_data_table.setItem(0, 0, __qtablewidgetitem18)
+        self.enc_statistics_data_table.setObjectName(u"enc_statistics_data_table")
+        sizePolicy11 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
+        sizePolicy11.setHorizontalStretch(0)
+        sizePolicy11.setVerticalStretch(0)
+        sizePolicy11.setHeightForWidth(self.enc_statistics_data_table.sizePolicy().hasHeightForWidth())
+        self.enc_statistics_data_table.setSizePolicy(sizePolicy11)
+        self.enc_statistics_data_table.setLayoutDirection(Qt.LeftToRight)
+        self.enc_statistics_data_table.setAutoFillBackground(False)
+        self.enc_statistics_data_table.setStyleSheet(u"QTableWidget {	\n"
+                                                     "	background-color: rgb(39, 44, 54);\n"
+                                                     "	padding: 10px;\n"
+                                                     "	border-radius: 5px;\n"
+                                                     "	gridline-color: rgb(44, 49, 60);\n"
+                                                     "	border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "QTableWidget::item{\n"
+                                                     "	border-color: rgb(44, 49, 60);\n"
+                                                     "	padding-left: 5px;\n"
+                                                     "	padding-right: 5px;\n"
+                                                     "	gridline-color: rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "QTableWidget::item:selected{\n"
+                                                     "	background-color: rgb(85, 170, 255);\n"
+                                                     "}\n"
+                                                     "QScrollBar:horizontal {\n"
+                                                     "    border: none;\n"
+                                                     "    background: rgb(52, 59, 72);\n"
+                                                     "    height: 14px;\n"
+                                                     "    margin: 0px 21px 0 21px;\n"
+                                                     "	border-radius: 0px;\n"
+                                                     "}\n"
+                                                     " QScrollBar:vertical {\n"
+                                                     "	border: none;\n"
+                                                     "    background: rgb(52, 59, 72);\n"
+                                                     "    width: 14px;\n"
+                                                     "    margin: 21px 0 21px 0;\n"
+                                                     "	border-radius: 0px;\n"
+                                                     " }\n"
+                                                     "QHeaderView::section{\n"
+                                                     "	Background-color: rgb(39, 44, 54);\n"
+                                                     "	max-width: 30px;\n"
+                                                     "	border: 1px solid rgb(44, 49, 60);\n"
+                                                     "	border-style: none;\n"
+                                                     "    border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                     "    border-right: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     ""
+                                                     "QTableWidget::horizontalHeader {	\n"
+                                                     "	background-color: rgb(81, 255, 0);\n"
+                                                     "}\n"
+                                                     "QHeaderView::section:horizontal\n"
+                                                     "{\n"
+                                                     "    border: 1px solid rgb(32, 34, 42);\n"
+                                                     "	background-color: rgb(27, 29, 35);\n"
+                                                     "	padding: 3px;\n"
+                                                     "	border-top-left-radius: 7px;\n"
+                                                     "    border-top-right-radius: 7px;\n"
+                                                     "}\n"
+                                                     "QHeaderView::section:vertical\n"
+                                                     "{\n"
+                                                     "    border: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "")
+        self.enc_statistics_data_table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.enc_statistics_data_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.enc_statistics_data_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.enc_statistics_data_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.enc_statistics_data_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.enc_statistics_data_table.setShowGrid(True)
+        self.enc_statistics_data_table.setSortingEnabled(True)
+        self.enc_statistics_data_table.horizontalHeader().setCascadingSectionResizes(False)
+
+        self.enc_statistics_layout_data_box.addWidget(self.enc_statistics_data_table)
+
+        self.verticalLayoutWidget_2 = QWidget(self.enc_statistics_data_frame)
+        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
+        self.verticalLayoutWidget_2.setGeometry(QRect(620, 0, 251, 241))
+        self.enc_statistics_layout_hw_box = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.enc_statistics_layout_hw_box.setObjectName(u"enc_statistics_layout_hw_box")
+        self.enc_statistics_layout_hw_box.setContentsMargins(0, 0, 0, 0)
+        self.enc_statistics_hw_box_label = QLabel(self.verticalLayoutWidget_2)
+        self.enc_statistics_hw_box_label.setObjectName(u"enc_statistics_hw_box_label")
+        self.enc_statistics_hw_box_label.setFont(font4)
+        self.enc_statistics_hw_box_label.setLayoutDirection(Qt.LeftToRight)
+        self.enc_statistics_hw_box_label.setAlignment(Qt.AlignCenter)
+
+        self.enc_statistics_layout_hw_box.addWidget(self.enc_statistics_hw_box_label)
+
+        self.enc_statistics_hw_label = QLabel(self.verticalLayoutWidget_2)
+        self.enc_statistics_hw_label.setObjectName(u"enc_statistics_hw_label")
+        self.enc_statistics_hw_label.setFont(font10)
+        self.enc_statistics_hw_label.setAlignment(Qt.AlignCenter)
+
+        self.enc_statistics_layout_hw_box.addWidget(self.enc_statistics_hw_label)
         self.stackedWidget.addWidget(self.page_enc_statistics)
+
         self.page_dsa_statistics = QWidget()
         self.page_dsa_statistics.setObjectName(u"page_dsa_statistics")
         self.dsa_statistics_table_frame = QFrame(self.page_dsa_statistics)
         self.dsa_statistics_table_frame.setObjectName(u"dsa_statistics_table_frame")
-        self.dsa_statistics_table_frame.setGeometry(QRect(9, 70, 880, 500))
+        self.dsa_statistics_table_frame.setGeometry(QRect(8, 329, 880, 261))
         self.dsa_statistics_table_frame.setMinimumSize(QSize(0, 150))
         self.dsa_statistics_table_frame.setFrameShape(QFrame.StyledPanel)
         self.dsa_statistics_table_frame.setFrameShadow(QFrame.Raised)
@@ -2389,16 +2561,16 @@ class Ui_MainWindow(object):
         self.dsa_statistics_table = QTableWidget(self.dsa_statistics_table_frame)
         if (self.dsa_statistics_table.columnCount() < 5):
             self.dsa_statistics_table.setColumnCount(5)
-        __qtablewidgetitem10 = QTableWidgetItem()
-        self.dsa_statistics_table.setHorizontalHeaderItem(0, __qtablewidgetitem10)
-        __qtablewidgetitem11 = QTableWidgetItem()
-        self.dsa_statistics_table.setHorizontalHeaderItem(1, __qtablewidgetitem11)
-        __qtablewidgetitem12 = QTableWidgetItem()
-        self.dsa_statistics_table.setHorizontalHeaderItem(2, __qtablewidgetitem12)
-        __qtablewidgetitem13 = QTableWidgetItem()
-        self.dsa_statistics_table.setHorizontalHeaderItem(3, __qtablewidgetitem13)
-        __qtablewidgetitem14 = QTableWidgetItem()
-        self.dsa_statistics_table.setHorizontalHeaderItem(4, __qtablewidgetitem14)
+        __qtablewidgetitem19 = QTableWidgetItem()
+        self.dsa_statistics_table.setHorizontalHeaderItem(0, __qtablewidgetitem19)
+        __qtablewidgetitem20 = QTableWidgetItem()
+        self.dsa_statistics_table.setHorizontalHeaderItem(1, __qtablewidgetitem20)
+        __qtablewidgetitem21 = QTableWidgetItem()
+        self.dsa_statistics_table.setHorizontalHeaderItem(2, __qtablewidgetitem21)
+        __qtablewidgetitem22 = QTableWidgetItem()
+        self.dsa_statistics_table.setHorizontalHeaderItem(3, __qtablewidgetitem22)
+        __qtablewidgetitem23 = QTableWidgetItem()
+        self.dsa_statistics_table.setHorizontalHeaderItem(4, __qtablewidgetitem23)
         if (self.dsa_statistics_table.rowCount() < 13):
             self.dsa_statistics_table.setRowCount(13)
         self.dsa_statistics_table.setObjectName(u"dsa_statistics_table")
@@ -2414,9 +2586,9 @@ class Ui_MainWindow(object):
         palette3.setBrush(QPalette.Active, QPalette.Window, brush15)
         brush22 = QBrush(QColor(210, 210, 210, 128))
         brush22.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette3.setBrush(QPalette.Active, QPalette.PlaceholderText, brush22)
-#endif
+        # endif
         palette3.setBrush(QPalette.Inactive, QPalette.WindowText, brush6)
         palette3.setBrush(QPalette.Inactive, QPalette.Button, brush15)
         palette3.setBrush(QPalette.Inactive, QPalette.Text, brush6)
@@ -2425,9 +2597,9 @@ class Ui_MainWindow(object):
         palette3.setBrush(QPalette.Inactive, QPalette.Window, brush15)
         brush23 = QBrush(QColor(210, 210, 210, 128))
         brush23.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette3.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush23)
-#endif
+        # endif
         palette3.setBrush(QPalette.Disabled, QPalette.WindowText, brush6)
         palette3.setBrush(QPalette.Disabled, QPalette.Button, brush15)
         palette3.setBrush(QPalette.Disabled, QPalette.Text, brush6)
@@ -2436,66 +2608,66 @@ class Ui_MainWindow(object):
         palette3.setBrush(QPalette.Disabled, QPalette.Window, brush15)
         brush24 = QBrush(QColor(210, 210, 210, 128))
         brush24.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette3.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush24)
-#endif
+        # endif
         self.dsa_statistics_table.setPalette(palette3)
         self.dsa_statistics_table.setFont(font10)
         self.dsa_statistics_table.setStyleSheet(u"QTableWidget {	\n"
-"	background-color: rgb(39, 44, 54);\n"
-"	padding: 10px;\n"
-"	border-radius: 5px;\n"
-"	gridline-color: rgb(44, 49, 60);\n"
-"	border-bottom: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-"QTableWidget::item{\n"
-"	border-color: rgb(44, 49, 60);\n"
-"	padding-left: 5px;\n"
-"	padding-right: 5px;\n"
-"	gridline-color: rgb(44, 49, 60);\n"
-"}\n"
-"QTableWidget::item:selected{\n"
-"	background-color: rgb(85, 170, 255);\n"
-"}\n"
-"QScrollBar:horizontal {\n"
-"    border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    height: 14px;\n"
-"    margin: 0px 21px 0 21px;\n"
-"	border-radius: 0px;\n"
-"}\n"
-" QScrollBar:vertical {\n"
-"	border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    width: 14px;\n"
-"    margin: 21px 0 21px 0;\n"
-"	border-radius: 0px;\n"
-" }\n"
-"QHeaderView::section{\n"
-"	Background-color: rgb(39, 44, 54);\n"
-"	max-width: 30px;\n"
-"	border: 1px solid rgb(44, 49, 60);\n"
-"	border-style: none;\n"
-"    border-bottom: 1px solid rgb(44, 49, 60);\n"
-"    border-right: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-""
-                        "QTableWidget::horizontalHeader {	\n"
-"	background-color: rgb(81, 255, 0);\n"
-"}\n"
-"QHeaderView::section:horizontal\n"
-"{\n"
-"    border: 1px solid rgb(32, 34, 42);\n"
-"	background-color: rgb(27, 29, 35);\n"
-"	padding: 3px;\n"
-"	border-top-left-radius: 7px;\n"
-"    border-top-right-radius: 7px;\n"
-"}\n"
-"QHeaderView::section:vertical\n"
-"{\n"
-"    border: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-"")
+                                                "	background-color: rgb(39, 44, 54);\n"
+                                                "	padding: 10px;\n"
+                                                "	border-radius: 5px;\n"
+                                                "	gridline-color: rgb(44, 49, 60);\n"
+                                                "	border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                "}\n"
+                                                "QTableWidget::item{\n"
+                                                "	border-color: rgb(44, 49, 60);\n"
+                                                "	padding-left: 5px;\n"
+                                                "	padding-right: 5px;\n"
+                                                "	gridline-color: rgb(44, 49, 60);\n"
+                                                "}\n"
+                                                "QTableWidget::item:selected{\n"
+                                                "	background-color: rgb(85, 170, 255);\n"
+                                                "}\n"
+                                                "QScrollBar:horizontal {\n"
+                                                "    border: none;\n"
+                                                "    background: rgb(52, 59, 72);\n"
+                                                "    height: 14px;\n"
+                                                "    margin: 0px 21px 0 21px;\n"
+                                                "	border-radius: 0px;\n"
+                                                "}\n"
+                                                " QScrollBar:vertical {\n"
+                                                "	border: none;\n"
+                                                "    background: rgb(52, 59, 72);\n"
+                                                "    width: 14px;\n"
+                                                "    margin: 21px 0 21px 0;\n"
+                                                "	border-radius: 0px;\n"
+                                                " }\n"
+                                                "QHeaderView::section{\n"
+                                                "	Background-color: rgb(39, 44, 54);\n"
+                                                "	max-width: 30px;\n"
+                                                "	border: 1px solid rgb(44, 49, 60);\n"
+                                                "	border-style: none;\n"
+                                                "    border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                "    border-right: 1px solid rgb(44, 49, 60);\n"
+                                                "}\n"
+                                                ""
+                                                "QTableWidget::horizontalHeader {	\n"
+                                                "	background-color: rgb(81, 255, 0);\n"
+                                                "}\n"
+                                                "QHeaderView::section:horizontal\n"
+                                                "{\n"
+                                                "    border: 1px solid rgb(32, 34, 42);\n"
+                                                "	background-color: rgb(27, 29, 35);\n"
+                                                "	padding: 3px;\n"
+                                                "	border-top-left-radius: 7px;\n"
+                                                "    border-top-right-radius: 7px;\n"
+                                                "}\n"
+                                                "QHeaderView::section:vertical\n"
+                                                "{\n"
+                                                "    border: 1px solid rgb(44, 49, 60);\n"
+                                                "}\n"
+                                                "")
         self.dsa_statistics_table.setFrameShape(QFrame.NoFrame)
         self.dsa_statistics_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.dsa_statistics_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
@@ -2518,14 +2690,14 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_17.addWidget(self.dsa_statistics_table)
 
-        self.dsa_statistic_title_frame = QFrame(self.page_dsa_statistics)
-        self.dsa_statistic_title_frame.setObjectName(u"dsa_statistic_title_frame")
-        self.dsa_statistic_title_frame.setGeometry(QRect(10, 10, 880, 50))
-        self.dsa_statistic_title_frame.setStyleSheet(u"background-color: rgb(39, 44, 54);\n"
-"border-radius: 5px;")
-        self.dsa_statistic_title_frame.setFrameShape(QFrame.StyledPanel)
-        self.dsa_statistic_title_frame.setFrameShadow(QFrame.Raised)
-        self.dsa_statistics_label = QLabel(self.dsa_statistic_title_frame)
+        self.dsa_statistics_title_frame = QFrame(self.page_dsa_statistics)
+        self.dsa_statistics_title_frame.setObjectName(u"dsa_statistics_title_frame")
+        self.dsa_statistics_title_frame.setGeometry(QRect(10, 10, 880, 50))
+        self.dsa_statistics_title_frame.setStyleSheet(u"background-color: rgb(39, 44, 54);\n"
+                                                      "border-radius: 5px;")
+        self.dsa_statistics_title_frame.setFrameShape(QFrame.StyledPanel)
+        self.dsa_statistics_title_frame.setFrameShadow(QFrame.Raised)
+        self.dsa_statistics_label = QLabel(self.dsa_statistics_title_frame)
         self.dsa_statistics_label.setObjectName(u"dsa_statistics_label")
         self.dsa_statistics_label.setGeometry(QRect(1, 1, 870, 50))
         sizePolicy7.setHeightForWidth(self.dsa_statistics_label.sizePolicy().hasHeightForWidth())
@@ -2533,12 +2705,149 @@ class Ui_MainWindow(object):
         self.dsa_statistics_label.setMinimumSize(QSize(0, 40))
         self.dsa_statistics_label.setFont(font8)
         self.dsa_statistics_label.setAlignment(Qt.AlignCenter)
+        self.dsa_statistics_data_frame = QFrame(self.page_dsa_statistics)
+        self.dsa_statistics_data_frame.setObjectName(u"dsa_statistics_data_frame")
+        self.dsa_statistics_data_frame.setGeometry(QRect(10, 70, 879, 251))
+        self.dsa_statistics_data_frame.setStyleSheet(u"background-color: rgb(39, 44, 54);\n"
+                                                     "border-radius: 5px;")
+        self.dsa_statistics_data_frame.setFrameShape(QFrame.StyledPanel)
+        self.dsa_statistics_data_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayoutWidget_5 = QWidget(self.dsa_statistics_data_frame)
+        self.verticalLayoutWidget_5.setObjectName(u"verticalLayoutWidget_5")
+        self.verticalLayoutWidget_5.setGeometry(QRect(620, 0, 251, 241))
+        self.dsa_statistics_layout_hw_box = QVBoxLayout(self.verticalLayoutWidget_5)
+        self.dsa_statistics_layout_hw_box.setObjectName(u"dsa_statistics_layout_hw_box")
+        self.dsa_statistics_layout_hw_box.setContentsMargins(0, 0, 0, 0)
+        self.dsa_statistics_hw_box_label = QLabel(self.verticalLayoutWidget_5)
+        self.dsa_statistics_hw_box_label.setObjectName(u"dsa_statistics_hw_box_label")
+        self.dsa_statistics_hw_box_label.setFont(font4)
+        self.dsa_statistics_hw_box_label.setLayoutDirection(Qt.LeftToRight)
+        self.dsa_statistics_hw_box_label.setAlignment(Qt.AlignCenter)
+
+        self.dsa_statistics_layout_hw_box.addWidget(self.dsa_statistics_hw_box_label)
+
+        self.dsa_statistics_hw_label = QLabel(self.verticalLayoutWidget_5)
+        self.dsa_statistics_hw_label.setObjectName(u"dsa_statistics_hw_label")
+        self.dsa_statistics_hw_label.setFont(font10)
+        self.dsa_statistics_hw_label.setAlignment(Qt.AlignCenter)
+
+        self.dsa_statistics_layout_hw_box.addWidget(self.dsa_statistics_hw_label)
+
+        self.verticalLayoutWidget_6 = QWidget(self.dsa_statistics_data_frame)
+        self.verticalLayoutWidget_6.setObjectName(u"verticalLayoutWidget_6")
+        self.verticalLayoutWidget_6.setGeometry(QRect(0, 0, 621, 241))
+        self.dsa_statistics_layout_data_box = QVBoxLayout(self.verticalLayoutWidget_6)
+        self.dsa_statistics_layout_data_box.setSpacing(10)
+        self.dsa_statistics_layout_data_box.setObjectName(u"dsa_statistics_layout_data_box")
+        self.dsa_statistics_layout_data_box.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.dsa_statistics_layout_data_box.setContentsMargins(55, 25, 20, 0)
+        self.dsa_statistics_data_label = QLabel(self.verticalLayoutWidget_6)
+        self.dsa_statistics_data_label.setObjectName(u"dsa_statistics_data_label")
+        self.dsa_statistics_data_label.setFont(font4)
+        self.dsa_statistics_data_label.setAlignment(Qt.AlignCenter)
+
+        self.dsa_statistics_layout_data_box.addWidget(self.dsa_statistics_data_label)
+
+        self.dsa_statistics_data_table = QTableWidget(self.verticalLayoutWidget_6)
+        if (self.dsa_statistics_data_table.columnCount() < 4):
+            self.dsa_statistics_data_table.setColumnCount(4)
+        __qtablewidgetitem24 = QTableWidgetItem()
+        self.dsa_statistics_data_table.setHorizontalHeaderItem(0, __qtablewidgetitem24)
+        __qtablewidgetitem25 = QTableWidgetItem()
+        self.dsa_statistics_data_table.setHorizontalHeaderItem(1, __qtablewidgetitem25)
+        __qtablewidgetitem26 = QTableWidgetItem()
+        self.dsa_statistics_data_table.setHorizontalHeaderItem(2, __qtablewidgetitem26)
+        __qtablewidgetitem27 = QTableWidgetItem()
+        self.dsa_statistics_data_table.setHorizontalHeaderItem(3, __qtablewidgetitem27)
+        if (self.dsa_statistics_data_table.rowCount() < 3):
+            self.dsa_statistics_data_table.setRowCount(3)
+        __qtablewidgetitem28 = QTableWidgetItem()
+        self.dsa_statistics_data_table.setVerticalHeaderItem(0, __qtablewidgetitem28)
+        __qtablewidgetitem29 = QTableWidgetItem()
+        self.dsa_statistics_data_table.setVerticalHeaderItem(1, __qtablewidgetitem29)
+        __qtablewidgetitem30 = QTableWidgetItem()
+        self.dsa_statistics_data_table.setVerticalHeaderItem(2, __qtablewidgetitem30)
+        __qtablewidgetitem31 = QTableWidgetItem()
+        __qtablewidgetitem31.setTextAlignment(Qt.AlignCenter);
+        __qtablewidgetitem31.setFont(font16);
+        self.dsa_statistics_data_table.setItem(0, 0, __qtablewidgetitem31)
+        self.dsa_statistics_data_table.setObjectName(u"dsa_statistics_data_table")
+        sizePolicy11.setHeightForWidth(self.dsa_statistics_data_table.sizePolicy().hasHeightForWidth())
+        self.dsa_statistics_data_table.setSizePolicy(sizePolicy11)
+        self.dsa_statistics_data_table.setLayoutDirection(Qt.LeftToRight)
+        self.dsa_statistics_data_table.setAutoFillBackground(False)
+        self.dsa_statistics_data_table.setStyleSheet(u"QTableWidget {	\n"
+                                                     "	background-color: rgb(39, 44, 54);\n"
+                                                     "	padding: 10px;\n"
+                                                     "	border-radius: 5px;\n"
+                                                     "	gridline-color: rgb(44, 49, 60);\n"
+                                                     "	border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "QTableWidget::item{\n"
+                                                     "	border-color: rgb(44, 49, 60);\n"
+                                                     "	padding-left: 5px;\n"
+                                                     "	padding-right: 5px;\n"
+                                                     "	gridline-color: rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "QTableWidget::item:selected{\n"
+                                                     "	background-color: rgb(85, 170, 255);\n"
+                                                     "}\n"
+                                                     "QScrollBar:horizontal {\n"
+                                                     "    border: none;\n"
+                                                     "    background: rgb(52, 59, 72);\n"
+                                                     "    height: 14px;\n"
+                                                     "    margin: 0px 21px 0 21px;\n"
+                                                     "	border-radius: 0px;\n"
+                                                     "}\n"
+                                                     " QScrollBar:vertical {\n"
+                                                     "	border: none;\n"
+                                                     "    background: rgb(52, 59, 72);\n"
+                                                     "    width: 14px;\n"
+                                                     "    margin: 21px 0 21px 0;\n"
+                                                     "	border-radius: 0px;\n"
+                                                     " }\n"
+                                                     "QHeaderView::section{\n"
+                                                     "	Background-color: rgb(39, 44, 54);\n"
+                                                     "	max-width: 30px;\n"
+                                                     "	border: 1px solid rgb(44, 49, 60);\n"
+                                                     "	border-style: none;\n"
+                                                     "    border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                     "    border-right: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     ""
+                                                     "QTableWidget::horizontalHeader {	\n"
+                                                     "	background-color: rgb(81, 255, 0);\n"
+                                                     "}\n"
+                                                     "QHeaderView::section:horizontal\n"
+                                                     "{\n"
+                                                     "    border: 1px solid rgb(32, 34, 42);\n"
+                                                     "	background-color: rgb(27, 29, 35);\n"
+                                                     "	padding: 3px;\n"
+                                                     "	border-top-left-radius: 7px;\n"
+                                                     "    border-top-right-radius: 7px;\n"
+                                                     "}\n"
+                                                     "QHeaderView::section:vertical\n"
+                                                     "{\n"
+                                                     "    border: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "")
+        self.dsa_statistics_data_table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.dsa_statistics_data_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.dsa_statistics_data_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.dsa_statistics_data_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.dsa_statistics_data_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.dsa_statistics_data_table.setShowGrid(True)
+        self.dsa_statistics_data_table.setSortingEnabled(True)
+        self.dsa_statistics_data_table.horizontalHeader().setCascadingSectionResizes(False)
+
+        self.dsa_statistics_layout_data_box.addWidget(self.dsa_statistics_data_table)
+
         self.stackedWidget.addWidget(self.page_dsa_statistics)
         self.page_key_statistics = QWidget()
         self.page_key_statistics.setObjectName(u"page_key_statistics")
         self.key_statistics_table_frame = QFrame(self.page_key_statistics)
         self.key_statistics_table_frame.setObjectName(u"key_statistics_table_frame")
-        self.key_statistics_table_frame.setGeometry(QRect(9, 70, 880, 500))
+        self.key_statistics_table_frame.setGeometry(QRect(8, 399, 880, 191))
         self.key_statistics_table_frame.setMinimumSize(QSize(0, 150))
         self.key_statistics_table_frame.setFrameShape(QFrame.StyledPanel)
         self.key_statistics_table_frame.setFrameShadow(QFrame.Raised)
@@ -2549,12 +2858,12 @@ class Ui_MainWindow(object):
         self.key_statistics_table = QTableWidget(self.key_statistics_table_frame)
         if (self.key_statistics_table.columnCount() < 3):
             self.key_statistics_table.setColumnCount(3)
-        __qtablewidgetitem15 = QTableWidgetItem()
-        self.key_statistics_table.setHorizontalHeaderItem(0, __qtablewidgetitem15)
-        __qtablewidgetitem16 = QTableWidgetItem()
-        self.key_statistics_table.setHorizontalHeaderItem(1, __qtablewidgetitem16)
-        __qtablewidgetitem17 = QTableWidgetItem()
-        self.key_statistics_table.setHorizontalHeaderItem(2, __qtablewidgetitem17)
+        __qtablewidgetitem32 = QTableWidgetItem()
+        self.key_statistics_table.setHorizontalHeaderItem(0, __qtablewidgetitem32)
+        __qtablewidgetitem33 = QTableWidgetItem()
+        self.key_statistics_table.setHorizontalHeaderItem(1, __qtablewidgetitem33)
+        __qtablewidgetitem34 = QTableWidgetItem()
+        self.key_statistics_table.setHorizontalHeaderItem(2, __qtablewidgetitem34)
         if (self.key_statistics_table.rowCount() < 13):
             self.key_statistics_table.setRowCount(13)
         self.key_statistics_table.setObjectName(u"key_statistics_table")
@@ -2570,9 +2879,9 @@ class Ui_MainWindow(object):
         palette4.setBrush(QPalette.Active, QPalette.Window, brush15)
         brush25 = QBrush(QColor(210, 210, 210, 128))
         brush25.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette4.setBrush(QPalette.Active, QPalette.PlaceholderText, brush25)
-#endif
+        # endif
         palette4.setBrush(QPalette.Inactive, QPalette.WindowText, brush6)
         palette4.setBrush(QPalette.Inactive, QPalette.Button, brush15)
         palette4.setBrush(QPalette.Inactive, QPalette.Text, brush6)
@@ -2581,9 +2890,9 @@ class Ui_MainWindow(object):
         palette4.setBrush(QPalette.Inactive, QPalette.Window, brush15)
         brush26 = QBrush(QColor(210, 210, 210, 128))
         brush26.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette4.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush26)
-#endif
+        # endif
         palette4.setBrush(QPalette.Disabled, QPalette.WindowText, brush6)
         palette4.setBrush(QPalette.Disabled, QPalette.Button, brush15)
         palette4.setBrush(QPalette.Disabled, QPalette.Text, brush6)
@@ -2592,66 +2901,66 @@ class Ui_MainWindow(object):
         palette4.setBrush(QPalette.Disabled, QPalette.Window, brush15)
         brush27 = QBrush(QColor(210, 210, 210, 128))
         brush27.setStyle(Qt.NoBrush)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        # if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
         palette4.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush27)
-#endif
+        # endif
         self.key_statistics_table.setPalette(palette4)
         self.key_statistics_table.setFont(font10)
         self.key_statistics_table.setStyleSheet(u"QTableWidget {	\n"
-"	background-color: rgb(39, 44, 54);\n"
-"	padding: 10px;\n"
-"	border-radius: 5px;\n"
-"	gridline-color: rgb(44, 49, 60);\n"
-"	border-bottom: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-"QTableWidget::item{\n"
-"	border-color: rgb(44, 49, 60);\n"
-"	padding-left: 5px;\n"
-"	padding-right: 5px;\n"
-"	gridline-color: rgb(44, 49, 60);\n"
-"}\n"
-"QTableWidget::item:selected{\n"
-"	background-color: rgb(85, 170, 255);\n"
-"}\n"
-"QScrollBar:horizontal {\n"
-"    border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    height: 14px;\n"
-"    margin: 0px 21px 0 21px;\n"
-"	border-radius: 0px;\n"
-"}\n"
-" QScrollBar:vertical {\n"
-"	border: none;\n"
-"    background: rgb(52, 59, 72);\n"
-"    width: 14px;\n"
-"    margin: 21px 0 21px 0;\n"
-"	border-radius: 0px;\n"
-" }\n"
-"QHeaderView::section{\n"
-"	Background-color: rgb(39, 44, 54);\n"
-"	max-width: 30px;\n"
-"	border: 1px solid rgb(44, 49, 60);\n"
-"	border-style: none;\n"
-"    border-bottom: 1px solid rgb(44, 49, 60);\n"
-"    border-right: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-""
-                        "QTableWidget::horizontalHeader {	\n"
-"	background-color: rgb(81, 255, 0);\n"
-"}\n"
-"QHeaderView::section:horizontal\n"
-"{\n"
-"    border: 1px solid rgb(32, 34, 42);\n"
-"	background-color: rgb(27, 29, 35);\n"
-"	padding: 3px;\n"
-"	border-top-left-radius: 7px;\n"
-"    border-top-right-radius: 7px;\n"
-"}\n"
-"QHeaderView::section:vertical\n"
-"{\n"
-"    border: 1px solid rgb(44, 49, 60);\n"
-"}\n"
-"")
+                                                "	background-color: rgb(39, 44, 54);\n"
+                                                "	padding: 10px;\n"
+                                                "	border-radius: 5px;\n"
+                                                "	gridline-color: rgb(44, 49, 60);\n"
+                                                "	border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                "}\n"
+                                                "QTableWidget::item{\n"
+                                                "	border-color: rgb(44, 49, 60);\n"
+                                                "	padding-left: 5px;\n"
+                                                "	padding-right: 5px;\n"
+                                                "	gridline-color: rgb(44, 49, 60);\n"
+                                                "}\n"
+                                                "QTableWidget::item:selected{\n"
+                                                "	background-color: rgb(85, 170, 255);\n"
+                                                "}\n"
+                                                "QScrollBar:horizontal {\n"
+                                                "    border: none;\n"
+                                                "    background: rgb(52, 59, 72);\n"
+                                                "    height: 14px;\n"
+                                                "    margin: 0px 21px 0 21px;\n"
+                                                "	border-radius: 0px;\n"
+                                                "}\n"
+                                                " QScrollBar:vertical {\n"
+                                                "	border: none;\n"
+                                                "    background: rgb(52, 59, 72);\n"
+                                                "    width: 14px;\n"
+                                                "    margin: 21px 0 21px 0;\n"
+                                                "	border-radius: 0px;\n"
+                                                " }\n"
+                                                "QHeaderView::section{\n"
+                                                "	Background-color: rgb(39, 44, 54);\n"
+                                                "	max-width: 30px;\n"
+                                                "	border: 1px solid rgb(44, 49, 60);\n"
+                                                "	border-style: none;\n"
+                                                "    border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                "    border-right: 1px solid rgb(44, 49, 60);\n"
+                                                "}\n"
+                                                ""
+                                                "QTableWidget::horizontalHeader {	\n"
+                                                "	background-color: rgb(81, 255, 0);\n"
+                                                "}\n"
+                                                "QHeaderView::section:horizontal\n"
+                                                "{\n"
+                                                "    border: 1px solid rgb(32, 34, 42);\n"
+                                                "	background-color: rgb(27, 29, 35);\n"
+                                                "	padding: 3px;\n"
+                                                "	border-top-left-radius: 7px;\n"
+                                                "    border-top-right-radius: 7px;\n"
+                                                "}\n"
+                                                "QHeaderView::section:vertical\n"
+                                                "{\n"
+                                                "    border: 1px solid rgb(44, 49, 60);\n"
+                                                "}\n"
+                                                "")
         self.key_statistics_table.setFrameShape(QFrame.NoFrame)
         self.key_statistics_table.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.key_statistics_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
@@ -2678,7 +2987,7 @@ class Ui_MainWindow(object):
         self.key_statistic_title_frame.setObjectName(u"key_statistic_title_frame")
         self.key_statistic_title_frame.setGeometry(QRect(10, 10, 880, 50))
         self.key_statistic_title_frame.setStyleSheet(u"background-color: rgb(39, 44, 54);\n"
-"border-radius: 5px;")
+                                                     "border-radius: 5px;")
         self.key_statistic_title_frame.setFrameShape(QFrame.StyledPanel)
         self.key_statistic_title_frame.setFrameShadow(QFrame.Raised)
         self.key_statistics_label = QLabel(self.key_statistic_title_frame)
@@ -2689,6 +2998,150 @@ class Ui_MainWindow(object):
         self.key_statistics_label.setMinimumSize(QSize(0, 40))
         self.key_statistics_label.setFont(font8)
         self.key_statistics_label.setAlignment(Qt.AlignCenter)
+        self.key_statistics_data_frame = QFrame(self.page_key_statistics)
+        self.key_statistics_data_frame.setObjectName(u"key_statistics_data_frame")
+        self.key_statistics_data_frame.setGeometry(QRect(10, 70, 879, 311))
+        self.key_statistics_data_frame.setStyleSheet(u"background-color: rgb(39, 44, 54);\n"
+                                                     "border-radius: 5px;")
+        self.key_statistics_data_frame.setFrameShape(QFrame.StyledPanel)
+        self.key_statistics_data_frame.setFrameShadow(QFrame.Raised)
+        self.verticalLayoutWidget_7 = QWidget(self.key_statistics_data_frame)
+        self.verticalLayoutWidget_7.setObjectName(u"verticalLayoutWidget_7")
+        self.verticalLayoutWidget_7.setGeometry(QRect(0, 0, 621, 311))
+        self.key_statistics_layout_data_box = QVBoxLayout(self.verticalLayoutWidget_7)
+        self.key_statistics_layout_data_box.setSpacing(0)
+        self.key_statistics_layout_data_box.setObjectName(u"key_statistics_layout_data_box")
+        self.key_statistics_layout_data_box.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.key_statistics_layout_data_box.setContentsMargins(55, 10, 20, 0)
+        self.key_statistics_data_label = QLabel(self.verticalLayoutWidget_7)
+        self.key_statistics_data_label.setObjectName(u"key_statistics_data_label")
+        self.key_statistics_data_label.setFont(font4)
+        self.key_statistics_data_label.setAlignment(Qt.AlignCenter)
+
+        self.key_statistics_layout_data_box.addWidget(self.key_statistics_data_label)
+
+        self.key_statistics_data_table = QTableWidget(self.verticalLayoutWidget_7)
+        if (self.key_statistics_data_table.columnCount() < 4):
+            self.key_statistics_data_table.setColumnCount(4)
+        __qtablewidgetitem35 = QTableWidgetItem()
+        self.key_statistics_data_table.setHorizontalHeaderItem(0, __qtablewidgetitem35)
+        __qtablewidgetitem36 = QTableWidgetItem()
+        self.key_statistics_data_table.setHorizontalHeaderItem(1, __qtablewidgetitem36)
+        __qtablewidgetitem37 = QTableWidgetItem()
+        self.key_statistics_data_table.setHorizontalHeaderItem(2, __qtablewidgetitem37)
+        __qtablewidgetitem38 = QTableWidgetItem()
+        self.key_statistics_data_table.setHorizontalHeaderItem(3, __qtablewidgetitem38)
+        if (self.key_statistics_data_table.rowCount() < 7):
+            self.key_statistics_data_table.setRowCount(7)
+        __qtablewidgetitem39 = QTableWidgetItem()
+        self.key_statistics_data_table.setVerticalHeaderItem(0, __qtablewidgetitem39)
+        __qtablewidgetitem40 = QTableWidgetItem()
+        self.key_statistics_data_table.setVerticalHeaderItem(1, __qtablewidgetitem40)
+        __qtablewidgetitem41 = QTableWidgetItem()
+        self.key_statistics_data_table.setVerticalHeaderItem(2, __qtablewidgetitem41)
+        __qtablewidgetitem42 = QTableWidgetItem()
+        self.key_statistics_data_table.setVerticalHeaderItem(3, __qtablewidgetitem42)
+        __qtablewidgetitem43 = QTableWidgetItem()
+        self.key_statistics_data_table.setVerticalHeaderItem(4, __qtablewidgetitem43)
+        __qtablewidgetitem44 = QTableWidgetItem()
+        self.key_statistics_data_table.setVerticalHeaderItem(5, __qtablewidgetitem44)
+        __qtablewidgetitem45 = QTableWidgetItem()
+        self.key_statistics_data_table.setVerticalHeaderItem(6, __qtablewidgetitem45)
+        __qtablewidgetitem46 = QTableWidgetItem()
+        __qtablewidgetitem46.setTextAlignment(Qt.AlignCenter);
+        __qtablewidgetitem46.setFont(font16);
+        self.key_statistics_data_table.setItem(4, 0, __qtablewidgetitem46)
+        self.key_statistics_data_table.setObjectName(u"key_statistics_data_table")
+        sizePolicy11.setHeightForWidth(self.key_statistics_data_table.sizePolicy().hasHeightForWidth())
+        self.key_statistics_data_table.setSizePolicy(sizePolicy11)
+        self.key_statistics_data_table.setLayoutDirection(Qt.LeftToRight)
+        self.key_statistics_data_table.setAutoFillBackground(False)
+        self.key_statistics_data_table.setStyleSheet(u"QTableWidget {	\n"
+                                                     "	background-color: rgb(39, 44, 54);\n"
+                                                     "	padding: 10px;\n"
+                                                     "	border-radius: 5px;\n"
+                                                     "	gridline-color: rgb(44, 49, 60);\n"
+                                                     "	border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "QTableWidget::item{\n"
+                                                     "	border-color: rgb(44, 49, 60);\n"
+                                                     "	padding-left: 5px;\n"
+                                                     "	padding-right: 5px;\n"
+                                                     "	gridline-color: rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "QTableWidget::item:selected{\n"
+                                                     "	background-color: rgb(85, 170, 255);\n"
+                                                     "}\n"
+                                                     "QScrollBar:horizontal {\n"
+                                                     "    border: none;\n"
+                                                     "    background: rgb(52, 59, 72);\n"
+                                                     "    height: 14px;\n"
+                                                     "    margin: 0px 21px 0 21px;\n"
+                                                     "	border-radius: 0px;\n"
+                                                     "}\n"
+                                                     " QScrollBar:vertical {\n"
+                                                     "	border: none;\n"
+                                                     "    background: rgb(52, 59, 72);\n"
+                                                     "    width: 14px;\n"
+                                                     "    margin: 21px 0 21px 0;\n"
+                                                     "	border-radius: 0px;\n"
+                                                     " }\n"
+                                                     "QHeaderView::section{\n"
+                                                     "	Background-color: rgb(39, 44, 54);\n"
+                                                     "	max-width: 30px;\n"
+                                                     "	border: 1px solid rgb(44, 49, 60);\n"
+                                                     "	border-style: none;\n"
+                                                     "    border-bottom: 1px solid rgb(44, 49, 60);\n"
+                                                     "    border-right: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     ""
+                                                     "QTableWidget::horizontalHeader {	\n"
+                                                     "	background-color: rgb(81, 255, 0);\n"
+                                                     "}\n"
+                                                     "QHeaderView::section:horizontal\n"
+                                                     "{\n"
+                                                     "    border: 1px solid rgb(32, 34, 42);\n"
+                                                     "	background-color: rgb(27, 29, 35);\n"
+                                                     "	padding: 3px;\n"
+                                                     "	border-top-left-radius: 7px;\n"
+                                                     "    border-top-right-radius: 7px;\n"
+                                                     "}\n"
+                                                     "QHeaderView::section:vertical\n"
+                                                     "{\n"
+                                                     "    border: 1px solid rgb(44, 49, 60);\n"
+                                                     "}\n"
+                                                     "")
+        self.key_statistics_data_table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.key_statistics_data_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.key_statistics_data_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
+        self.key_statistics_data_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.key_statistics_data_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.key_statistics_data_table.setShowGrid(True)
+        self.key_statistics_data_table.setSortingEnabled(True)
+        self.key_statistics_data_table.horizontalHeader().setCascadingSectionResizes(False)
+
+        self.key_statistics_layout_data_box.addWidget(self.key_statistics_data_table)
+
+        self.verticalLayoutWidget_8 = QWidget(self.key_statistics_data_frame)
+        self.verticalLayoutWidget_8.setObjectName(u"verticalLayoutWidget_8")
+        self.verticalLayoutWidget_8.setGeometry(QRect(620, 0, 251, 311))
+        self.key_statistics_layout_hw_box = QVBoxLayout(self.verticalLayoutWidget_8)
+        self.key_statistics_layout_hw_box.setObjectName(u"key_statistics_layout_hw_box")
+        self.key_statistics_layout_hw_box.setContentsMargins(0, 0, 0, 0)
+        self.key_statistics_hw_box_label = QLabel(self.verticalLayoutWidget_8)
+        self.key_statistics_hw_box_label.setObjectName(u"key_statistics_hw_box_label")
+        self.key_statistics_hw_box_label.setFont(font4)
+        self.key_statistics_hw_box_label.setLayoutDirection(Qt.LeftToRight)
+        self.key_statistics_hw_box_label.setAlignment(Qt.AlignCenter)
+
+        self.key_statistics_layout_hw_box.addWidget(self.key_statistics_hw_box_label)
+
+        self.key_statistics_hw_label = QLabel(self.verticalLayoutWidget_8)
+        self.key_statistics_hw_label.setObjectName(u"key_statistics_hw_label")
+        self.key_statistics_hw_label.setFont(font10)
+        self.key_statistics_hw_label.setAlignment(Qt.AlignCenter)
+
+        self.key_statistics_layout_hw_box.addWidget(self.key_statistics_hw_label)
         self.stackedWidget.addWidget(self.page_key_statistics)
         self.page_widgets = QWidget()
         self.page_widgets.setObjectName(u"page_widgets")
@@ -3261,50 +3714,62 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.btn_toggle_menu.setText("")
         self.label_title_bar_top.setText(QCoreApplication.translate("MainWindow", u"PQProject", None))
-#if QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
         self.btn_minimize.setToolTip(QCoreApplication.translate("MainWindow", u"Minimize", None))
-#endif // QT_CONFIG(tooltip)
+        # endif // QT_CONFIG(tooltip)
         self.btn_minimize.setText("")
-#if QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
         self.btn_maximize_restore.setToolTip(QCoreApplication.translate("MainWindow", u"Maximize", None))
-#endif // QT_CONFIG(tooltip)
+        # endif // QT_CONFIG(tooltip)
         self.btn_maximize_restore.setText("")
-#if QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
         self.btn_close.setToolTip(QCoreApplication.translate("MainWindow", u"Close", None))
-#endif // QT_CONFIG(tooltip)
+        # endif // QT_CONFIG(tooltip)
         self.btn_close.setText("")
-        self.label_top_info_1.setText(QCoreApplication.translate("MainWindow", u"Semestral project based around PostQuantum Cryptography", None))
+        self.label_top_info_1.setText(
+        QCoreApplication.translate("MainWindow", u"Semestral project based around PostQuantum Cryptography",
+                                   None))
         self.label_top_info_2.setText(QCoreApplication.translate("MainWindow", u"| LOGIN", None))
         self.label_user_icon.setText(QCoreApplication.translate("MainWindow", u"PQ", None))
         self.login_image.setText("")
         self.login_headline_label.setText(QCoreApplication.translate("MainWindow", u"You shall not pass", None))
         self.login_input_line.setInputMask("")
-        self.login_input_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter your masterpassword", None))
+        self.login_input_line.setPlaceholderText(
+            QCoreApplication.translate("MainWindow", u"Enter your masterpassword", None))
         self.login_status_label.setText("")
         self.login_button.setText(QCoreApplication.translate("MainWindow", u"Log me in", None))
         self.change_pass_title.setText(QCoreApplication.translate("MainWindow", u"Change master password", None))
-        self.change_pass_old_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter your old password", None))
-        self.change_pass_new_line1.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter your new password", None))
-        self.change_pass_new_line2.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Confirm  your new passoword", None))
+        self.change_pass_old_line.setPlaceholderText(
+            QCoreApplication.translate("MainWindow", u"Enter your old password", None))
+        self.change_pass_new_line1.setPlaceholderText(
+            QCoreApplication.translate("MainWindow", u"Enter your new password", None))
+        self.change_pass_new_line2.setPlaceholderText(
+            QCoreApplication.translate("MainWindow", u"Confirm  your new passoword", None))
         self.change_pass_button.setText(QCoreApplication.translate("MainWindow", u"CHANGE IT", None))
         self.enc_dsa_maintitle_label.setText(QCoreApplication.translate("MainWindow", u"Select a file", None))
-        self.enc_dsa_upload_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose your file", None))
+        self.enc_dsa_upload_line.setPlaceholderText(
+            QCoreApplication.translate("MainWindow", u"Choose your file", None))
         self.enc_dsa_upload_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
         self.enc_dsa_maintitle_label_2.setText(QCoreApplication.translate("MainWindow", u"Selected key", None))
         self.dec_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Encryption", None))
         self.enc_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Decryption", None))
         self.enc_dec_moonit_button.setText(QCoreApplication.translate("MainWindow", u"MOON IT", None))
-        self.enc_dec_download_file_button.setText(QCoreApplication.translate("MainWindow", u"Download encrypted file", None))
-        self.enc_dec_upload_ciphertext_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose ciphertext", None))
-        self.enc_dec_upload_ciphertext_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
-        self.enc_dec_download_file_button_2.setText(QCoreApplication.translate("MainWindow", u"Download ciphertext", None))
+        self.enc_dec_download_file_button.setText(
+            QCoreApplication.translate("MainWindow", u"Download encrypted file", None))
+        self.enc_dec_upload_ciphertext_line.setPlaceholderText(
+            QCoreApplication.translate("MainWindow", u"Choose ciphertext", None))
+        self.enc_dec_upload_ciphertext_button.setText(
+            QCoreApplication.translate("MainWindow", u"Open Blender", None))
+        self.enc_dec_download_file_button_2.setText(
+            QCoreApplication.translate("MainWindow", u"Download ciphertext", None))
         self.sign_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Sign", None))
         self.verify_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Verify", None))
         self.dsa_verify_button.setText(QCoreApplication.translate("MainWindow", u"Verify your file", None))
         self.dsa_verify_button_status.setText(QCoreApplication.translate("MainWindow", u"Verify status", None))
         self.dsa_download_button.setText(QCoreApplication.translate("MainWindow", u"Download signature", None))
         self.dsa_upload_signature_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
-        self.dsa_upload_signature_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose signature", None))
+        self.dsa_upload_signature_line.setPlaceholderText(
+            QCoreApplication.translate("MainWindow", u"Choose signature", None))
         self.key_checkbox1.setText(QCoreApplication.translate("MainWindow", u"KEM - mceliece", None))
         self.key_checkbox2.setText(QCoreApplication.translate("MainWindow", u"KEM - saber", None))
         self.key_checkbox3.setText(QCoreApplication.translate("MainWindow", u"KEM - kyber", None))
@@ -3313,7 +3778,8 @@ class Ui_MainWindow(object):
         self.key_checkbox4_4.setText(QCoreApplication.translate("MainWindow", u"DSA - rainbow", None))
         self.key_checkbox4_3.setText(QCoreApplication.translate("MainWindow", u"DSA - sphincs", None))
         self.key_setname_label.setText(QCoreApplication.translate("MainWindow", u"Set key name", None))
-        self.key_inputname_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter key name", None))
+        self.key_inputname_line.setPlaceholderText(
+            QCoreApplication.translate("MainWindow", u"Enter key name", None))
         self.key_checking_name.setText(QCoreApplication.translate("MainWindow", u"Checking name", None))
         self.key_generate_button.setText(QCoreApplication.translate("MainWindow", u"Generate", None))
         self.key_uploadkey_label.setText(QCoreApplication.translate("MainWindow", u"Upload your key", None))
@@ -3329,41 +3795,125 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Type", None));
         ___qtablewidgetitem3 = self.key_maintable.horizontalHeaderItem(3)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Value", None));
-        ___qtablewidgetitem4 = self.enc_statistics_table.horizontalHeaderItem(0)
+        ___qtablewidgetitem4 = self.enc_statistics_list_table.horizontalHeaderItem(0)
         ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"DatTime", None));
-        ___qtablewidgetitem5 = self.enc_statistics_table.horizontalHeaderItem(1)
+        ___qtablewidgetitem5 = self.enc_statistics_list_table.horizontalHeaderItem(1)
         ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Alg", None));
-        ___qtablewidgetitem6 = self.enc_statistics_table.horizontalHeaderItem(2)
+        ___qtablewidgetitem6 = self.enc_statistics_list_table.horizontalHeaderItem(2)
         ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Operation", None));
-        ___qtablewidgetitem7 = self.enc_statistics_table.horizontalHeaderItem(3)
+        ___qtablewidgetitem7 = self.enc_statistics_list_table.horizontalHeaderItem(3)
         ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"Nov\u00fd sloupec", None));
-        ___qtablewidgetitem8 = self.enc_statistics_table.horizontalHeaderItem(4)
+        ___qtablewidgetitem8 = self.enc_statistics_list_table.horizontalHeaderItem(4)
         ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"KEM time", None));
-        ___qtablewidgetitem9 = self.enc_statistics_table.horizontalHeaderItem(5)
+        ___qtablewidgetitem9 = self.enc_statistics_list_table.horizontalHeaderItem(5)
         ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"AES time", None));
-        self.enc_statistics_label.setText(QCoreApplication.translate("MainWindow", u"Encryption/Decryption statistics", None))
-        ___qtablewidgetitem10 = self.dsa_statistics_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"DateTime", None));
-        ___qtablewidgetitem11 = self.dsa_statistics_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"Alg", None));
-        ___qtablewidgetitem12 = self.dsa_statistics_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Operation", None));
-        ___qtablewidgetitem13 = self.dsa_statistics_table.horizontalHeaderItem(3)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"FileSize", None));
-        ___qtablewidgetitem14 = self.dsa_statistics_table.horizontalHeaderItem(4)
-        ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"DSA time", None));
-        self.dsa_statistics_label.setText(QCoreApplication.translate("MainWindow", u"Digital signature statistics", None))
-        ___qtablewidgetitem15 = self.key_statistics_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem15.setText(QCoreApplication.translate("MainWindow", u"DateTime", None));
-        ___qtablewidgetitem16 = self.key_statistics_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem16.setText(QCoreApplication.translate("MainWindow", u"Alg", None));
-        ___qtablewidgetitem17 = self.key_statistics_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem17.setText(QCoreApplication.translate("MainWindow", u"GEN time", None));
+        self.enc_statistics_label.setText(
+            QCoreApplication.translate("MainWindow", u"Encryption/Decryption statistics", None))
+        self.enc_statistics_data_label.setText(QCoreApplication.translate("MainWindow", u"Statistics", None))
+        ___qtablewidgetitem10 = self.enc_statistics_data_table.horizontalHeaderItem(0)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"Average", None));
+        ___qtablewidgetitem11 = self.enc_statistics_data_table.horizontalHeaderItem(1)
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"Median", None));
+        ___qtablewidgetitem12 = self.enc_statistics_data_table.horizontalHeaderItem(2)
+        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Min", None));
+        ___qtablewidgetitem13 = self.enc_statistics_data_table.horizontalHeaderItem(3)
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"Max", None));
+        ___qtablewidgetitem14 = self.enc_statistics_data_table.verticalHeaderItem(0)
+        ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"KEM - mceliece", None));
+        ___qtablewidgetitem15 = self.enc_statistics_data_table.verticalHeaderItem(1)
+        ___qtablewidgetitem15.setText(QCoreApplication.translate("MainWindow", u"KEM - kyber", None));
+        ___qtablewidgetitem16 = self.enc_statistics_data_table.verticalHeaderItem(2)
+        ___qtablewidgetitem16.setText(QCoreApplication.translate("MainWindow", u"KEM - saber", None));
+        ___qtablewidgetitem17 = self.enc_statistics_data_table.verticalHeaderItem(3)
+        ___qtablewidgetitem17.setText(QCoreApplication.translate("MainWindow", u"KEM - ntruhps", None));
+
+        __sortingEnabled = self.enc_statistics_data_table.isSortingEnabled()
+        self.enc_statistics_data_table.setSortingEnabled(False)
+        self.enc_statistics_data_table.setSortingEnabled(__sortingEnabled)
+
+        self.enc_statistics_hw_box_label.setText(
+            QCoreApplication.translate("MainWindow", u"Hardware information", None))
+        self.enc_statistics_hw_label.setText(QCoreApplication.translate("MainWindow", u"hw", None))
+        ___qtablewidgetitem18 = self.dsa_statistics_table.horizontalHeaderItem(0)
+        ___qtablewidgetitem18.setText(QCoreApplication.translate("MainWindow", u"DateTime", None));
+        ___qtablewidgetitem19 = self.dsa_statistics_table.horizontalHeaderItem(1)
+        ___qtablewidgetitem19.setText(QCoreApplication.translate("MainWindow", u"Alg", None));
+        ___qtablewidgetitem20 = self.dsa_statistics_table.horizontalHeaderItem(2)
+        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"Operation", None));
+        ___qtablewidgetitem21 = self.dsa_statistics_table.horizontalHeaderItem(3)
+        ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"FileSize", None));
+        ___qtablewidgetitem22 = self.dsa_statistics_table.horizontalHeaderItem(4)
+        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"DSA time", None));
+        self.dsa_statistics_label.setText(
+            QCoreApplication.translate("MainWindow", u"Digital signature statistics", None))
+        self.dsa_statistics_hw_box_label.setText(
+            QCoreApplication.translate("MainWindow", u"Hardware information", None))
+        self.dsa_statistics_hw_label.setText(QCoreApplication.translate("MainWindow", u"hw", None))
+        self.dsa_statistics_data_label.setText(QCoreApplication.translate("MainWindow", u"Statistics", None))
+        ___qtablewidgetitem23 = self.dsa_statistics_data_table.horizontalHeaderItem(0)
+        ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"Average", None));
+        ___qtablewidgetitem24 = self.dsa_statistics_data_table.horizontalHeaderItem(1)
+        ___qtablewidgetitem24.setText(QCoreApplication.translate("MainWindow", u"Median", None));
+        ___qtablewidgetitem25 = self.dsa_statistics_data_table.horizontalHeaderItem(2)
+        ___qtablewidgetitem25.setText(QCoreApplication.translate("MainWindow", u"Min", None));
+        ___qtablewidgetitem26 = self.dsa_statistics_data_table.horizontalHeaderItem(3)
+        ___qtablewidgetitem26.setText(QCoreApplication.translate("MainWindow", u"Max", None));
+        ___qtablewidgetitem27 = self.dsa_statistics_data_table.verticalHeaderItem(0)
+        ___qtablewidgetitem27.setText(QCoreApplication.translate("MainWindow", u"DSA - dilithium", None));
+        ___qtablewidgetitem28 = self.dsa_statistics_data_table.verticalHeaderItem(1)
+        ___qtablewidgetitem28.setText(QCoreApplication.translate("MainWindow", u"DSA - rainbow", None));
+        ___qtablewidgetitem29 = self.dsa_statistics_data_table.verticalHeaderItem(2)
+        ___qtablewidgetitem29.setText(QCoreApplication.translate("MainWindow", u"DSA - sphinics", None));
+
+        __sortingEnabled1 = self.dsa_statistics_data_table.isSortingEnabled()
+        self.dsa_statistics_data_table.setSortingEnabled(False)
+        self.dsa_statistics_data_table.setSortingEnabled(__sortingEnabled1)
+
+        ___qtablewidgetitem30 = self.key_statistics_table.horizontalHeaderItem(0)
+        ___qtablewidgetitem30.setText(QCoreApplication.translate("MainWindow", u"DateTime", None));
+        ___qtablewidgetitem31 = self.key_statistics_table.horizontalHeaderItem(1)
+        ___qtablewidgetitem31.setText(QCoreApplication.translate("MainWindow", u"Alg", None));
+        ___qtablewidgetitem32 = self.key_statistics_table.horizontalHeaderItem(2)
+        ___qtablewidgetitem32.setText(QCoreApplication.translate("MainWindow", u"GEN time", None));
         self.key_statistics_label.setText(QCoreApplication.translate("MainWindow", u"Key statistics", None))
-        self.labelBoxBlenderInstalation.setText(QCoreApplication.translate("MainWindow", u"BLENDER INSTALLATION", None))
+        self.key_statistics_data_label.setText(QCoreApplication.translate("MainWindow", u"Statistics", None))
+        ___qtablewidgetitem33 = self.key_statistics_data_table.horizontalHeaderItem(0)
+        ___qtablewidgetitem33.setText(QCoreApplication.translate("MainWindow", u"Average", None));
+        ___qtablewidgetitem34 = self.key_statistics_data_table.horizontalHeaderItem(1)
+        ___qtablewidgetitem34.setText(QCoreApplication.translate("MainWindow", u"Median", None));
+        ___qtablewidgetitem35 = self.key_statistics_data_table.horizontalHeaderItem(2)
+        ___qtablewidgetitem35.setText(QCoreApplication.translate("MainWindow", u"Min", None));
+        ___qtablewidgetitem36 = self.key_statistics_data_table.horizontalHeaderItem(3)
+        ___qtablewidgetitem36.setText(QCoreApplication.translate("MainWindow", u"Max", None));
+        ___qtablewidgetitem37 = self.key_statistics_data_table.verticalHeaderItem(0)
+        ___qtablewidgetitem37.setText(QCoreApplication.translate("MainWindow", u"KEM - mceliece", None));
+        ___qtablewidgetitem38 = self.key_statistics_data_table.verticalHeaderItem(1)
+        ___qtablewidgetitem38.setText(QCoreApplication.translate("MainWindow", u"KEM - saber", None));
+        ___qtablewidgetitem39 = self.key_statistics_data_table.verticalHeaderItem(2)
+        ___qtablewidgetitem39.setText(QCoreApplication.translate("MainWindow", u"KEM - kyber", None));
+        ___qtablewidgetitem40 = self.key_statistics_data_table.verticalHeaderItem(3)
+        ___qtablewidgetitem40.setText(QCoreApplication.translate("MainWindow", u"KEM - ntruhps", None));
+        ___qtablewidgetitem41 = self.key_statistics_data_table.verticalHeaderItem(4)
+        ___qtablewidgetitem41.setText(QCoreApplication.translate("MainWindow", u"DSA - dilithium", None));
+        ___qtablewidgetitem42 = self.key_statistics_data_table.verticalHeaderItem(5)
+        ___qtablewidgetitem42.setText(QCoreApplication.translate("MainWindow", u"DSA - rainbow", None));
+        ___qtablewidgetitem43 = self.key_statistics_data_table.verticalHeaderItem(6)
+        ___qtablewidgetitem43.setText(QCoreApplication.translate("MainWindow", u"DSA - sphinics", None));
+
+        __sortingEnabled2 = self.key_statistics_data_table.isSortingEnabled()
+        self.key_statistics_data_table.setSortingEnabled(False)
+        self.key_statistics_data_table.setSortingEnabled(__sortingEnabled2)
+
+        self.key_statistics_hw_box_label.setText(
+            QCoreApplication.translate("MainWindow", u"Hardware information", None))
+        self.key_statistics_hw_label.setText(QCoreApplication.translate("MainWindow", u"hw", None))
+        self.labelBoxBlenderInstalation.setText(
+            QCoreApplication.translate("MainWindow", u"BLENDER INSTALLATION", None))
         self.lineEdit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Your Password", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
-        self.labelVersion_3.setText(QCoreApplication.translate("MainWindow", u"Ex: C:Program FilesBlender FoundationBlender 2.82 blender.exe", None))
+        self.labelVersion_3.setText(QCoreApplication.translate("MainWindow",
+                                                               u"Ex: C:Program FilesBlender FoundationBlender 2.82 blender.exe",
+                                                               None))
         self.checkBox.setText(QCoreApplication.translate("MainWindow", u"CheckBox", None))
         self.radioButton.setText(QCoreApplication.translate("MainWindow", u"RadioButton", None))
         self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"Test 1", None))
@@ -3372,61 +3922,64 @@ class Ui_MainWindow(object):
 
         self.commandLinkButton.setText(QCoreApplication.translate("MainWindow", u"CommandLinkButton", None))
         self.commandLinkButton.setDescription(QCoreApplication.translate("MainWindow", u"Open External Link", None))
-        ___qtablewidgetitem18 = self.tableWidget.horizontalHeaderItem(0)
-        ___qtablewidgetitem18.setText(QCoreApplication.translate("MainWindow", u"0", None));
-        ___qtablewidgetitem19 = self.tableWidget.horizontalHeaderItem(1)
-        ___qtablewidgetitem19.setText(QCoreApplication.translate("MainWindow", u"1", None));
-        ___qtablewidgetitem20 = self.tableWidget.horizontalHeaderItem(2)
-        ___qtablewidgetitem20.setText(QCoreApplication.translate("MainWindow", u"2", None));
-        ___qtablewidgetitem21 = self.tableWidget.horizontalHeaderItem(3)
-        ___qtablewidgetitem21.setText(QCoreApplication.translate("MainWindow", u"3", None));
-        ___qtablewidgetitem22 = self.tableWidget.verticalHeaderItem(0)
-        ___qtablewidgetitem22.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem23 = self.tableWidget.verticalHeaderItem(1)
-        ___qtablewidgetitem23.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem24 = self.tableWidget.verticalHeaderItem(2)
-        ___qtablewidgetitem24.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem25 = self.tableWidget.verticalHeaderItem(3)
-        ___qtablewidgetitem25.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem26 = self.tableWidget.verticalHeaderItem(4)
-        ___qtablewidgetitem26.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem27 = self.tableWidget.verticalHeaderItem(5)
-        ___qtablewidgetitem27.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem28 = self.tableWidget.verticalHeaderItem(6)
-        ___qtablewidgetitem28.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem29 = self.tableWidget.verticalHeaderItem(7)
-        ___qtablewidgetitem29.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem30 = self.tableWidget.verticalHeaderItem(8)
-        ___qtablewidgetitem30.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem31 = self.tableWidget.verticalHeaderItem(9)
-        ___qtablewidgetitem31.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem32 = self.tableWidget.verticalHeaderItem(10)
-        ___qtablewidgetitem32.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem33 = self.tableWidget.verticalHeaderItem(11)
-        ___qtablewidgetitem33.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem34 = self.tableWidget.verticalHeaderItem(12)
-        ___qtablewidgetitem34.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem35 = self.tableWidget.verticalHeaderItem(13)
-        ___qtablewidgetitem35.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem36 = self.tableWidget.verticalHeaderItem(14)
-        ___qtablewidgetitem36.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
-        ___qtablewidgetitem37 = self.tableWidget.verticalHeaderItem(15)
-        ___qtablewidgetitem37.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem44 = self.tableWidget.horizontalHeaderItem(0)
+        ___qtablewidgetitem44.setText(QCoreApplication.translate("MainWindow", u"0", None));
+        ___qtablewidgetitem45 = self.tableWidget.horizontalHeaderItem(1)
+        ___qtablewidgetitem45.setText(QCoreApplication.translate("MainWindow", u"1", None));
+        ___qtablewidgetitem46 = self.tableWidget.horizontalHeaderItem(2)
+        ___qtablewidgetitem46.setText(QCoreApplication.translate("MainWindow", u"2", None));
+        ___qtablewidgetitem47 = self.tableWidget.horizontalHeaderItem(3)
+        ___qtablewidgetitem47.setText(QCoreApplication.translate("MainWindow", u"3", None));
+        ___qtablewidgetitem48 = self.tableWidget.verticalHeaderItem(0)
+        ___qtablewidgetitem48.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem49 = self.tableWidget.verticalHeaderItem(1)
+        ___qtablewidgetitem49.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem50 = self.tableWidget.verticalHeaderItem(2)
+        ___qtablewidgetitem50.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem51 = self.tableWidget.verticalHeaderItem(3)
+        ___qtablewidgetitem51.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem52 = self.tableWidget.verticalHeaderItem(4)
+        ___qtablewidgetitem52.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem53 = self.tableWidget.verticalHeaderItem(5)
+        ___qtablewidgetitem53.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem54 = self.tableWidget.verticalHeaderItem(6)
+        ___qtablewidgetitem54.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem55 = self.tableWidget.verticalHeaderItem(7)
+        ___qtablewidgetitem55.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem56 = self.tableWidget.verticalHeaderItem(8)
+        ___qtablewidgetitem56.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem57 = self.tableWidget.verticalHeaderItem(9)
+        ___qtablewidgetitem57.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem58 = self.tableWidget.verticalHeaderItem(10)
+        ___qtablewidgetitem58.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem59 = self.tableWidget.verticalHeaderItem(11)
+        ___qtablewidgetitem59.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem60 = self.tableWidget.verticalHeaderItem(12)
+        ___qtablewidgetitem60.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem61 = self.tableWidget.verticalHeaderItem(13)
+        ___qtablewidgetitem61.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem62 = self.tableWidget.verticalHeaderItem(14)
+        ___qtablewidgetitem62.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
+        ___qtablewidgetitem63 = self.tableWidget.verticalHeaderItem(15)
+        ___qtablewidgetitem63.setText(QCoreApplication.translate("MainWindow", u"New Row", None));
 
-        __sortingEnabled = self.tableWidget.isSortingEnabled()
+        __sortingEnabled3 = self.tableWidget.isSortingEnabled()
         self.tableWidget.setSortingEnabled(False)
-        ___qtablewidgetitem38 = self.tableWidget.item(0, 0)
-        ___qtablewidgetitem38.setText(QCoreApplication.translate("MainWindow", u"Test", None));
-        ___qtablewidgetitem39 = self.tableWidget.item(0, 1)
-        ___qtablewidgetitem39.setText(QCoreApplication.translate("MainWindow", u"Text", None));
-        ___qtablewidgetitem40 = self.tableWidget.item(0, 2)
-        ___qtablewidgetitem40.setText(QCoreApplication.translate("MainWindow", u"Cell", None));
-        ___qtablewidgetitem41 = self.tableWidget.item(0, 3)
-        ___qtablewidgetitem41.setText(QCoreApplication.translate("MainWindow", u"Line", None));
-        self.tableWidget.setSortingEnabled(__sortingEnabled)
+        ___qtablewidgetitem64 = self.tableWidget.item(0, 0)
+        ___qtablewidgetitem64.setText(QCoreApplication.translate("MainWindow", u"Test", None));
+        ___qtablewidgetitem65 = self.tableWidget.item(0, 1)
+        ___qtablewidgetitem65.setText(QCoreApplication.translate("MainWindow", u"Text", None));
+        ___qtablewidgetitem66 = self.tableWidget.item(0, 2)
+        ___qtablewidgetitem66.setText(QCoreApplication.translate("MainWindow", u"Cell", None));
+        ___qtablewidgetitem67 = self.tableWidget.item(0, 3)
+        ___qtablewidgetitem67.setText(QCoreApplication.translate("MainWindow", u"Line", None));
+        self.tableWidget.setSortingEnabled(__sortingEnabled3)
 
-        self.label_credits.setText(QCoreApplication.translate("MainWindow", u"Design: Wanderson M. Pimenta | Created: Bc. Dzad\u00edkov\u00e1, Bc. Janout, Bc. Lovinger, Bc. Muzikant", None))
+        self.label_credits.setText(QCoreApplication.translate("MainWindow",
+                                                              u"Design: Wanderson M. Pimenta | Created: Bc. Dzad\u00edkov\u00e1, Bc. Janout, Bc. Lovinger, Bc. Muzikant",
+                                                              None))
         self.label_version.setText(QCoreApplication.translate("MainWindow", u"v.2022", None))
+
     # retranslateUi
 
         # OUR CODE
@@ -3443,4 +3996,4 @@ class Ui_MainWindow(object):
         self.login_image.setPixmap(pixmap)
         self.login_image.setAlignment(Qt.AlignCenter)
         #self.enc_dsa_selected_key_line.setClearButtonEnabled(True)
-        self.enc_dsa_upload_button.clicked.connect(self.openFile)
+        self.enc_dec_moonit_button.clicked.connect(self.decryptFile)
