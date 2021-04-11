@@ -12,6 +12,9 @@ from Managers.pqEncryptionModule import PqEncryptionManager
 from Managers.pqKeyGenModule import PqKeyGenManager
 from Managers.pqSigningModule import PqSigningManager
 from Managers.statisticsModule import StatisticsManager
+import sys
+import os
+from os.path import dirname, abspath
 
 from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
     QRect, QSize, QUrl, Qt, QDir)
@@ -19,31 +22,45 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
     QFontDatabase, QIcon, QLinearGradient, QPalette, QPainter, QPixmap,
     QRadialGradient)
 from PySide2.QtWidgets import *
+from PyQt5.QtWidgets import QFileDialog
 
+qPushButtonDefault = "QPushButton{border:2px solid #343b48;border-radius:15px;background-color:#343b48}QPushButton:hover{background-color:#394150;border:2px solid #3d4656}QPushButton:pressed{background-color:#232831;border:2px solid #2b323d}"
+qPushButtonDisabled = "QPushButton{border:2px solid #000;color:#555;border-radius:15px;background-color:#000}"
 
-qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}"
+qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}QLineEdit:hover{background-color:#394150;border:2px solid #3d4656;color:#fff}QLineEdit:pressed{background-color:#232831;border:2px solid #2b323d;color:#fff}"
 qLineRed = "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}"
 qLineGreen = "QLineEdit{border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}"
+qLineDisable = "QLineEdit{border:2px solid #000;color:#555;border-radius:15px;background-color:#000}"
 
 qRadioButtonGreen = "QRadioButton{color:rgb(0, 255, 0);font-weight: 600;}"
 qRadioButtonRed = "QRadioButton{color:rgb(255,0,0)}"
 qRadioButtonDefault = "QRadioButton{color:#fff}"
+qRadioButtonDisable = "QRadioButton{color:#555}"
+
+global selectedId, selectedName, selectedType
 
 def change_page(self, param):
     if param == 0:
         self.stackedWidget.setCurrentWidget(self.page_login)
+        self.label_top_info_2.setText("| LOGIN")
     if param == 1:
         self.stackedWidget.setCurrentWidget(self.page_key)
+        self.label_top_info_2.setText("| KEY")
     if param == 2:
         self.stackedWidget.setCurrentWidget(self.page_enc_dsa)
+        self.label_top_info_2.setText("| ENC/DEC/DSA")
     if param == 3:
         self.stackedWidget.setCurrentWidget(self.page_key_statistics)
+        self.label_top_info_2.setText("| Key statistics")
     if param == 4:
         self.stackedWidget.setCurrentWidget(self.page_enc_statistics)
+        self.label_top_info_2.setText("| Encryption/Decryption statistics")
     if param == 5:
         self.stackedWidget.setCurrentWidget(self.page_dsa_statistics)
+        self.label_top_info_2.setText("| Digital signature statistics")
     if param == 6:
         self.stackedWidget.setCurrentWidget(self.page_change_masterpass)
+        self.label_top_info_2.setText("| Change master password")
     else:
         pass
 
@@ -136,7 +153,8 @@ class Ui_MainWindow(object):
                 print("Myslis si, ze tu budes skuskat spravne masterpass?")
 
     def openFile(self):
-        print("Snazime sa otvorit subor")
+        pass
+   
         
     def generateKey(self):
         print("idzeme generovac klusik")
@@ -197,29 +215,288 @@ class Ui_MainWindow(object):
             self.key_maintable.setItem(0, 2, QTableWidgetItem(r[2]))
             self.key_maintable.setItem(0, 3, QTableWidgetItem(str(len(r[3]))))
 
-        
-
-    def itemChangedHandler(self):
-        global selectedName
-        if len(self.key_maintable.selectedItems()) != 0:
-            selectedName = self.key_maintable.selectedItems()[0].text()
-        else:
-            selectedName = ""
 
     def currentWidgetChangedHandler(self):
         if self.stackedWidget.currentWidget().objectName() == "page_key":
-                self.updateTableKey()
-                #reset styles
-                keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2,
-                self.key_checkbox4_3, self.key_checkbox4_4]
-                for k in keys:
-                        k.setStyleSheet(qRadioButtonDefault)
-                self.key_inputname_line.setStyleSheet(qLineDefault)
-                self.key_checking_name.setText("")
-            
+            self.updateTableKey()
+            # reset styles
+            keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4,
+                    self.key_checkbox4_2,
+                    self.key_checkbox4_3, self.key_checkbox4_4]
+            for k in keys:
+                k.setStyleSheet(qRadioButtonDefault)
+            self.key_inputname_line.setStyleSheet(qLineDefault)
+            self.key_checking_name.setText("")
+
         if self.stackedWidget.currentWidget().objectName() == "page_enc_dsa":
+            self.enc_dsa_selected_key_line.setStyleSheet(qLineDefault)
+            self.enc_dsa_selected_key_line.setText("")
+            self.itemChangedHandler()
+            self.layoutKeyChange()
             pass
             # selectedKeyStore = list, where name == selectedName
+
+
+    def itemChangedHandler(self):
+        global selectedId, selectedName, selectedType
+        if len(self.key_maintable.selectedItems()) != 0:
+            selectedId = self.key_maintable.selectedItems()[0].text()
+            selectedName = self.key_maintable.selectedItems()[1].text()
+            selectedType = self.key_maintable.selectedItems()[2].text()
+            print(selectedId+" "+selectedName+" "+selectedType)
+        else:
+            selectedId = ""
+
+    def layoutKeyChange(self):
+        if selectedId != "":
+            self.updateKeyLayoutEnable()
+            if selectedName == "Mceliece":
+                #sprav mceliece
+                if selectedType == "Private":
+                    self.updateKeyLayoutPrivateKEM()
+                elif selectedType == "Public":
+                    self.updateKeyLayoutPublicKEM()
+                else:
+                    self.updateKeyLayoutDisable()
+            if selectedName == "Saber":
+                #sprav saber
+                if selectedType == "Private":
+                    self.updateKeyLayoutPrivateKEM()
+                elif selectedType == "Public":
+                    self.updateKeyLayoutPublicKEM()
+                else:
+                    self.updateKeyLayoutDisable()
+            if selectedName == "Kyber":
+                #sprav kyber
+                if selectedType == "Private":
+                    self.updateKeyLayoutPrivateKEM()
+                elif selectedType == "Public":
+                    self.updateKeyLayoutPublicKEM()
+                else:
+                    self.updateKeyLayoutDisable()
+            if selectedName == "Ntruhps":
+                #sprav nthrups
+                if selectedType == "Private":
+                    self.updateKeyLayoutPrivateKEM()
+                elif selectedType == "Public":
+                    self.updateKeyLayoutPublicKEM()
+                else:
+                    self.updateKeyLayoutDisable()
+            if selectedName == "Dilithium":
+                #sprav dilithium
+                if selectedType == "Private":
+                    self.updateKeyLayoutPrivateDSA()
+                elif selectedType == "Public":
+                    self.updateKeyLayoutPublicDSA()
+                else:
+                    self.updateKeyLayoutDisable()
+            if selectedName == "Rainbow":
+                #sprav rainbow
+                if selectedType == "Private":
+                    self.updateKeyLayoutPrivateDSA()
+                elif selectedType == "Public":
+                    self.updateKeyLayoutPublicDSA()
+                else:
+                    self.updateKeyLayoutDisable()
+            if selectedName == "Sphincs":
+                #sprav sphincs
+                if selectedType == "Private":
+                    self.updateKeyLayoutPrivateDSA()
+                elif selectedType == "Public":
+                    self.updateKeyLayoutPublicDSA()
+                else:
+                    self.updateKeyLayoutDisable()
+        else:
+            self.updateKeyLayoutDisable()
+
+    def updateKeyLayoutEnable(self):
+        # unlock pre prve dva inputy bez ohladu na zvoleny kluc
+        self.enc_dsa_upload_line.setEnabled(True)
+        self.enc_dsa_upload_line.setStyleSheet(qLineDefault)
+        self.enc_dsa_upload_line.setPlaceholderText("Choose your file")
+        self.enc_dsa_selected_key_line.setText(selectedId + " " + selectedName + " " + selectedType)
+        self.enc_dsa_selected_key_line.setEnabled(True)
+        self.enc_dsa_selected_key_line.setStyleSheet(qLineDefault)
+
+
+    def updateKeyLayoutDisable(self):
+        # lockdown pre vsetky inputy, kvoli nezvolenemu klucu
+        self.enc_dsa_upload_line.setEnabled(False)
+        self.enc_dsa_upload_line.setStyleSheet(qLineRed)
+        self.enc_dsa_upload_line.setPlaceholderText("No key selected ! Return to key page to select your key.")
+        self.enc_dsa_selected_key_line.setEnabled(False)
+        self.enc_dsa_selected_key_line.setStyleSheet(qLineRed)
+        self.enc_dsa_selected_key_line.setPlaceholderText("No key selected ! Return to key page to select your key.")
+        self.dec_radiobutton.setEnabled(False)
+        self.dec_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.enc_radiobutton.setEnabled(False)
+        self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.sign_radiobutton.setEnabled(False)
+        self.sign_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.verify_radiobutton.setEnabled(False)
+        self.verify_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.enc_dec_upload_ciphertext_line.setEnabled(False)
+        self.enc_dec_upload_ciphertext_line.setPlaceholderText("")
+        self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineRed)
+        self.dsa_upload_signature_line.setEnabled(False)
+        self.dsa_upload_signature_line.setPlaceholderText("")
+        self.dsa_upload_signature_line.setStyleSheet(qLineRed)
+        self.enc_dec_upload_ciphertext_button.setEnabled(False)
+        self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_upload_signature_button.setEnabled(False)
+        self.dsa_upload_signature_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_moonit_button.setEnabled(False)
+        self.enc_dec_moonit_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_verify_button.setEnabled(False)
+        self.dsa_verify_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_download_file_button.setEnabled(False)
+        self.enc_dec_download_file_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_download_file_button_2.setEnabled(False)
+        self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
+        self.dsa_verify_button_status.setText("")
+        self.dsa_download_button.setEnabled(False)
+        self.dsa_download_button.setStyleSheet(qPushButtonDisabled)
+
+    def updateKeyLayoutPrivateKEM(self):
+        self.enc_radiobutton.setStyleSheet(qRadioButtonGreen)
+        self.enc_radiobutton.setEnabled(True)
+        self.enc_radiobutton.setChecked(True)
+        self.dec_radiobutton.setEnabled(False)
+        self.dec_radiobutton.setStyleSheet(qRadioButtonDefault)
+        self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDefault)
+        self.enc_dec_upload_ciphertext_line.setPlaceholderText("Upload your ciphertext")
+        self.enc_dec_upload_ciphertext_line.setEnabled(True)
+        self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDefault)
+        self.enc_dec_upload_ciphertext_button.setEnabled(True)
+        self.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
+        self.enc_dec_moonit_button.setText("Decrypt file to M00N")
+        self.enc_dec_moonit_button.setEnabled(True)
+        self.enc_dec_download_file_button.setStyleSheet(qPushButtonDefault)
+        self.enc_dec_download_file_button.setText("Download decrypted file")
+        self.enc_dec_download_file_button.setEnabled(True)
+        self.enc_dec_download_file_button_2.setEnabled(False)
+        self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
+        # disable sign/verify side
+        self.sign_radiobutton.setEnabled(False)
+        self.sign_radiobutton.setChecked(False)
+        self.sign_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.verify_radiobutton.setEnabled(False)
+        self.verify_radiobutton.setChecked(False)
+        self.verify_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.dsa_upload_signature_line.setEnabled(False)
+        self.dsa_upload_signature_line.setPlaceholderText("")
+        self.dsa_upload_signature_line.setStyleSheet(qLineDisable)
+        self.dsa_upload_signature_button.setEnabled(False)
+        self.dsa_upload_signature_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_verify_button.setEnabled(False)
+        self.dsa_verify_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_verify_button_status.setText("")
+        self.dsa_download_button.setEnabled(False)
+        self.dsa_download_button.setStyleSheet(qPushButtonDisabled)
+        
+    def updateKeyLayoutPublicKEM(self):
+        self.dec_radiobutton.setStyleSheet(qRadioButtonGreen)
+        self.dec_radiobutton.setEnabled(True)
+        self.dec_radiobutton.setChecked(True)
+        self.enc_radiobutton.setEnabled(False)
+        self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDisable)
+        #self.enc_dec_upload_ciphertext_line.setPlaceholderText("Upload your ciphertext")
+        self.enc_dec_upload_ciphertext_line.setEnabled(False)
+        self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_upload_ciphertext_button.setEnabled(False)
+        self.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
+        self.enc_dec_moonit_button.setText("Encrypt file to M00N")
+        self.enc_dec_moonit_button.setEnabled(True)
+        self.enc_dec_download_file_button.setStyleSheet(qPushButtonDefault)
+        self.enc_dec_download_file_button.setText("Download encrypted file")
+        self.enc_dec_download_file_button.setEnabled(True)
+        self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDefault)
+        self.enc_dec_download_file_button_2.setEnabled(True)
+        # disable sign/verify side
+        self.sign_radiobutton.setEnabled(False)
+        self.sign_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.verify_radiobutton.setEnabled(False)
+        self.verify_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.dsa_upload_signature_line.setEnabled(False)
+        self.dsa_upload_signature_line.setPlaceholderText("")
+        self.dsa_upload_signature_line.setStyleSheet(qLineDisable)
+        self.dsa_upload_signature_button.setEnabled(False)
+        self.dsa_upload_signature_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_verify_button.setEnabled(False)
+        self.dsa_verify_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_verify_button_status.setText("")
+        self.dsa_download_button.setEnabled(False)
+        self.dsa_download_button.setStyleSheet(qPushButtonDisabled)
+
+    def updateKeyLayoutPrivateDSA(self):
+        self.sign_radiobutton.setEnabled(False)
+        self.sign_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.verify_radiobutton.setEnabled(True)
+        self.verify_radiobutton.setChecked(True)
+        self.verify_radiobutton.setStyleSheet(qRadioButtonGreen)
+        self.dsa_upload_signature_line.setEnabled(True)
+        self.dsa_upload_signature_line.setPlaceholderText("Upload your ciphertext")
+        self.dsa_upload_signature_line.setStyleSheet(qLineDefault)
+        self.dsa_upload_signature_button.setEnabled(True)
+        self.dsa_upload_signature_button.setStyleSheet(qPushButtonDefault)
+        self.dsa_verify_button.setEnabled(True)
+        self.dsa_verify_button.setStyleSheet(qPushButtonDefault)
+        self.dsa_verify_button_status.setText("")
+        self.dsa_download_button.setEnabled(True)
+        self.dsa_download_button.setStyleSheet(qPushButtonDefault)
+        self.dsa_download_button.setText("Download verified file")
+
+        # disable enc/dec side
+        self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.enc_radiobutton.setEnabled(False)
+        self.dec_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.dec_radiobutton.setEnabled(False)
+        self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDisable)
+        self.enc_dec_upload_ciphertext_line.setEnabled(False)
+        self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_upload_ciphertext_button.setEnabled(False)
+        self.enc_dec_moonit_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_moonit_button.setEnabled(False)
+        self.enc_dec_download_file_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_download_file_button.setEnabled(False)
+        self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_download_file_button_2.setEnabled(False)
+
+    def updateKeyLayoutPublicDSA(self):
+        self.sign_radiobutton.setEnabled(True)
+        self.sign_radiobutton.setChecked(True)
+        self.sign_radiobutton.setStyleSheet(qRadioButtonGreen)
+        self.verify_radiobutton.setEnabled(False)
+        self.verify_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.dsa_upload_signature_line.setEnabled(False)
+        self.dsa_upload_signature_line.setPlaceholderText("")
+        self.dsa_upload_signature_line.setStyleSheet(qLineDisable)
+        self.dsa_upload_signature_button.setEnabled(False)
+        self.dsa_upload_signature_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_verify_button.setEnabled(False)
+        self.dsa_verify_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_verify_button_status.setText("")
+        self.dsa_download_button.setEnabled(True)
+        self.dsa_download_button.setStyleSheet(qPushButtonDefault)
+        self.dsa_download_button.setText("Download signed file")
+
+        # disable enc/dec side
+        self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.enc_radiobutton.setEnabled(False)
+        self.dec_radiobutton.setStyleSheet(qRadioButtonDisable)
+        self.dec_radiobutton.setEnabled(False)
+        self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDisable)
+        self.enc_dec_upload_ciphertext_line.setEnabled(False)
+        self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_upload_ciphertext_button.setEnabled(False)
+        self.enc_dec_moonit_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_moonit_button.setEnabled(False)
+        self.enc_dec_download_file_button.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_download_file_button.setEnabled(False)
+        self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
+        self.enc_dec_download_file_button_2.setEnabled(False)
+
 
     def keyTableItemDoubleClicked(self):
         change_page(self, 2)
@@ -3161,7 +3438,9 @@ class Ui_MainWindow(object):
         self.stackedWidget.currentChanged.connect(self.currentWidgetChangedHandler)
         self.change_pass_button.clicked.connect(self.changing_password)
         self.login_button.clicked.connect(self.checking_password)
-        pixmap = QPixmap("gui/login.png")
+        pixmap = QPixmap(dirname(abspath(__file__))+"/login.png")
         pixmap = pixmap.scaledToWidth(128)
         self.login_image.setPixmap(pixmap)
         self.login_image.setAlignment(Qt.AlignCenter)
+        #self.enc_dsa_selected_key_line.setClearButtonEnabled(True)
+        self.enc_dsa_upload_button.clicked.connect(self.openFile)

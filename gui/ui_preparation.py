@@ -175,7 +175,7 @@ class MainWindow(QMainWindow):
         if btnWidget.objectName() == "btn_key":
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_key)
             UIFunctions.resetStyle(self, "btn_key")
-            UIFunctions.labelPage(self, "Key")
+            UIFunctions.labelPage(self, "KEY")
             btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
 
         # PAGE DSA STATISTICS
@@ -391,12 +391,12 @@ class UIFunctions(MainWindow):
     ########################################################################
     ## ==> SELECT
     def selectMenu(getStyle):
-        select = getStyle + ("QPushButton { border-right: 7px solid rgb(44, 49, 60); }")
+        select = getStyle
         return select
 
     ## ==> DESELECT
     def deselectMenu(getStyle):
-        deselect = getStyle.replace("QPushButton { border-right: 7px solid rgb(44, 49, 60); }", "")
+        deselect = getStyle
         return deselect
 
     ## ==> START SELECTION
