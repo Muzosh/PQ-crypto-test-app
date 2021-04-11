@@ -38,7 +38,7 @@ qRadioButtonRed = "QRadioButton{color:rgb(255,0,0)}"
 qRadioButtonDefault = "QRadioButton{color:#fff}"
 qRadioButtonDisable = "QRadioButton{color:#555}"
 
-global selectedId, selectedAlg, selectedType
+global selectedId, selectedAlg, selectedType, cipher_text, encrypted_file, decrypted_file
 
 def change_page(self, param):
     if param == 0:
@@ -226,8 +226,7 @@ class Ui_MainWindow(object):
             self.key_inputname_line.setStyleSheet(qLineDefault)
             self.key_checking_name.setText("")
         elif self.stackedWidget.currentWidget().objectName() == "page_enc_dsa":
-            self.enc_dsa_selected_key_line.setStyleSheet(qLineDefault)
-            self.enc_dsa_selected_key_line.setText("")
+
             self.itemChangedHandler()
             self.layoutKeyChange()
             pass
@@ -242,6 +241,8 @@ class Ui_MainWindow(object):
 
     def itemChangedHandler(self):
         global selectedId, selectedAlg, selectedType
+        self.enc_dsa_selected_key_line.setStyleSheet(qLineDefault)
+        self.enc_dsa_selected_key_line.setText("")
         if len(self.key_maintable.selectedItems()) != 0:
             selectedId = self.key_maintable.selectedItems()[0].text()
             selectedAlg = self.key_maintable.selectedItems()[1].text()
@@ -369,7 +370,7 @@ class Ui_MainWindow(object):
         self.enc_radiobutton.setEnabled(True)
         self.enc_radiobutton.setChecked(True)
         self.dec_radiobutton.setEnabled(False)
-        self.dec_radiobutton.setStyleSheet(qRadioButtonDefault)
+        self.dec_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDefault)
         self.enc_dec_upload_ciphertext_line.setPlaceholderText("Upload your ciphertext")
         self.enc_dec_upload_ciphertext_line.setEnabled(True)
@@ -505,23 +506,66 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button_2.setEnabled(False)
 
 
+    def selectedCipher(self):
+        correctCipher = ""
+        if selectedId != "":
+            list_IDs = passwordManager.loadKeyStoreList();
+            for l in list_IDs:
+                if selectedId in str(l[0]):
+                    if selectedType == str(l[2]):
+                        print("Match!")
+                        correctCipher=l
+        return correctCipher
+
+
+    def encryptFile(self):
+        global cipher_text, encrypted_file
+        print("encryptujem, nevyrusuj")
+        file_path = self.enc_dsa_upload_line.text()
+        cipher = self.selectedCipher()
+        with open(file_path, 'rb') as f:
+            uploaded_File = f.read()
+        #print(type(uploaded_File))
+        #print(cipher)
+        cipher_text, encrypted_file = pqEncryptionManager.encryptFile(uploaded_File,cipher)
+
     def decryptFile(self):
-        pass
-        #if self.enc_radiobutton.isChecked():
-        #    file_path = self.enc_dsa_upload_line.text()
-        #    cipher = selectedId
-        #    print(list)
-        #    text_path = self.enc_dec_upload_ciphertext_line.text()
-        #    print(file_path+""+cipher+""+text_path)
+        global decrypted_file
+        print("uz iba chvilu, hned mame tvoje tajomstvo decryptovane")
+        file_path = self.enc_dsa_upload_line.text()
+        cipher = self.selectedCipher()
+        with open(file_path, 'rb') as f:
+            uploaded_File = f.read()
+        text_path = self.enc_dec_upload_ciphertext_line.text()
+        with open(text_path, 'rb') as f:
+            uploaded_cipher_text = f.read()
+        decrypted_file = pqEncryptionManager.decryptFile(uploaded_File,uploaded_cipher_text,cipher)
 
-        #   with open(file_path, 'rb') as f:
-        #        tmpFile = f.read()
-        #    with open(file_path, 'rb') as f:
-        #        tmpCipherText = f.read()
+    def moonIt(self):
+        if self.dec_radiobutton.isChecked():
+            self.encryptFile()
+        elif self.enc_radiobutton.isChecked():
+            self.decryptFile()
+        else:
+            print("Ziadne radio nezvolil si, whats up")
 
-        #    pqEncryptionManager.decryptFile(tmpFile,tmpCipherText,passwordManager.loadKeyStoreList()[1])
+    def downloadFile(self):
+        if self.dec_radiobutton.isChecked():
+            #print(encrypted_file)
+            with open(dirname(dirname(abspath(__file__)))+"/Download/file", 'wb') as file:
+                file.write(encrypted_file)
+
+        if self.enc_radiobutton.isChecked():
+            #print(decrypted_file)
+            with open(dirname(dirname(abspath(__file__)))+"/Download/decrypted_file", 'wb') as file:
+                file.write(decrypted_file)
 
 
+    def downloadCipher(self):
+        if self.dec_radiobutton.isChecked():
+            #print(cipher_text)
+            with open(dirname(dirname(abspath(__file__)))+"/Download/ciphertext", 'wb') as file:
+                file.write(cipher_text)
 
 
     def keyTableItemDoubleClicked(self):
@@ -4080,7 +4124,7 @@ class Ui_MainWindow(object):
         self.login_image.setPixmap(pixmap)
         self.login_image.setAlignment(Qt.AlignCenter)
         #self.enc_dsa_selected_key_line.setClearButtonEnabled(True)
-        self.enc_dec_moonit_button.clicked.connect(self.decryptFile)
+        self.enc_dec_moonit_button.clicked.connect(self.moonIt)
 
         hwText = f"Architecture: {platform.architecture()[0]}"
         hwText += f"\nMachine: {platform.machine()}"
@@ -4094,3 +4138,6 @@ class Ui_MainWindow(object):
         self.enc_statistics_hw_label.setText(hwText)
         self.dsa_statistics_hw_label.setText(hwText)
         self.key_statistics_hw_label.setText(hwText)
+        
+        self.enc_dec_download_file_button.clicked.connect(self.downloadFile)
+        self.enc_dec_download_file_button_2.clicked.connect(self.downloadCipher)
