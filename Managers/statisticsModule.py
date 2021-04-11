@@ -9,17 +9,17 @@ class StatisticsManager:
     """
     
     def __init__(self):
-        self.__keyGenEntries = []
-        self.__kemAesEntries = []
-        self.__dsaEntries = []
+        self.keyGenEntries = []
+        self.kemAesEntries = []
+        self.dsaEntries = []
     
     def addKeyGenEntry(self, datetime:datetime, alg:str, timeInSeconds:float):
-        self.__keyGenEntries.append((datetime, alg, timeInSeconds))
+        self.keyGenEntries.append((datetime, alg, timeInSeconds))
         
     def addKemAesEntry(self, datetime:datetime, alg:str, operationType:str, aesBlockSize:int, fileSize:int, kemTimeInSeconds:float, aesTimeInSeconds:float):
-        self.__kemAesEntries.append((datetime, alg, operationType, aesBlockSize, fileSize, kemTimeInSeconds, aesTimeInSeconds))
+        self.kemAesEntries.append((datetime, alg, operationType, aesBlockSize, fileSize, kemTimeInSeconds, aesTimeInSeconds))
         
     def addDsaEntry(self, datetime:datetime, alg:str, operationType:str, fileSize:int, timeInSeconds:float):
-        self.__dsaEntries.append((datetime, alg, operationType, fileSize, timeInSeconds))
+        self.dsaEntries.append((datetime, alg, operationType, fileSize, timeInSeconds))
         
         
