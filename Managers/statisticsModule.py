@@ -1,4 +1,5 @@
 from datetime import datetime
+import statistics
 
 class StatisticsManager:
     """This class handles everything around statistics, data mining, collecting data, etc...
@@ -9,13 +10,9 @@ class StatisticsManager:
     """
     
     def __init__(self):
-        self.__keyGenEntries = []
-        self.__kemAesEntries = []
-        self.__dsaEntries = []
-        #for testing
-        #self.__keyGenEntries = [(datetime.today(), 'McEliece', float(40)),(datetime.today(), 'aaa', float(10)),(datetime.today(), 'McEliece', float(20))]
-        #self.__kemAesEntries = [(datetime.today(), 'McEliece', 'op', 256, 50, float(40), float(40)), (datetime.today(), 'aaa', 'op', 256, 50, float(40), float(40)), (datetime.today(), 'McEliece', 'op', 256, 50, float(20), float(20))]
-        #self.__dsaEntries = [(datetime.today(), 'RainbowVc', 'op',50, float(40)), (datetime.today(), 'RainbowVc', 'op', 50, float(40)), (datetime.today(), 'Sphincs', 'op', 50, float(20))]
+        self.keyGenEntries = []
+        self.kemAesEntries = []
+        self.dsaEntries = []
     
     def addKeyGenEntry(self, datetime:datetime, alg:str, timeInSeconds:float):
         self.keyGenEntries.append((datetime, alg, timeInSeconds))
@@ -24,145 +21,156 @@ class StatisticsManager:
         self.kemAesEntries.append((datetime, alg, operationType, aesBlockSize, fileSize, kemTimeInSeconds, aesTimeInSeconds))
         
     def addDsaEntry(self, datetime:datetime, alg:str, operationType:str, fileSize:int, timeInSeconds:float):
-        self.__dsaEntries.append((datetime, alg, operationType, fileSize, timeInSeconds)) #timeInSeconds/fileSize
+        self.__dsaEntries.append((datetime, alg, operationType, fileSize, timeInSeconds))
     
-    def average_handler(self, list, position_of_indextime):
-        sum = 0
-        for tup in list:
-            sum = sum + tup[position_of_indextime]
+    def average_handler(self, list):
         if len(list) == 0:
-            return None
+            return "N/A"
         else:
-            return sum/len(list)
+            return sum(list)/len(list)
         
-    def min_handler(self, list, position_of_indextime):
-        min = float('inf')
-        for tup in list:
-            if tup[position_of_indextime] < min:
-                min = tup[position_of_indextime]        
-        return min
-    
-    def max_handler(self, list, position_of_indextime):
-        max = float('-inf')
-        for tup in list:
-            if tup[position_of_indextime] > max:
-                max = tup[position_of_indextime]        
-        return max
-    
-    def median_handler(self, list:list, position_of_indextime):
-        list.sort(key=lambda tup:tup[position_of_indextime])
-        if (list == None or list == []):
-            return None
-        x = len(list)
-        if (x % 2 == 0):
-            median1 = list[x//2]
-            median2 = list[x//2 - 1]
-            median = (median1[position_of_indextime] + median2[position_of_indextime])/2
-            return median
+    def min_handler(self, list):
+        if len(list) == 0:
+            return "N/A"
         else:
-            median = list[x//2]
-            return median[position_of_indextime]
+            return min(list)
+    
+    def max_handler(self, list):
+        if len(list) == 0:
+            return "N/A"
+        else:
+            return max(list)
+    
+    def median_handler(self, list):
+        if len(list) == 0:
+            return "N/A"
+        else:
+            return statistics.median(list)
         
     def filterKeyList_handler(self):
-        mceliece = [tup for tup in self.__keyGenEntries if (tup[1] == 'McEliece')]
-        #mceliece = [tup[2] for tup in self.__keyGenEntries if (tup[1] == 'McEliece')]
-        saber = [tup for tup in self.__keyGenEntries if (tup[1] == 'Saber')]
-        kyber = [tup for tup in self.__keyGenEntries if (tup[1] == 'Kyber')]
-        nthrups = [tup for tup in self.__keyGenEntries if (tup[1] == 'Nthrups')]
-        dilithium = [tup for tup in self.__keyGenEntries if (tup[1] == 'Dilithium')]
-        rainbow = [tup for tup in self.__keyGenEntries if (tup[1] == 'RainbowVc')]
-        sphincs = [tup for tup in self.__keyGenEntries if (tup[1] == 'Sphincs')]
-        
-        return mceliece, saber, kyber, nthrups, dilithium, rainbow, sphincs
-    
-    def filterKemList_handler(self):
-        mceliece = [tup for tup in self.__kemAesEntries if (tup[1] == 'McEliece')]
-        #mceliece = [tup[2] for tup in self.__keyGenEntries if (tup[1] == 'McEliece')]
-        saber = [tup for tup in self.__kemAesEntries if (tup[1] == 'Saber')]
-        kyber = [tup for tup in self.__kemAesEntries if (tup[1] == 'Kyber')]
-        nthrups = [tup for tup in self.__kemAesEntries if (tup[1] == 'Nthrups')]
-        
-        return mceliece, saber, kyber, nthrups
-    
-    def filterDsaList_handler(self):
-        dilithium = [tup for tup in self.__dsaEntries if (tup[1] == 'Dilithium')]
-        rainbow = [tup for tup in self.__dsaEntries if (tup[1] == 'RainbowVc')]
-        sphincs = [tup for tup in self.__dsaEntries if (tup[1] == 'Sphincs')]
-        
+        mceliece = [tup[2] for tup in self.keyGenEntries if (tup[1] == 'McEliece')]
+        saber = [tup[2] for tup in self.keyGenEntries if (tup[1] == 'Saber')]
+        kyber = [tup[2] for tup in self.keyGenEntries if (tup[1] == 'Kyber')]
+        nthrups = [tup[2] for tup in self.keyGenEntries if (tup[1] == 'Nthrups')]
+        dilithium = [tup[2] for tup in self.keyGenEntries if (tup[1] == 'Dilithium')]
+        rainbow = [tup[2] for tup in self.keyGenEntries if (tup[1] == 'RainbowVc')]
+        sphincs = [tup[2] for tup in self.keyGenEntries if (tup[1] == 'Sphincs')]
+        return mceliece, kyber, saber, nthrups, dilithium, rainbow, sphincs
+
+    def filterEncryptList_handler(self):
+        mceliece = [tup[5]+tup[6]/tup[4] for tup in self.kemAesEntries if (tup[1] == 'McEliece' and tup[2] == 'Encrypt')]
+        saber = [tup[5]+tup[6]/tup[4] for tup in self.kemAesEntries if (tup[1] == 'Saber' and tup[2] == 'Encrypt')]
+        kyber = [tup[5]+tup[6]/tup[4] for tup in self.kemAesEntries if (tup[1] == 'Kyber' and tup[2] == 'Encrypt')]
+        nthrups = [tup[5]+tup[6]/tup[4] for tup in self.kemAesEntries if (tup[1] == 'Nthrups' and tup[2] == 'Encrypt')]
+        return mceliece, kyber, saber, nthrups
+
+    def filterDecryptList_handler(self):
+        mceliece = [tup[5]+tup[6]/tup[4] for tup in self.kemAesEntries if (tup[1] == 'McEliece' and tup[2] == 'Decrypt')]
+        saber = [tup[5]+tup[6]/tup[4] for tup in self.kemAesEntries if (tup[1] == 'Saber' and tup[2] == 'Decrypt')]
+        kyber = [tup[5]+tup[6]/tup[4] for tup in self.kemAesEntries if (tup[1] == 'Kyber' and tup[2] == 'Decrypt')]
+        nthrups = [tup[5]+tup[6]/tup[4] for tup in self.kemAesEntries if (tup[1] == 'Nthrups' and tup[2] == 'Decrypt')]
+        return mceliece, kyber, saber, nthrups
+
+    def filterSignList_handler(self):
+        dilithium = [tup[4]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Dilithium' and tup[2] == 'Sign')]
+        rainbow = [tup[2]/tup[3] for tup in self.dsaEntries if (tup[1] == 'RainbowVc' and tup[2] == 'Sign')]
+        sphincs = [tup[2]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Sphincs' and tup[2] == 'Sign')]
         return dilithium, rainbow, sphincs
-    
-    #KEY  
+
+    def filterVerifyList_handler(self):
+        dilithium = [tup[4]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Dilithium' and tup[2] == 'Verify')]
+        rainbow = [tup[2]/tup[3] for tup in self.dsaEntries if (tup[1] == 'RainbowVc' and tup[2] == 'Verify')]
+        sphincs = [tup[2]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Sphincs' and tup[2] == 'Verify')]
+        return dilithium, rainbow, sphincs    
+
     def getKeyAverages(self):
-        key_filtered_list = self.filterKeyList_handler()        
-        return [self.average_handler(key_filtered_list[0],2), self.average_handler(key_filtered_list[1],2), self.average_handler(key_filtered_list[2],2), self.average_handler(key_filtered_list[3],2), self.average_handler(key_filtered_list[4],2), self.average_handler(key_filtered_list[5],2), self.average_handler(key_filtered_list[6],2)]
+        key_filtered_list = self.filterKeyList_handler()
+        return [self.average_handler(key_filtered_list[i]) for i in range(len(key_filtered_list))]
 
     def getKeyMins(self):
         key_filtered_list = self.filterKeyList_handler()
-        return [self.min_handler(key_filtered_list[0],2), self.min_handler(key_filtered_list[1],2), self.min_handler(key_filtered_list[2],2), self.min_handler(key_filtered_list[3],2), self.min_handler(key_filtered_list[4],2), self.min_handler(key_filtered_list[5],2), self.min_handler(key_filtered_list[6],2)]
-    
-    def getKeyMaxs(self):
+        return [self.min_handler(key_filtered_list[i]) for i in range(len(key_filtered_list))]
+
+    def getKeyMaxes(self):
         key_filtered_list = self.filterKeyList_handler()
-        return [self.max_handler(key_filtered_list[0],2), self.max_handler(key_filtered_list[1],2), self.max_handler(key_filtered_list[2],2), self.max_handler(key_filtered_list[3],2), self.max_handler(key_filtered_list[4],2), self.max_handler(key_filtered_list[5],2), self.max_handler(key_filtered_list[6],2)]
-    
+        return [self.max_handler(key_filtered_list[i]) for i in range(len(key_filtered_list))]
+
     def getKeyMedians(self):
         key_filtered_list = self.filterKeyList_handler()
-        return [self.median_handler(key_filtered_list[0],2), self.median_handler(key_filtered_list[1],2), self.median_handler(key_filtered_list[2],2), self.median_handler(key_filtered_list[3],2), self.median_handler(key_filtered_list[4],2), self.median_handler(key_filtered_list[5],2), self.median_handler(key_filtered_list[6],2)]
-    
-    #KEM   
-    def getKemAverages(self):
-        kem_filtered_list = self.filterKemList_handler()        
-        return [self.average_handler(kem_filtered_list[0],5), self.average_handler(kem_filtered_list[1],5), self.average_handler(kem_filtered_list[2],5), self.average_handler(kem_filtered_list[3],5)]
+        return [self.median_handler(key_filtered_list[i]) for i in range(len(key_filtered_list))]
+       
+    def getEncryptAverages(self):
+        encypt_filtered_list = self.filterEncryptList_handler()
+        return [self.average_handler(encypt_filtered_list[i]) for i in range(len(encypt_filtered_list))]
 
-    def getKemMins(self):
-        kem_filtered_list = self.filterKemList_handler()
-        return [self.min_handler(kem_filtered_list[0],5), self.min_handler(kem_filtered_list[1],5), self.min_handler(kem_filtered_list[2],5), self.min_handler(kem_filtered_list[3],5)]
-    
-    def getKemMaxs(self):
-        kem_filtered_list = self.filterKemList_handler()
-        return [self.max_handler(kem_filtered_list[0],5), self.max_handler(kem_filtered_list[1],5), self.max_handler(kem_filtered_list[2],5), self.max_handler(kem_filtered_list[3],5)]
-    
-    def getKemMedians(self):
-        kem_filtered_list = self.filterKemList_handler()
-        return [self.median_handler(kem_filtered_list[0],5), self.median_handler(kem_filtered_list[1],5), self.median_handler(kem_filtered_list[2],5), self.median_handler(kem_filtered_list[3],5)]
-    
-    #DSA  
-    def getDsaAverages(self):
-        dsa_filtered_list = self.filterDsaList_handler()        
-        return [self.average_handler(dsa_filtered_list[0],4), self.average_handler(dsa_filtered_list[1],4), self.average_handler(dsa_filtered_list[2],4)]
+    def getEncryptMins(self):
+        encypt_filtered_list = self.filterEncryptList_handler()
+        return [self.min_handler(encypt_filtered_list[i]) for i in range(len(encypt_filtered_list))]
 
-    def getDsaMins(self):
-        dsa_filtered_list = self.filterDsaList_handler()
-        return [self.min_handler(dsa_filtered_list[0],4), self.min_handler(dsa_filtered_list[1],4), self.min_handler(dsa_filtered_list[2],4)]
+    def getEncryptMaxes(self):
+        encypt_filtered_list = self.filterEncryptList_handler()
+        return [self.max_handler(encypt_filtered_list[i]) for i in range(len(encypt_filtered_list))]
+
+    def getEncryptMedians(self):
+        encypt_filtered_list = self.filterEncryptList_handler()
+        return [self.median_handler(encypt_filtered_list[i]) for i in range(len(encypt_filtered_list))]
+       
+    def getDecryptAverages(self):
+        decrypt_filtered_list = self.filterDecryptList_handler()
+        return [self.average_handler(decrypt_filtered_list[i]) for i in range(len(decrypt_filtered_list))]
+
+    def getDecryptMins(self):
+        decrypt_filtered_list = self.filterDecryptList_handler()
+        return [self.min_handler(decrypt_filtered_list[i]) for i in range(len(decrypt_filtered_list))]
+
+    def getDecryptMaxes(self):
+        decrypt_filtered_list = self.filterDecryptList_handler()
+        return [self.max_handler(decrypt_filtered_list[i]) for i in range(len(decrypt_filtered_list))]
+
+    def getDecryptMedians(self):
+        decrypt_filtered_list = self.filterDecryptList_handler()
+        return [self.median_handler(decrypt_filtered_list[i]) for i in range(len(decrypt_filtered_list))]
+       
+    def getSignAverages(self):
+        sign_filtered_list = self.filterSignList_handler()
+        return [self.average_handler(sign_filtered_list[i]) for i in range(len(sign_filtered_list))]
+
+    def getSignMins(self):
+        sign_filtered_list = self.filterSignList_handler()
+        return [self.min_handler(sign_filtered_list[i]) for i in range(len(sign_filtered_list))]
+
+    def getSignMaxes(self):
+        sign_filtered_list = self.filterSignList_handler()
+        return [self.max_handler(sign_filtered_list[i]) for i in range(len(sign_filtered_list))]
+
+    def getSignMedians(self):
+        sign_filtered_list = self.filterSignList_handler()
+        return [self.median_handler(sign_filtered_list[i]) for i in range(len(sign_filtered_list))]
+       
+    def getVerifyAverages(self):
+        verify_filtered_list = self.filterVerifyList_handler()
+        return [self.average_handler(verify_filtered_list[i]) for i in range(len(verify_filtered_list))]
+
+    def getVerifyMins(self):
+        verify_filtered_list = self.filterVerifyList_handler()
+        return [self.min_handler(verify_filtered_list[i]) for i in range(len(verify_filtered_list))]
+
+    def getVerifyMaxes(self):
+        verify_filtered_list = self.filterVerifyList_handler()
+        return [self.max_handler(verify_filtered_list[i]) for i in range(len(verify_filtered_list))]
+
+    def getVerifyMedians(self):
+        verify_filtered_list = self.filterVerifyList_handler()
+        return [self.median_handler(verify_filtered_list[i]) for i in range(len(verify_filtered_list))]
     
-    def getDsaMaxs(self):
-        dsa_filtered_list = self.filterDsaList_handler()
-        return [self.max_handler(dsa_filtered_list[0],4), self.max_handler(dsa_filtered_list[1],4), self.max_handler(dsa_filtered_list[2],4)]
-    
-    def getDsaMedians(self):
-        dsa_filtered_list = self.filterDsaList_handler()
-        return [self.median_handler(dsa_filtered_list[0],4), self.median_handler(dsa_filtered_list[1],4), self.median_handler(dsa_filtered_list[2],4)]
-         
-    
-# TEST AREA        
-#s = StatisticsManager()
-#s.average_handler([("a", "a", float(10)), ("a", "a", float(15))])
+# # TEST AREA        
+# s = StatisticsManager()
+# #s.average_handler([("a", "a", float(10)), ("a", "a", float(15))])
+# #print(s.getKeyAverages())
 
-#s.filterKeyList_handler()
+# s.filterKeyList_handler()
+# #print(s.getKeyMins())
 
-#print(s.getKeyAverages())
-#print(s.getKeyMins())
-#print(s.getKeyMaxs())
-#print(s.getKeyMedians())
-
-#print(s.getKemAverages())
-#print(s.getKemMins())
-#print(s.getKemMaxs())
-#print(s.getKemMedians())
-
-
-#print(s.getDsaAverages())
-#print(s.getDsaMins())
-#print(s.getDsaMaxs())
-#print(s.getDsaMedians())
+# print(s.getKeyMedians())
         
         

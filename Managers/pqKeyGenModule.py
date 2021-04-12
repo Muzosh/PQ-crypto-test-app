@@ -129,7 +129,7 @@ class PqKeyGenManager:
 
     # KEM
     def generate_keypair_mceliece8192128(self, name=""):
-        self.__RunKeyGen(gen_mceliece, "McLiece", name)
+        self.__RunKeyGen(gen_mceliece, "McEliece", name)
 
     def generate_keypair_saber(self, name=""):
         self.__RunKeyGen(gen_saber, "Saber", name)
