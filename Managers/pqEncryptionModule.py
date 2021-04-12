@@ -50,7 +50,7 @@ class PqEncryptionManager:
         
         # dictionary is a substitue for switch case, which is absent in Python
         self.encFuncDict = {
-            "McLiece": encapsulate_mceliece8192128,
+            "McEliece": encapsulate_mceliece8192128,
             "Saber": encapsulate_saber,
             "Kyber": encapsulate_kyber1024,
             "Nthrups": encapsulate_ntruhps2048509

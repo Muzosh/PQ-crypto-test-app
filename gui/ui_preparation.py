@@ -18,6 +18,7 @@
 import os
 import sys
 import platform
+from os.path import dirname, abspath
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtCore import (QCoreApplication, QPropertyAnimation, QDate, QDateTime, QMetaObject, QObject, QPoint, QRect, QSize, QTime, QUrl, Qt, QEvent)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont, QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter, QPixmap, QRadialGradient)
@@ -26,6 +27,11 @@ from ui_main import Ui_MainWindow
 from ui_styles import Style
 
 qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}QLineEdit:hover{background-color:#394150;border:2px solid #3d4656;color:#fff}QLineEdit:pressed{background-color:#232831;border:2px solid #2b323d;color:#fff}"
+qPushButtonDefault = "QPushButton{border:2px solid #343b48;border-radius:15px;background-color:#343b48}QPushButton:hover{background-color:#394150;border:2px solid #3d4656}QPushButton:pressed{background-color:#232831;border:2px solid #2b323d}"
+
+downloadsFolder = dirname(dirname(abspath(__file__))) + "/Downloads"
+if not os.path.exists(downloadsFolder):
+    os.mkdir(downloadsFolder)
 
 ## ==> GLOBALS
 GLOBAL_STATE = 0
@@ -73,6 +79,8 @@ class MainWindow(QMainWindow):
         self.updateLoginPageButtonText()
         self.ui.enc_dsa_upload_button.clicked.connect(self.openFileKey)
         self.ui.enc_dec_upload_ciphertext_button.clicked.connect(self.openFileCipherText)
+        self.ui.enc_dec_download_file_button.clicked.connect(self.downloadFile)
+        self.ui.enc_dec_download_file_button_2.clicked.connect(self.downloadCipher)
 
 
         ## ==> CREATE MENUS
@@ -279,7 +287,6 @@ class MainWindow(QMainWindow):
             self.ui.login_button.setText("Log me IN NOW")
             print("File exists = not today, bro!")
 
-
     def openFile(self):
         file_filter = "All Files (*);"
         response = QFileDialog.getOpenFileName(
@@ -295,12 +302,34 @@ class MainWindow(QMainWindow):
         self.ui.enc_dsa_upload_line.setText(name)
         self.ui.enc_dsa_upload_line.setEnabled(True)
         self.ui.enc_dsa_upload_line.setStyleSheet(qLineDefault)
+        self.ui.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
 
     def openFileCipherText(self):
         name = self.openFile()
         self.ui.enc_dec_upload_ciphertext_line.setText(name)
         self.ui.enc_dec_upload_ciphertext_line.setEnabled(True)
         self.ui.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDefault)
+        self.ui.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
+
+    def downloadFile(self):
+        if self.ui.dec_radiobutton.isChecked():
+            filePath = QFileDialog.getSaveFileName(self, "Save encrypted file", downloadsFolder + "/encryptedFile.kry")[0]
+            if filePath != '':
+                with open(filePath, 'wb+') as file:
+                    file.write(self.ui.encrypted_file)
+
+        if self.ui.enc_radiobutton.isChecked():
+            filePath = QFileDialog.getSaveFileName(self, "Save decrypted file", downloadsFolder + "/decryptedFile.specifyMe")[0]
+            if filePath != '':
+                with open(filePath, 'wb+') as file:
+                    file.write(self.ui.decrypted_file)
+
+    def downloadCipher(self):
+        if self.ui.dec_radiobutton.isChecked():
+            filePath = QFileDialog.getSaveFileName(self, "Save ciphertext", downloadsFolder + "/kem.cipher")[0]
+            if filePath != '':
+                with open(filePath, 'wb+') as file:
+                    file.write(self.ui.cipher_text)
 
             
 class UIFunctions(MainWindow):

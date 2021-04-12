@@ -26,6 +26,8 @@ from PySide2.QtWidgets import *
 from PyQt5.QtWidgets import QFileDialog
 
 qPushButtonDefault = "QPushButton{border:2px solid #343b48;border-radius:15px;background-color:#343b48}QPushButton:hover{background-color:#394150;border:2px solid #3d4656}QPushButton:pressed{background-color:#232831;border:2px solid #2b323d}"
+qPushButtonRed = "QPushButton{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}"
+qPushButtonGreen = "QPushButton{border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}"
 qPushButtonDisabled = "QPushButton{border:2px solid #000;color:#555;border-radius:15px;background-color:#000}"
 
 qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}QLineEdit:hover{background-color:#394150;border:2px solid #3d4656;color:#fff}QLineEdit:pressed{background-color:#232831;border:2px solid #2b323d;color:#fff}"
@@ -37,14 +39,6 @@ qRadioButtonGreen = "QRadioButton{color:rgb(0, 255, 0);font-weight: 600;}"
 qRadioButtonRed = "QRadioButton{color:rgb(255,0,0)}"
 qRadioButtonDefault = "QRadioButton{color:#fff}"
 qRadioButtonDisable = "QRadioButton{color:#555}"
-
-downloadsFolder = dirname(dirname(abspath(__file__))) + "/Downloads"
-if not os.path.exists(downloadsFolder):
-    os.mkdir(downloadsFolder)
-
-global selectedId, selectedAlg, selectedType, cipher_text, encrypted_file, decrypted_file, keyStoreList
-
-keyStoreList = []
 
 def change_page(self, param):
     if param == 0:
@@ -82,8 +76,17 @@ def hideMenuItems(self):
         self.frame_left_menu.children()[1].children()[x].hide()
 
 class Ui_MainWindow(object):
+    def __init__(self):
+        self.selectedId = ""
+        self.selectedAlg = ""
+        self.selectedType = ""
+        self.cipher_text = b""
+        self.encrypted_file = b""
+        self.decrypted_file = b""
+        self.keyStoreList = []
+
     def SaveStatisticsToFile(self):
-        statisticsManager.saveStatisticsToFile()
+        self.statisticsManager.saveStatisticsToFile()
 
     def checking_password(self):
         entered_password = self.login_input_line.text()
@@ -94,18 +97,17 @@ class Ui_MainWindow(object):
             self.login_status_label.setText("You're empty bitch")
         else:
             try:
-                global passwordManager, pqEncryptionManager, pqKeyGenManager, pqSigningManager, statisticsManager
-                passwordManager = PasswordManager(entered_password)
+                self.passwordManager = PasswordManager(entered_password)
                 self.login_input_line.setStyleSheet(qLineGreen)
                 self.login_status_label.setText("Your secrets has been revealed!")
                 change_page(self, 1)
                 
-                statisticsManager = StatisticsManager(passwordManager)
-                pqEncryptionManager = PqEncryptionManager(statisticsManager)
-                pqSigningManager = PqSigningManager(statisticsManager)
-                pqKeyGenManager = PqKeyGenManager(passwordManager, statisticsManager)
+                self.statisticsManager = StatisticsManager(self.passwordManager)
+                self.pqEncryptionManager = PqEncryptionManager(self.statisticsManager)
+                self.pqSigningManager = PqSigningManager(self.statisticsManager)
+                self.pqKeyGenManager = PqKeyGenManager(self.passwordManager, self.statisticsManager)
 
-                statisticsManager.loadStatisticsFromFile()
+                self.statisticsManager.loadStatisticsFromFile()
 
                 unhideMenuItems(self)
 
@@ -115,7 +117,7 @@ class Ui_MainWindow(object):
 
     def changing_password(self):
             old_pass = self.change_pass_old_line.text()
-            if passwordManager.authenticate(old_pass):
+            if self.passwordManager.authenticate(old_pass):
                 print("som true")
                 self.change_pass_old_line.setStyleSheet(qLineGreen)
                 print("Trafil si masterpass, uz ho iba zmenit..")
@@ -128,7 +130,7 @@ class Ui_MainWindow(object):
                     self.change_pass_new_line2.setStyleSheet(qLineGreen)
                     print("Obe nove hesla su rovnake, idem ta teda zmenit")
 
-                    passwordManager.changeMasterPassword(old_pass, new_pass2)
+                    self.passwordManager.changeMasterPassword(old_pass, new_pass2)
                     self.change_pass_old_line.setText("")
                     self.change_pass_old_line.setStyleSheet(qLineDefault)
                     self.change_pass_new_line1.setText("")
@@ -165,9 +167,6 @@ class Ui_MainWindow(object):
                 self.change_pass_old_line.setStyleSheet(qLineRed)
                 print("Myslis si, ze tu budes skuskat spravne masterpass?")
 
-
-   
-        
     def generateKey(self):
         print("idzeme generovac klusik")
         selected_key = ""
@@ -195,30 +194,28 @@ class Ui_MainWindow(object):
         if name != "" and selected_key != "":
             print("Generujem us ten kluc naah")
             if selected_key == "KEM - mceliece":
-                pqKeyGenManager.generate_keypair_mceliece8192128(name)
+                self.pqKeyGenManager.generate_keypair_mceliece8192128(name)
             if selected_key == "KEM - saber":
-                pqKeyGenManager.generate_keypair_saber(name)
+                self.pqKeyGenManager.generate_keypair_saber(name)
             if selected_key == "KEM - kyber":
-                pqKeyGenManager.generate_keypair_kyber1024(name)
+                self.pqKeyGenManager.generate_keypair_kyber1024(name)
             if selected_key == "KEM - ntruhps":
-                pqKeyGenManager.generate_keypair_ntruhps2048509(name)
+                self.pqKeyGenManager.generate_keypair_ntruhps2048509(name)
             if selected_key == "DSA - dilithium":
-                pqKeyGenManager.generate_keypair_dilithium4(name)
+                self.pqKeyGenManager.generate_keypair_dilithium4(name)
             if selected_key == "DSA - rainbow":
-                pqKeyGenManager.generate_keypair_rainbowVc_classic(name)
+                self.pqKeyGenManager.generate_keypair_rainbowVc_classic(name)
             if selected_key == "DSA - sphincs":
-                pqKeyGenManager.generate_keypair_sphincs_shake256_256s_simple(name)
+                self.pqKeyGenManager.generate_keypair_sphincs_shake256_256s_simple(name)
             self.updateTableKey()
         else:
             print("Vypln pravdzivo vsetok obsah!")
 
     def updateTableKey(self):
         self.key_maintable.setRowCount(0)
+        self.keyStoreList = self.passwordManager.loadKeyStoreList()
 
-        global keyStoreList
-        keyStoreList = passwordManager.loadKeyStoreList()
-
-        for keyStore in keyStoreList:
+        for keyStore in self.keyStoreList:
             self.key_maintable.insertRow(0)
             self.key_maintable.setItem(0, 0, QTableWidgetItem(keyStore[0]))
             self.key_maintable.setItem(0, 1, QTableWidgetItem(keyStore[1]))
@@ -227,7 +224,7 @@ class Ui_MainWindow(object):
 
     def currentWidgetChangedHandler(self):
         if self.stackedWidget.currentWidget().objectName() == "page_key":
-            if keyStoreList == []:
+            if self.keyStoreList == []:
                 self.updateTableKey()
             # reset styles
             keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4,
@@ -239,6 +236,7 @@ class Ui_MainWindow(object):
             self.key_checking_name.setText("")
         elif self.stackedWidget.currentWidget().objectName() == "page_enc_dsa":
             self.itemChangedHandler()
+            self.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
             self.layoutKeyChange()
         elif self.stackedWidget.currentWidget().objectName() == "page_key_statistics":
             self.loadKeyStatisticsTable()
@@ -249,73 +247,72 @@ class Ui_MainWindow(object):
         
 
     def itemChangedHandler(self):
-        global selectedId, selectedAlg, selectedType
         self.enc_dsa_selected_key_line.setStyleSheet(qLineDefault)
         self.enc_dsa_selected_key_line.setText("")
         if len(self.key_maintable.selectedItems()) != 0:
-            selectedId = self.key_maintable.selectedItems()[0].text()
-            selectedAlg = self.key_maintable.selectedItems()[1].text()
-            selectedType = self.key_maintable.selectedItems()[2].text()
-            print(selectedId+" "+selectedAlg+" "+selectedType)
+            self.selectedId = self.key_maintable.selectedItems()[0].text()
+            self.selectedAlg = self.key_maintable.selectedItems()[1].text()
+            self.selectedType = self.key_maintable.selectedItems()[2].text()
+            print(self.selectedId+" "+self.selectedAlg+" "+self.selectedType)
         else:
-            selectedId = ""
+            self.selectedId = ""
 
     def layoutKeyChange(self):
-        if selectedId != "":
+        if self.selectedId != "":
             self.updateKeyLayoutEnable()
-            if selectedAlg == "McEliece":
+            if self.selectedAlg == "McEliece":
                 #sprav mceliece
-                if selectedType == "Private":
+                if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
-                elif selectedType == "Public":
+                elif self.selectedType == "Public":
                     self.updateKeyLayoutPublicKEM()
                 else:
                     self.updateKeyLayoutDisable()
-            if selectedAlg == "Saber":
+            if self.selectedAlg == "Saber":
                 #sprav saber
-                if selectedType == "Private":
+                if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
-                elif selectedType == "Public":
+                elif self.selectedType == "Public":
                     self.updateKeyLayoutPublicKEM()
                 else:
                     self.updateKeyLayoutDisable()
-            if selectedAlg == "Kyber":
+            if self.selectedAlg == "Kyber":
                 #sprav kyber
-                if selectedType == "Private":
+                if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
-                elif selectedType == "Public":
+                elif self.selectedType == "Public":
                     self.updateKeyLayoutPublicKEM()
                 else:
                     self.updateKeyLayoutDisable()
-            if selectedAlg == "Ntruhps":
+            if self.selectedAlg == "Nthrups":
                 #sprav nthrups
-                if selectedType == "Private":
+                if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
-                elif selectedType == "Public":
+                elif self.selectedType == "Public":
                     self.updateKeyLayoutPublicKEM()
                 else:
                     self.updateKeyLayoutDisable()
-            if selectedAlg == "Dilithium":
+            if self.selectedAlg == "Dilithium":
                 #sprav dilithium
-                if selectedType == "Private":
+                if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateDSA()
-                elif selectedType == "Public":
+                elif self.selectedType == "Public":
                     self.updateKeyLayoutPublicDSA()
                 else:
                     self.updateKeyLayoutDisable()
-            if selectedAlg == "RainbowVc":
+            if self.selectedAlg == "RainbowVc":
                 #sprav rainbow
-                if selectedType == "Private":
+                if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateDSA()
-                elif selectedType == "Public":
+                elif self.selectedType == "Public":
                     self.updateKeyLayoutPublicDSA()
                 else:
                     self.updateKeyLayoutDisable()
-            if selectedAlg == "Sphincs":
+            if self.selectedAlg == "Sphincs":
                 #sprav sphincs
-                if selectedType == "Private":
+                if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateDSA()
-                elif selectedType == "Public":
+                elif self.selectedType == "Public":
                     self.updateKeyLayoutPublicDSA()
                 else:
                     self.updateKeyLayoutDisable()
@@ -327,12 +324,11 @@ class Ui_MainWindow(object):
         self.enc_dsa_upload_line.setEnabled(True)
         self.enc_dsa_upload_line.setStyleSheet(qLineDefault)
         self.enc_dsa_upload_line.setPlaceholderText("Choose your file")
-        self.enc_dsa_selected_key_line.setText(selectedId + " " + selectedAlg + " " + selectedType)
+        self.enc_dsa_selected_key_line.setText(self.selectedId + " " + self.selectedAlg + " " + self.selectedType)
         self.enc_dsa_selected_key_line.setEnabled(True)
         self.enc_dsa_selected_key_line.setStyleSheet(qLineDefault)
         self.enc_dsa_upload_button.setEnabled(True)
         self.enc_dsa_upload_button.setStyleSheet(qPushButtonDefault)
-
 
     def updateKeyLayoutDisable(self):
         # lockdown pre vsetky inputy, kvoli nezvolenemu klucu
@@ -514,30 +510,31 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
         self.enc_dec_download_file_button_2.setEnabled(False)
 
-
     def selectedCipher(self):
-        if selectedId != "":
-            return next((x for x in keyStoreList if selectedId == x[0] and selectedType == x[2]), None)
-
+        if self.selectedId != "":
+            return next((x for x in self.keyStoreList if self.selectedId == x[0] and self.selectedType == x[2]), None)
 
     def encryptFile(self):
-        global cipher_text, encrypted_file
         print("encryptujem, nevyrusuj")
         keyStore = self.selectedCipher()
         try:
             file_path = self.enc_dsa_upload_line.text()
             with open(file_path, 'rb') as f:
                 uploaded_File = f.read()
-
-            cipher_text, encrypted_file = pqEncryptionManager.encryptFile(uploaded_File, keyStore)
-            print("finished encrypting")
         except FileNotFoundError:
             self.enc_dsa_upload_line.setEnabled(False)
             self.enc_dsa_upload_line.setStyleSheet(qLineRed)
             self.enc_dsa_upload_line.setPlaceholderText("File not found")
+            return
+            
+        try:
+            self.cipher_text, self.encrypted_file = self.pqEncryptionManager.encryptFile(uploaded_File, keyStore)
+            self.enc_dec_moonit_button.setStyleSheet(qPushButtonGreen)
+            print("finished encrypting")
+        except Exception as err:
+            self.enc_dec_moonit_button.setStyleSheet(qPushButtonRed)
 
     def decryptFile(self):
-        global decrypted_file
         print("uz iba chvilu, hned mame tvoje tajomstvo decryptovane")
         keyStore = self.selectedCipher()
         try:
@@ -558,9 +555,13 @@ class Ui_MainWindow(object):
             self.enc_dec_upload_ciphertext_line.setEnabled(False)
             self.enc_dec_upload_ciphertext_line.setPlaceholderText("")
             self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineRed)
-        
-        decrypted_file = pqEncryptionManager.decryptFile(uploaded_File, uploaded_cipher_text, keyStore)
-        print("finished decrypting")
+
+        try:
+            self.decrypted_file = self.pqEncryptionManager.decryptFile(uploaded_File, uploaded_cipher_text, keyStore)
+            self.enc_dec_moonit_button.setStyleSheet(qPushButtonGreen)
+            print("finished decrypting")
+        except:
+            self.enc_dec_moonit_button.setStyleSheet(qPushButtonRed)
 
     def moonIt(self):
         if self.dec_radiobutton.isChecked():
@@ -570,95 +571,75 @@ class Ui_MainWindow(object):
         else:
             print("Ziadne radio nezvolil si, whats up")
 
-    def downloadFile(self):
-        if self.dec_radiobutton.isChecked():
-            #print(encrypted_file)
-            with open(downloadsFolder + "/encryptedfile", 'wb+') as file:
-                file.write(encrypted_file)
-
-        if self.enc_radiobutton.isChecked():
-            #print(decrypted_file)
-            with open(downloadsFolder + "/decrypted_file", 'wb+') as file:
-                file.write(decrypted_file)
-
-
-    def downloadCipher(self):
-        if self.dec_radiobutton.isChecked():
-            #print(cipher_text)
-            with open(downloadsFolder + "/ciphertext", 'wb+') as file:
-                file.write(cipher_text)
-
-
     def keyTableItemDoubleClicked(self):
         change_page(self, 2)
 
     def loadKeyStatisticsTable(self):
         self.key_statistics_table.setRowCount(0)
 
-        for entry in statisticsManager.keyGenEntries:
+        for entry in self.statisticsManager.keyGenEntries:
             self.key_statistics_table.insertRow(0)
             self.key_statistics_table.setItem(0, 0, QTableWidgetItem(str(entry[0])))
             self.key_statistics_table.setItem(0, 1, QTableWidgetItem(entry[1]))
             self.key_statistics_table.setItem(0, 2, QTableWidgetItem(str(entry[2])))
 
-        averages = statisticsManager.getKeyAverages()
+        averages = self.statisticsManager.getKeyAverages()
         for i in range(len(averages)):
             self.key_statistics_data_table.setItem(i, 0, QTableWidgetItem(str(averages[i])))
 
-        medians = statisticsManager.getKeyMedians()
+        medians = self.statisticsManager.getKeyMedians()
         for i in range(len(medians)):
             self.key_statistics_data_table.setItem(i, 1, QTableWidgetItem(str(medians[i])))
 
-        mins = statisticsManager.getKeyMins()
+        mins = self.statisticsManager.getKeyMins()
         for i in range(len(mins)):
             self.key_statistics_data_table.setItem(i, 2, QTableWidgetItem(str(mins[i])))
 
-        maxes = statisticsManager.getKeyMaxes()
+        maxes = self.statisticsManager.getKeyMaxes()
         for i in range(len(maxes)):
             self.key_statistics_data_table.setItem(i, 3, QTableWidgetItem(str(maxes[i])))
 
     def loadEncStatisticsTable(self):
         self.enc_statistics_list_table.setRowCount(0)
 
-        for entry in statisticsManager.kemAesEntries:
+        for entry in self.statisticsManager.kemAesEntries:
             self.enc_statistics_list_table.insertRow(0)
             self.enc_statistics_list_table.setItem(0, 0, QTableWidgetItem(str(entry[0])))
             self.enc_statistics_list_table.setItem(0, 1, QTableWidgetItem(entry[1]))
             self.enc_statistics_list_table.setItem(0, 2, QTableWidgetItem(entry[2]))
-            self.enc_statistics_list_table.setItem(0, 3, QTableWidgetItem(entry[3]))
-            self.enc_statistics_list_table.setItem(0, 4, QTableWidgetItem(str(entry[4])))
-            self.enc_statistics_list_table.setItem(0, 5, QTableWidgetItem(str(entry[5])))
-            self.enc_statistics_list_table.setItem(0, 6, QTableWidgetItem(str(entry[6])))
+            self.enc_statistics_list_table.setItem(0, 3, QTableWidgetItem(str(entry[4])))
+            self.enc_statistics_list_table.setItem(0, 4, QTableWidgetItem(str(entry[5])))
+            self.enc_statistics_list_table.setItem(0, 5, QTableWidgetItem(str(entry[6])))
 
-        averages = statisticsManager.getEncryptAverages()
+        averages = self.statisticsManager.getEncryptAverages()
         for i in range(len(averages)):
             self.enc_statistics_data_table.setItem(i, 0, QTableWidgetItem(str(averages[i])))
         
-        averages = statisticsManager.getDecryptAverages()
+        averages = self.statisticsManager.getDecryptAverages()
         for i in range(len(averages)):
             self.enc_statistics_data_table.setItem(i+4, 0, QTableWidgetItem(str(averages[i])))
 
-        medians = statisticsManager.getEncryptMedians()
+        medians = self.statisticsManager.getEncryptMedians()
         for i in range(len(medians)):
             self.enc_statistics_data_table.setItem(i, 1, QTableWidgetItem(str(medians[i])))
 
-        medians = statisticsManager.getDecryptMedians()
+        medians = self.statisticsManager.getDecryptMedians()
         for i in range(len(medians)):
             self.enc_statistics_data_table.setItem(i+4, 1, QTableWidgetItem(str(medians[i])))
 
-        mins = statisticsManager.getEncryptMins()
+        mins = self.statisticsManager.getEncryptMins()
         for i in range(len(mins)):
             self.enc_statistics_data_table.setItem(i, 2, QTableWidgetItem(str(mins[i])))
 
-        mins = statisticsManager.getDecryptMins()
+        mins = self.statisticsManager.getDecryptMins()
         for i in range(len(mins)):
             self.enc_statistics_data_table.setItem(i+4, 2, QTableWidgetItem(str(mins[i])))
 
-        maxes = statisticsManager.getEncryptMaxes()
+        maxes = self.statisticsManager.getEncryptMaxes()
         for i in range(len(maxes)):
             self.enc_statistics_data_table.setItem(i, 3, QTableWidgetItem(str(maxes[i])))
 
-        maxes = statisticsManager.getDecryptMaxes()
+        maxes = self.statisticsManager.getDecryptMaxes()
         for i in range(len(maxes)):
             self.enc_statistics_data_table.setItem(i+4, 3, QTableWidgetItem(str(maxes[i])))
 
@@ -666,7 +647,7 @@ class Ui_MainWindow(object):
     def loadDsaStatisticsTable(self):
         self.dsa_statistics_table.setRowCount(0)
 
-        for entry in statisticsManager.dsaEntries:
+        for entry in self.statisticsManager.dsaEntries:
             self.dsa_statistics_table.insertRow(0)
             self.dsa_statistics_table.setItem(0, 0, QTableWidgetItem(str(entry[0])))
             self.dsa_statistics_table.setItem(0, 1, QTableWidgetItem(entry[1]))
@@ -674,35 +655,35 @@ class Ui_MainWindow(object):
             self.dsa_statistics_table.setItem(0, 3, QTableWidgetItem(str(entry[3])))
             self.dsa_statistics_table.setItem(0, 4, QTableWidgetItem(str(entry[4])))
 
-        averages = statisticsManager.getSignAverages()
+        averages = self.statisticsManager.getSignAverages()
         for i in range(len(averages)):
             self.dsa_statistics_data_table.setItem(i, 0, QTableWidgetItem(str(averages[i])))
 
-        averages = statisticsManager.getVerifyAverages()
+        averages = self.statisticsManager.getVerifyAverages()
         for i in range(len(averages)):
             self.dsa_statistics_data_table.setItem(i+3, 0, QTableWidgetItem(str(averages[i])))
 
-        medians = statisticsManager.getSignMedians()
+        medians = self.statisticsManager.getSignMedians()
         for i in range(len(medians)):
             self.dsa_statistics_data_table.setItem(i, 1, QTableWidgetItem(str(medians[i])))
 
-        medians = statisticsManager.getVerifyMedians()
+        medians = self.statisticsManager.getVerifyMedians()
         for i in range(len(medians)):
             self.dsa_statistics_data_table.setItem(i+3, 1, QTableWidgetItem(str(medians[i])))
 
-        mins = statisticsManager.getSignMins()
+        mins = self.statisticsManager.getSignMins()
         for i in range(len(mins)):
             self.dsa_statistics_data_table.setItem(i, 2, QTableWidgetItem(str(mins[i])))
 
-        mins = statisticsManager.getVerifyMins()
+        mins = self.statisticsManager.getVerifyMins()
         for i in range(len(mins)):
             self.dsa_statistics_data_table.setItem(i+3, 2, QTableWidgetItem(str(mins[i])))
 
-        maxes = statisticsManager.getSignMaxes()
+        maxes = self.statisticsManager.getSignMaxes()
         for i in range(len(maxes)):
             self.dsa_statistics_data_table.setItem(i, 3, QTableWidgetItem(str(maxes[i])))
 
-        maxes = statisticsManager.getVerifyMaxes()
+        maxes = self.statisticsManager.getVerifyMaxes()
         for i in range(len(maxes)):
             self.dsa_statistics_data_table.setItem(i+3, 3, QTableWidgetItem(str(maxes[i])))
 
@@ -2447,8 +2428,6 @@ class Ui_MainWindow(object):
         self.enc_statistics_list_table.setHorizontalHeaderItem(4, __qtablewidgetitem8)
         __qtablewidgetitem9 = QTableWidgetItem()
         self.enc_statistics_list_table.setHorizontalHeaderItem(5, __qtablewidgetitem9)
-        if (self.enc_statistics_list_table.rowCount() < 13):
-            self.enc_statistics_list_table.setRowCount(13)
         self.enc_statistics_list_table.setObjectName(u"enc_statistics_list_table")
         sizePolicy.setHeightForWidth(self.enc_statistics_list_table.sizePolicy().hasHeightForWidth())
         self.enc_statistics_list_table.setSizePolicy(sizePolicy)
@@ -2549,17 +2528,18 @@ class Ui_MainWindow(object):
         self.enc_statistics_list_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         self.enc_statistics_list_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.enc_statistics_list_table.setAlternatingRowColors(False)
-        self.enc_statistics_list_table.setSelectionMode(QAbstractItemView.NoSelection)
-        self.enc_statistics_list_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.enc_statistics_list_table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.enc_statistics_list_table.setSelectionBehavior(QAbstractItemView.SelectItems)
         self.enc_statistics_list_table.setShowGrid(True)
         self.enc_statistics_list_table.setGridStyle(Qt.SolidLine)
         self.enc_statistics_list_table.setSortingEnabled(True)
-        self.enc_statistics_list_table.setRowCount(13)
+        self.enc_statistics_list_table.setWordWrap(False)
+        self.enc_statistics_list_table.setRowCount(0)
+        self.enc_statistics_list_table.setColumnCount(6)
         self.enc_statistics_list_table.horizontalHeader().setVisible(False)
-        self.enc_statistics_list_table.horizontalHeader().setCascadingSectionResizes(True)
-        self.enc_statistics_list_table.horizontalHeader().setMinimumSectionSize(20)
-        self.enc_statistics_list_table.horizontalHeader().setDefaultSectionSize(150)
-        self.enc_statistics_list_table.horizontalHeader().setStretchLastSection(True)
+        self.enc_statistics_list_table.horizontalHeader().setMinimumSectionSize(100)
+        self.enc_statistics_list_table.horizontalHeader().setDefaultSectionSize(190)
+        self.enc_statistics_list_table.horizontalHeader().setStretchLastSection(False)
         self.enc_statistics_list_table.verticalHeader().setVisible(False)
         self.enc_statistics_list_table.verticalHeader().setCascadingSectionResizes(False)
         self.enc_statistics_list_table.verticalHeader().setHighlightSections(False)
@@ -2708,9 +2688,10 @@ class Ui_MainWindow(object):
         self.enc_statistics_data_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.enc_statistics_data_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         self.enc_statistics_data_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.enc_statistics_data_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.enc_statistics_data_table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.enc_statistics_data_table.setShowGrid(True)
         self.enc_statistics_data_table.setSortingEnabled(False)
+        self.enc_statistics_data_table.setWordWrap(False)
         self.enc_statistics_data_table.horizontalHeader().setCascadingSectionResizes(False)
         self.enc_statistics_data_table.horizontalHeader().setMinimumSectionSize(39)
         self.enc_statistics_data_table.horizontalHeader().setDefaultSectionSize(100)
@@ -2776,8 +2757,6 @@ class Ui_MainWindow(object):
         self.dsa_statistics_table.setHorizontalHeaderItem(3, __qtablewidgetitem29)
         __qtablewidgetitem30 = QTableWidgetItem()
         self.dsa_statistics_table.setHorizontalHeaderItem(4, __qtablewidgetitem30)
-        if (self.dsa_statistics_table.rowCount() < 13):
-            self.dsa_statistics_table.setRowCount(13)
         self.dsa_statistics_table.setObjectName(u"dsa_statistics_table")
         sizePolicy.setHeightForWidth(self.dsa_statistics_table.sizePolicy().hasHeightForWidth())
         self.dsa_statistics_table.setSizePolicy(sizePolicy)
@@ -2883,12 +2862,13 @@ class Ui_MainWindow(object):
         self.dsa_statistics_table.setShowGrid(True)
         self.dsa_statistics_table.setGridStyle(Qt.SolidLine)
         self.dsa_statistics_table.setSortingEnabled(True)
-        self.dsa_statistics_table.setRowCount(13)
+        self.dsa_statistics_table.setWordWrap(False)
+        self.dsa_statistics_table.setRowCount(0)
         self.dsa_statistics_table.horizontalHeader().setVisible(False)
-        self.dsa_statistics_table.horizontalHeader().setCascadingSectionResizes(True)
+        self.dsa_statistics_table.horizontalHeader().setCascadingSectionResizes(False)
         self.dsa_statistics_table.horizontalHeader().setMinimumSectionSize(20)
-        self.dsa_statistics_table.horizontalHeader().setDefaultSectionSize(150)
-        self.dsa_statistics_table.horizontalHeader().setStretchLastSection(True)
+        self.dsa_statistics_table.horizontalHeader().setDefaultSectionSize(180)
+        self.dsa_statistics_table.horizontalHeader().setStretchLastSection(False)
         self.dsa_statistics_table.verticalHeader().setVisible(False)
         self.dsa_statistics_table.verticalHeader().setCascadingSectionResizes(False)
         self.dsa_statistics_table.verticalHeader().setHighlightSections(False)
@@ -3048,9 +3028,10 @@ class Ui_MainWindow(object):
         self.dsa_statistics_data_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.dsa_statistics_data_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         self.dsa_statistics_data_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.dsa_statistics_data_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.dsa_statistics_data_table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.dsa_statistics_data_table.setShowGrid(True)
         self.dsa_statistics_data_table.setSortingEnabled(False)
+        self.dsa_statistics_data_table.setWordWrap(False)
         self.dsa_statistics_data_table.horizontalHeader().setCascadingSectionResizes(False)
         self.dsa_statistics_data_table.horizontalHeader().setHighlightSections(False)
         self.dsa_statistics_data_table.horizontalHeader().setProperty("showSortIndicator", False)
@@ -3080,8 +3061,6 @@ class Ui_MainWindow(object):
         self.key_statistics_table.setHorizontalHeaderItem(1, __qtablewidgetitem43)
         __qtablewidgetitem44 = QTableWidgetItem()
         self.key_statistics_table.setHorizontalHeaderItem(2, __qtablewidgetitem44)
-        if (self.key_statistics_table.rowCount() < 13):
-            self.key_statistics_table.setRowCount(13)
         self.key_statistics_table.setObjectName(u"key_statistics_table")
         sizePolicy.setHeightForWidth(self.key_statistics_table.sizePolicy().hasHeightForWidth())
         self.key_statistics_table.setSizePolicy(sizePolicy)
@@ -3187,8 +3166,10 @@ class Ui_MainWindow(object):
         self.key_statistics_table.setShowGrid(True)
         self.key_statistics_table.setGridStyle(Qt.SolidLine)
         self.key_statistics_table.setSortingEnabled(True)
-        self.key_statistics_table.setRowCount(13)
+        self.key_statistics_table.setWordWrap(False)
+        self.key_statistics_table.setRowCount(0)
         self.key_statistics_table.horizontalHeader().setVisible(False)
+        self.key_statistics_table.horizontalHeader().setDefaultSectionSize(190)
         self.key_statistics_table.horizontalHeader().setHighlightSections(False)
         self.key_statistics_table.horizontalHeader().setProperty("showSortIndicator", False)
         self.key_statistics_table.horizontalHeader().setStretchLastSection(True)
@@ -3326,9 +3307,10 @@ class Ui_MainWindow(object):
         self.key_statistics_data_table.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.key_statistics_data_table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustToContents)
         self.key_statistics_data_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.key_statistics_data_table.setSelectionMode(QAbstractItemView.NoSelection)
+        self.key_statistics_data_table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.key_statistics_data_table.setShowGrid(True)
         self.key_statistics_data_table.setSortingEnabled(False)
+        self.key_statistics_data_table.setWordWrap(False)
         self.key_statistics_data_table.horizontalHeader().setCascadingSectionResizes(False)
         self.key_statistics_data_table.horizontalHeader().setHighlightSections(False)
         self.key_statistics_data_table.horizontalHeader().setProperty("showSortIndicator", False)
@@ -4188,6 +4170,7 @@ class Ui_MainWindow(object):
         self.label_version.setText(QCoreApplication.translate("MainWindow", u"v.2022", None))
     # retranslateUi
 
+
         # OUR CODE
         self.key_generate_button.clicked.connect(self.generateKey)
         self.key_maintable.doubleClicked.connect(self.keyTableItemDoubleClicked)
@@ -4217,8 +4200,6 @@ class Ui_MainWindow(object):
         self.dsa_statistics_hw_label.setText(hwText)
         self.key_statistics_hw_label.setText(hwText)
         
-        self.enc_dec_download_file_button.clicked.connect(self.downloadFile)
-        self.enc_dec_download_file_button_2.clicked.connect(self.downloadCipher)
         self.key_maintable.horizontalHeader().setVisible(True)
         self.dsa_statistics_table.horizontalHeader().setVisible(True)
         self.enc_statistics_list_table.horizontalHeader().setVisible(True)
