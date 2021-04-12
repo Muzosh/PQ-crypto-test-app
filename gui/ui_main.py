@@ -76,6 +76,9 @@ def hideMenuItems(self):
         self.frame_left_menu.children()[1].children()[x].hide()
 
 class Ui_MainWindow(object):
+    def SaveStatisticsToFile(self):
+        statisticsManager.saveStatisticsToFile()
+
     def checking_password(self):
         entered_password = self.login_input_line.text()
 
@@ -91,10 +94,13 @@ class Ui_MainWindow(object):
                 self.login_status_label.setText("Your secrets has been revealed!")
                 change_page(self, 1)
                 
-                statisticsManager = StatisticsManager()
+                statisticsManager = StatisticsManager(passwordManager)
                 pqEncryptionManager = PqEncryptionManager(statisticsManager)
                 pqSigningManager = PqSigningManager(statisticsManager)
                 pqKeyGenManager = PqKeyGenManager(passwordManager, statisticsManager)
+
+                statisticsManager.loadStatisticsFromFile()
+
                 unhideMenuItems(self)
 
             except ValueError:

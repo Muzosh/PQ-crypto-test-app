@@ -3,6 +3,7 @@ import json
 import base64
 import hashlib
 
+from datetime import datetime
 from Managers.aesModule import aesEncrypt, aesDecrypt
 
 class PasswordManager:
@@ -26,6 +27,8 @@ class PasswordManager:
     __keyStoresFileName = __databaseFolder + "/secrets" 
     # file for masterPassword
     __keyChainFileName = __databaseFolder + "/keychain"
+    # file for statistics
+    __statisticsFileName = __databaseFolder + "/statistics"
     
     # masterPassword in plaintext
     __masterPassword = b""
@@ -38,6 +41,10 @@ class PasswordManager:
         # Create or check keyStores file
         if not os.path.exists(self.__keyStoresFileName):
             open(self.__keyStoresFileName, 'w').close()
+
+        # Create or check statistics file
+        if not os.path.exists(self.__statisticsFileName):
+            open(self.__statisticsFileName, 'w').close()
             
         # Create or check keyChain file
         if not os.path.exists(self.__keyChainFileName):
@@ -97,6 +104,95 @@ class PasswordManager:
             
         with open(self.__keyStoresFileName, 'w') as file:
             file.write(base64.b64encode(str(encryptedList).encode()).decode())
+
+    def writeStatistics(self, keyGenEntries, kemAesEntries, dsaEntries):
+        '''
+        Write encrypted statistics to the file.
+        '''
+        encryptedList = []
+
+        tempList = []
+        for x in keyGenEntries:
+            tempList.append(
+                aesEncrypt(
+                    str(x[0]).encode() + b"\x00"*4 +
+                    x[1].encode() + b"\x00"*4 +
+                    str(x[2]).encode(),
+                    self.__masterPassword))
+        encryptedList.append(tempList)
+
+        tempList = []
+        for x in kemAesEntries:
+            tempList.append(
+                aesEncrypt(
+                    str(x[0]).encode() + b"\x00"*4 +
+                    x[1].encode() + b"\x00"*4 +
+                    x[2].encode() + b"\x00"*4 +
+                    str(x[3]).encode() + b"\x00"*4 +
+                    str(x[4]).encode() + b"\x00"*4 +
+                    str(x[5]).encode() + b"\x00"*4 +
+                    str(x[6]).encode(),
+                    self.__masterPassword))
+        encryptedList.append(tempList)
+
+        tempList = []
+        for x in dsaEntries:
+            tempList.append(
+                aesEncrypt(
+                    str(x[0]).encode() + b"\x00"*4 +
+                    x[1].encode() + b"\x00"*4 +
+                    x[2].encode() + b"\x00"*4 +
+                    str(x[3]).encode() + b"\x00"*4 +
+                    str(x[4]).encode(),
+                    self.__masterPassword))
+        encryptedList.append(tempList)
+            
+        with open(self.__statisticsFileName, 'w') as file:
+            file.write(base64.b64encode(str(encryptedList).encode()).decode())
+    
+    def readStatistics(self):
+        '''
+        Read keyStores from the file.
+        '''
+        with open(self.__statisticsFileName, 'r') as file:
+            encryptedList = base64.b64decode(file.readline().encode()).decode()
+        
+        statistics = json.loads(str(encryptedList).replace("'", "\"") or "[[],[],[]]")
+
+        keyGenEntries = []
+        for x in statistics[0]:
+            entry = aesDecrypt(x, self.__masterPassword).split(b"\x00"*4, 2)
+            
+            keyGenEntries.append(
+                (datetime.strptime(entry[0].decode(), '%Y-%m-%d %H:%M:%S.%f'),
+                entry[1].decode(),
+                float(entry[2].decode())))
+            
+        kemAesEntries = []
+        for x in statistics[1]:
+            entry = aesDecrypt(x, self.__masterPassword).split(b"\x00"*4, 6)
+            
+            kemAesEntries.append(
+                (datetime.strptime(entry[0].decode(), '%Y-%m-%d %H:%M:%S.%f'),
+                entry[1].decode(),
+                entry[2].decode(),
+                int(entry[3].decode()),
+                int(entry[4].decode()),
+                float(entry[5].decode()),
+                float(entry[6].decode())))
+            
+        dsaEntries = []
+        for x in statistics[2]:
+            entry = aesDecrypt(x, self.__masterPassword).split(b"\x00"*4, 4)
+            
+            dsaEntries.append(
+                (datetime.strptime(entry[0].decode(), '%Y-%m-%d %H:%M:%S.%f'),
+                entry[1].decode(),
+                entry[2].decode(),
+                int(entry[3].decode()),
+                float(entry[4].decode())))
+            
+        return keyGenEntries, kemAesEntries, dsaEntries
 
     def authenticate(self, password):
         '''

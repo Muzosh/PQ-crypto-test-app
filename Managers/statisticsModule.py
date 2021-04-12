@@ -9,10 +9,11 @@ class StatisticsManager:
         addDsaEntry(datetime:datetime, alg:str, operationType:str, fileSize:int, timeInSeconds:float) -> None
     """
     
-    def __init__(self):
+    def __init__(self, passwordManager):
         self.keyGenEntries = []
         self.kemAesEntries = []
         self.dsaEntries = []
+        self.passwordManager = passwordManager
     
     def addKeyGenEntry(self, datetime:datetime, alg:str, timeInSeconds:float):
         self.keyGenEntries.append((datetime, alg, timeInSeconds))
@@ -23,6 +24,12 @@ class StatisticsManager:
     def addDsaEntry(self, datetime:datetime, alg:str, operationType:str, fileSize:int, timeInSeconds:float):
         self.__dsaEntries.append((datetime, alg, operationType, fileSize, timeInSeconds))
     
+    def saveStatisticsToFile(self):
+        self.passwordManager.writeStatistics(self.keyGenEntries, self.kemAesEntries, self.dsaEntries)
+
+    def loadStatisticsFromFile(self):
+        self.keyGenEntries, self.kemAesEntries, self.dsaEntries = self.passwordManager.readStatistics()
+
     def average_handler(self, list):
         if len(list) == 0:
             return "N/A"

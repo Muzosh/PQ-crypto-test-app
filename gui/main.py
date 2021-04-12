@@ -30,4 +30,9 @@ if __name__ == "__main__":
     QtGui.QFontDatabase.addApplicationFont('fonts/segoeui.ttf')
     QtGui.QFontDatabase.addApplicationFont('fonts/segoeuib.ttf')
     window = MainWindow()
-    sys.exit(app.exec_())
+
+    ret = app.exec_()
+
+    window.SaveStatisticsToFile()
+
+    sys.exit(ret)

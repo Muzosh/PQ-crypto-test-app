@@ -33,6 +33,9 @@ GLOBAL_TITLE_BAR = True
 count = 1
 
 class MainWindow(QMainWindow):
+    def SaveStatisticsToFile(self):
+        self.ui.SaveStatisticsToFile()
+    
     def __init__(self):
         QMainWindow.__init__(self)
         self.ui = Ui_MainWindow()
