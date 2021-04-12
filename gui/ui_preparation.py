@@ -25,6 +25,8 @@ from PySide2.QtWidgets import *
 from ui_main import Ui_MainWindow
 from ui_styles import Style
 
+qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}QLineEdit:hover{background-color:#394150;border:2px solid #3d4656;color:#fff}QLineEdit:pressed{background-color:#232831;border:2px solid #2b323d;color:#fff}"
+
 ## ==> GLOBALS
 GLOBAL_STATE = 0
 GLOBAL_TITLE_BAR = True
@@ -291,10 +293,14 @@ class MainWindow(QMainWindow):
     def openFileKey(self):
         name = self.openFile()
         self.ui.enc_dsa_upload_line.setText(name)
+        self.ui.enc_dsa_upload_line.setEnabled(True)
+        self.ui.enc_dsa_upload_line.setStyleSheet(qLineDefault)
 
     def openFileCipherText(self):
         name = self.openFile()
         self.ui.enc_dec_upload_ciphertext_line.setText(name)
+        self.ui.enc_dec_upload_ciphertext_line.setEnabled(True)
+        self.ui.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDefault)
 
             
 class UIFunctions(MainWindow):

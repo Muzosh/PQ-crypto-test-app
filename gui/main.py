@@ -34,5 +34,6 @@ if __name__ == "__main__":
     ret = app.exec_()
 
     window.SaveStatisticsToFile()
+    print("Statistics saved")
 
     sys.exit(ret)

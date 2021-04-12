@@ -38,7 +38,13 @@ qRadioButtonRed = "QRadioButton{color:rgb(255,0,0)}"
 qRadioButtonDefault = "QRadioButton{color:#fff}"
 qRadioButtonDisable = "QRadioButton{color:#555}"
 
-global selectedId, selectedAlg, selectedType, cipher_text, encrypted_file, decrypted_file
+downloadsFolder = dirname(dirname(abspath(__file__))) + "/Downloads"
+if not os.path.exists(downloadsFolder):
+    os.mkdir(downloadsFolder)
+
+global selectedId, selectedAlg, selectedType, cipher_text, encrypted_file, decrypted_file, keyStoreList
+
+keyStoreList = []
 
 def change_page(self, param):
     if param == 0:
@@ -206,13 +212,12 @@ class Ui_MainWindow(object):
         else:
             print("Vypln pravdzivo vsetok obsah!")
 
-       
-
     def updateTableKey(self):
         self.key_maintable.setRowCount(0)
 
         global keyStoreList
         keyStoreList = passwordManager.loadKeyStoreList()
+
         for keyStore in keyStoreList:
             self.key_maintable.insertRow(0)
             self.key_maintable.setItem(0, 0, QTableWidgetItem(keyStore[0]))
@@ -222,7 +227,8 @@ class Ui_MainWindow(object):
 
     def currentWidgetChangedHandler(self):
         if self.stackedWidget.currentWidget().objectName() == "page_key":
-            self.updateTableKey()
+            if keyStoreList == []:
+                self.updateTableKey()
             # reset styles
             keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4,
                     self.key_checkbox4_2,
@@ -232,11 +238,8 @@ class Ui_MainWindow(object):
             self.key_inputname_line.setStyleSheet(qLineDefault)
             self.key_checking_name.setText("")
         elif self.stackedWidget.currentWidget().objectName() == "page_enc_dsa":
-
             self.itemChangedHandler()
             self.layoutKeyChange()
-            pass
-            # selectedKeyStore = list, where name == selectedAlg
         elif self.stackedWidget.currentWidget().objectName() == "page_key_statistics":
             self.loadKeyStatisticsTable()
         elif self.stackedWidget.currentWidget().objectName() == "page_enc_statistics":
@@ -260,7 +263,7 @@ class Ui_MainWindow(object):
     def layoutKeyChange(self):
         if selectedId != "":
             self.updateKeyLayoutEnable()
-            if selectedAlg == "Mceliece":
+            if selectedAlg == "McEliece":
                 #sprav mceliece
                 if selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
@@ -300,7 +303,7 @@ class Ui_MainWindow(object):
                     self.updateKeyLayoutPublicDSA()
                 else:
                     self.updateKeyLayoutDisable()
-            if selectedAlg == "Rainbow":
+            if selectedAlg == "RainbowVc":
                 #sprav rainbow
                 if selectedType == "Private":
                     self.updateKeyLayoutPrivateDSA()
@@ -513,39 +516,51 @@ class Ui_MainWindow(object):
 
 
     def selectedCipher(self):
-        correctCipher = ""
         if selectedId != "":
-            list_IDs = passwordManager.loadKeyStoreList();
-            for l in list_IDs:
-                if selectedId in str(l[0]):
-                    if selectedType == str(l[2]):
-                        print("Match!")
-                        correctCipher=l
-        return correctCipher
+            return next((x for x in keyStoreList if selectedId == x[0] and selectedType == x[2]), None)
 
 
     def encryptFile(self):
         global cipher_text, encrypted_file
         print("encryptujem, nevyrusuj")
-        file_path = self.enc_dsa_upload_line.text()
-        cipher = self.selectedCipher()
-        with open(file_path, 'rb') as f:
-            uploaded_File = f.read()
-        #print(type(uploaded_File))
-        #print(cipher)
-        cipher_text, encrypted_file = pqEncryptionManager.encryptFile(uploaded_File,cipher)
+        keyStore = self.selectedCipher()
+        try:
+            file_path = self.enc_dsa_upload_line.text()
+            with open(file_path, 'rb') as f:
+                uploaded_File = f.read()
+
+            cipher_text, encrypted_file = pqEncryptionManager.encryptFile(uploaded_File, keyStore)
+            print("finished encrypting")
+        except FileNotFoundError:
+            self.enc_dsa_upload_line.setEnabled(False)
+            self.enc_dsa_upload_line.setStyleSheet(qLineRed)
+            self.enc_dsa_upload_line.setPlaceholderText("File not found")
 
     def decryptFile(self):
         global decrypted_file
         print("uz iba chvilu, hned mame tvoje tajomstvo decryptovane")
-        file_path = self.enc_dsa_upload_line.text()
-        cipher = self.selectedCipher()
-        with open(file_path, 'rb') as f:
-            uploaded_File = f.read()
-        text_path = self.enc_dec_upload_ciphertext_line.text()
-        with open(text_path, 'rb') as f:
-            uploaded_cipher_text = f.read()
-        decrypted_file = pqEncryptionManager.decryptFile(uploaded_File,uploaded_cipher_text,cipher)
+        keyStore = self.selectedCipher()
+        try:
+            file_path = self.enc_dsa_upload_line.text()
+            with open(file_path, 'rb') as f:
+                uploaded_File = f.read()
+        except FileNotFoundError:
+            self.enc_dsa_upload_line.setEnabled(False)
+            self.enc_dsa_upload_line.setStyleSheet(qLineRed)
+            self.enc_dsa_upload_line.setPlaceholderText("File not found")
+            return
+        
+        try:
+            text_path = self.enc_dec_upload_ciphertext_line.text()
+            with open(text_path, 'rb') as f:
+                uploaded_cipher_text = f.read()
+        except FileNotFoundError:
+            self.enc_dec_upload_ciphertext_line.setEnabled(False)
+            self.enc_dec_upload_ciphertext_line.setPlaceholderText("")
+            self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineRed)
+        
+        decrypted_file = pqEncryptionManager.decryptFile(uploaded_File, uploaded_cipher_text, keyStore)
+        print("finished decrypting")
 
     def moonIt(self):
         if self.dec_radiobutton.isChecked():
@@ -558,19 +573,19 @@ class Ui_MainWindow(object):
     def downloadFile(self):
         if self.dec_radiobutton.isChecked():
             #print(encrypted_file)
-            with open(dirname(dirname(abspath(__file__)))+"/Download/file", 'wb') as file:
+            with open(downloadsFolder + "/encryptedfile", 'wb+') as file:
                 file.write(encrypted_file)
 
         if self.enc_radiobutton.isChecked():
             #print(decrypted_file)
-            with open(dirname(dirname(abspath(__file__)))+"/Download/decrypted_file", 'wb') as file:
+            with open(downloadsFolder + "/decrypted_file", 'wb+') as file:
                 file.write(decrypted_file)
 
 
     def downloadCipher(self):
         if self.dec_radiobutton.isChecked():
             #print(cipher_text)
-            with open(dirname(dirname(abspath(__file__)))+"/Download/ciphertext", 'wb') as file:
+            with open(downloadsFolder + "/ciphertext", 'wb+') as file:
                 file.write(cipher_text)
 
 
