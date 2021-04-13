@@ -13,6 +13,7 @@ from Managers.pqEncryptionModule import PqEncryptionManager
 from Managers.pqKeyGenModule import PqKeyGenManager
 from Managers.pqSigningModule import PqSigningManager
 from Managers.statisticsModule import StatisticsManager
+import traceback
 import sys
 import os
 from os.path import dirname, abspath
@@ -83,6 +84,7 @@ class Ui_MainWindow(object):
         self.cipher_text = b""
         self.encrypted_file = b""
         self.decrypted_file = b""
+        self.signature = b""
         self.keyStoreList = []
 
     def SaveStatisticsToFile(self):
@@ -369,6 +371,8 @@ class Ui_MainWindow(object):
         self.dsa_verify_button_status.setText("")
         self.dsa_download_button.setEnabled(False)
         self.dsa_download_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_sign_button.setEnabled(False)
+        self.dsa_sign_button.setStyleSheet(qPushButtonDisabled)
 
     def updateKeyLayoutPrivateKEM(self):
         self.enc_radiobutton.setStyleSheet(qRadioButtonGreen)
@@ -406,6 +410,8 @@ class Ui_MainWindow(object):
         self.dsa_verify_button_status.setText("")
         self.dsa_download_button.setEnabled(False)
         self.dsa_download_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_sign_button.setEnabled(False)
+        self.dsa_sign_button.setStyleSheet(qPushButtonDisabled)
         
     def updateKeyLayoutPublicKEM(self):
         self.dec_radiobutton.setStyleSheet(qRadioButtonGreen)
@@ -441,8 +447,10 @@ class Ui_MainWindow(object):
         self.dsa_verify_button_status.setText("")
         self.dsa_download_button.setEnabled(False)
         self.dsa_download_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_sign_button.setEnabled(False)
+        self.dsa_sign_button.setStyleSheet(qPushButtonDisabled)
 
-    def updateKeyLayoutPrivateDSA(self):
+    def updateKeyLayoutPublicDSA(self):
         self.sign_radiobutton.setEnabled(False)
         self.sign_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.verify_radiobutton.setEnabled(True)
@@ -456,9 +464,10 @@ class Ui_MainWindow(object):
         self.dsa_verify_button.setEnabled(True)
         self.dsa_verify_button.setStyleSheet(qPushButtonDefault)
         self.dsa_verify_button_status.setText("")
-        self.dsa_download_button.setEnabled(True)
-        self.dsa_download_button.setStyleSheet(qPushButtonDefault)
-        self.dsa_download_button.setText("Download verified file")
+        self.dsa_download_button.setEnabled(False)
+        self.dsa_download_button.setStyleSheet(qPushButtonDisabled)
+        self.dsa_sign_button.setEnabled(False)
+        self.dsa_sign_button.setStyleSheet(qPushButtonDisabled)
 
         # disable enc/dec side
         self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
@@ -476,7 +485,7 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
         self.enc_dec_download_file_button_2.setEnabled(False)
 
-    def updateKeyLayoutPublicDSA(self):
+    def updateKeyLayoutPrivateDSA(self):
         self.sign_radiobutton.setEnabled(True)
         self.sign_radiobutton.setChecked(True)
         self.sign_radiobutton.setStyleSheet(qRadioButtonGreen)
@@ -493,6 +502,8 @@ class Ui_MainWindow(object):
         self.dsa_download_button.setEnabled(True)
         self.dsa_download_button.setStyleSheet(qPushButtonDefault)
         self.dsa_download_button.setText("Download signed file")
+        self.dsa_sign_button.setEnabled(True)
+        self.dsa_sign_button.setStyleSheet(qPushButtonDefault)
 
         # disable enc/dec side
         self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
@@ -514,24 +525,80 @@ class Ui_MainWindow(object):
         if self.selectedId != "":
             return next((x for x in self.keyStoreList if self.selectedId == x[0] and self.selectedType == x[2]), None)
 
+    def signFile(self):
+        print("signujem, nevyrusuj")
+        keyStore = self.selectedCipher()
+        try:
+            file_path = self.enc_dsa_upload_line.text()
+            with open(file_path, 'rb') as f:
+                uploaded_file = f.read()
+        except FileNotFoundError:
+            self.enc_dsa_upload_line.setStyleSheet(qLineRed)
+            self.enc_dsa_upload_line.setPlaceholderText("File not found")
+            return
+
+        try:
+            self.signature = self.pqSigningManager.signFile(uploaded_file, keyStore)
+            self.dsa_sign_button.setStyleSheet(qPushButtonGreen)
+            print("finished signing")
+        except Exception as err:
+            print(traceback.format_exc())
+            self.dsa_sign_button.setStyleSheet(qPushButtonRed)
+
+    def verifyFile(self):
+        print("uz iba chvilu, hned mame tvuj podpis overeny")
+        keyStore = self.selectedCipher()
+        try:
+            file_path = self.enc_dsa_upload_line.text()
+            with open(file_path, 'rb') as f:
+                uploaded_file = f.read()
+        except FileNotFoundError:
+            self.enc_dsa_upload_line.setStyleSheet(qLineRed)
+            self.enc_dsa_upload_line.setPlaceholderText("File not found")
+            return
+        
+        try:
+            signature_path = self.dsa_upload_signature_line.text()
+            with open(signature_path, 'rb') as f:
+                uploaded_signature = f.read()
+        except FileNotFoundError:
+            self.dsa_upload_signature_line.setPlaceholderText("File not found")
+            self.dsa_upload_signature_line.setStyleSheet(qLineRed)
+            return
+
+        try:
+            verifyResult = self.pqSigningManager.verifySignature(uploaded_signature, uploaded_file, keyStore)
+            print("finished verifying")
+        except Exception as err:
+            print(traceback.format_exc())
+            self.dsa_verify_button_status.setText("Verification unsuccessful for unknown reason")
+            return
+        
+        if verifyResult:
+            self.dsa_verify_button_status.setText("Verification successful, signature is correct!")
+            self.dsa_verify_button.setStyleSheet(qPushButtonGreen)
+        else:
+            self.dsa_verify_button_status.setText("Verification unsuccessful, signature is incorrect!")
+            self.dsa_verify_button.setStyleSheet(qPushButtonRed)
+
     def encryptFile(self):
         print("encryptujem, nevyrusuj")
         keyStore = self.selectedCipher()
         try:
             file_path = self.enc_dsa_upload_line.text()
             with open(file_path, 'rb') as f:
-                uploaded_File = f.read()
+                uploaded_file = f.read()
         except FileNotFoundError:
-            self.enc_dsa_upload_line.setEnabled(False)
             self.enc_dsa_upload_line.setStyleSheet(qLineRed)
             self.enc_dsa_upload_line.setPlaceholderText("File not found")
             return
             
         try:
-            self.cipher_text, self.encrypted_file = self.pqEncryptionManager.encryptFile(uploaded_File, keyStore)
+            self.cipher_text, self.encrypted_file = self.pqEncryptionManager.encryptFile(uploaded_file, keyStore)
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonGreen)
             print("finished encrypting")
         except Exception as err:
+            print(traceback.format_exc())
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonRed)
 
     def decryptFile(self):
@@ -540,9 +607,8 @@ class Ui_MainWindow(object):
         try:
             file_path = self.enc_dsa_upload_line.text()
             with open(file_path, 'rb') as f:
-                uploaded_File = f.read()
+                uploaded_file = f.read()
         except FileNotFoundError:
-            self.enc_dsa_upload_line.setEnabled(False)
             self.enc_dsa_upload_line.setStyleSheet(qLineRed)
             self.enc_dsa_upload_line.setPlaceholderText("File not found")
             return
@@ -552,15 +618,16 @@ class Ui_MainWindow(object):
             with open(text_path, 'rb') as f:
                 uploaded_cipher_text = f.read()
         except FileNotFoundError:
-            self.enc_dec_upload_ciphertext_line.setEnabled(False)
-            self.enc_dec_upload_ciphertext_line.setPlaceholderText("")
+            self.enc_dec_upload_ciphertext_line.setPlaceholderText("File not found")
             self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineRed)
+            return
 
         try:
-            self.decrypted_file = self.pqEncryptionManager.decryptFile(uploaded_File, uploaded_cipher_text, keyStore)
+            self.decrypted_file = self.pqEncryptionManager.decryptFile(uploaded_file, uploaded_cipher_text, keyStore)
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonGreen)
             print("finished decrypting")
-        except:
+        except Exception as err:
+            print(traceback.format_exc())
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonRed)
 
     def moonIt(self):
@@ -1907,29 +1974,6 @@ class Ui_MainWindow(object):
 
         self.dsa_radiobuttons_layour.addWidget(self.verify_radiobutton)
 
-        self.dsa_verify_button = QPushButton(self.dsa_frame)
-        self.dsa_verify_button.setObjectName(u"dsa_verify_button")
-        self.dsa_verify_button.setGeometry(QRect(90, 180, 250, 40))
-        sizePolicy7.setHeightForWidth(self.dsa_verify_button.sizePolicy().hasHeightForWidth())
-        self.dsa_verify_button.setSizePolicy(sizePolicy7)
-        self.dsa_verify_button.setMinimumSize(QSize(0, 40))
-        self.dsa_verify_button.setFont(font10)
-        self.dsa_verify_button.setStyleSheet(u"QPushButton {\n"
-"	border: 2px solid rgb(52, 59, 72);\n"
-"border-radius: 15px;	\n"
-"	background-color: rgb(52, 59, 72);\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(57, 65, 80);\n"
-"	border: 2px solid rgb(61, 70, 86);\n"
-"}\n"
-"QPushButton:pressed {	\n"
-"	background-color: rgb(35, 40, 49);\n"
-"	border: 2px solid rgb(43, 50, 61);\n"
-"}")
-        icon7 = QIcon()
-        icon7.addFile(u":/16x16/icons/16x16/cil-speedometer.png", QSize(), QIcon.Normal, QIcon.On)
-        self.dsa_verify_button.setIcon(icon7)
         self.dsa_verify_button_status = QLabel(self.dsa_frame)
         self.dsa_verify_button_status.setObjectName(u"dsa_verify_button_status")
         self.dsa_verify_button_status.setGeometry(QRect(100, 250, 251, 20))
@@ -2002,6 +2046,62 @@ class Ui_MainWindow(object):
 "	background-color: rgb(35, 40, 49);\n"
 "	border: 2px solid rgb(43, 50, 61);\n"
 "}")
+        self.horizontalLayoutWidget_6 = QWidget(self.dsa_frame)
+        self.horizontalLayoutWidget_6.setObjectName(u"horizontalLayoutWidget_6")
+        self.horizontalLayoutWidget_6.setGeometry(QRect(0, 160, 421, 81))
+        self.horizontalLayout_14 = QHBoxLayout(self.horizontalLayoutWidget_6)
+        self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
+        self.horizontalLayout_14.setContentsMargins(10, 0, 10, 0)
+        self.dsa_sign_button = QPushButton(self.horizontalLayoutWidget_6)
+        self.dsa_sign_button.setObjectName(u"dsa_sign_button")
+        sizePolicy7.setHeightForWidth(self.dsa_sign_button.sizePolicy().hasHeightForWidth())
+        self.dsa_sign_button.setSizePolicy(sizePolicy7)
+        self.dsa_sign_button.setMinimumSize(QSize(0, 40))
+        self.dsa_sign_button.setFont(font10)
+        self.dsa_sign_button.setStyleSheet(u"QPushButton {\n"
+"	border: 2px solid rgb(52, 59, 72);\n"
+"border-radius: 15px;	\n"
+"	background-color: rgb(52, 59, 72);\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(57, 65, 80);\n"
+"	border: 2px solid rgb(61, 70, 86);\n"
+"}\n"
+"QPushButton:pressed {	\n"
+"	background-color: rgb(35, 40, 49);\n"
+"	border: 2px solid rgb(43, 50, 61);\n"
+"}")
+        icon7 = QIcon()
+        icon7.addFile(u":/16x16/icons/16x16/cil-pen-alt.png", QSize(), QIcon.Normal, QIcon.On)
+        self.dsa_sign_button.setIcon(icon7)
+
+        self.horizontalLayout_14.addWidget(self.dsa_sign_button)
+
+        self.dsa_verify_button = QPushButton(self.horizontalLayoutWidget_6)
+        self.dsa_verify_button.setObjectName(u"dsa_verify_button")
+        sizePolicy7.setHeightForWidth(self.dsa_verify_button.sizePolicy().hasHeightForWidth())
+        self.dsa_verify_button.setSizePolicy(sizePolicy7)
+        self.dsa_verify_button.setMinimumSize(QSize(0, 40))
+        self.dsa_verify_button.setFont(font10)
+        self.dsa_verify_button.setStyleSheet(u"QPushButton {\n"
+"	border: 2px solid rgb(52, 59, 72);\n"
+"border-radius: 15px;	\n"
+"	background-color: rgb(52, 59, 72);\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(57, 65, 80);\n"
+"	border: 2px solid rgb(61, 70, 86);\n"
+"}\n"
+"QPushButton:pressed {	\n"
+"	background-color: rgb(35, 40, 49);\n"
+"	border: 2px solid rgb(43, 50, 61);\n"
+"}")
+        icon8 = QIcon()
+        icon8.addFile(u":/16x16/icons/16x16/cil-speedometer.png", QSize(), QIcon.Normal, QIcon.On)
+        self.dsa_verify_button.setIcon(icon8)
+
+        self.horizontalLayout_14.addWidget(self.dsa_verify_button)
+
         self.line = QFrame(self.page_enc_dsa)
         self.line.setObjectName(u"line")
         self.line.setWindowModality(Qt.WindowModal)
@@ -2866,8 +2966,8 @@ class Ui_MainWindow(object):
         self.dsa_statistics_table.setRowCount(0)
         self.dsa_statistics_table.horizontalHeader().setVisible(False)
         self.dsa_statistics_table.horizontalHeader().setCascadingSectionResizes(False)
-        self.dsa_statistics_table.horizontalHeader().setMinimumSectionSize(20)
-        self.dsa_statistics_table.horizontalHeader().setDefaultSectionSize(180)
+        self.dsa_statistics_table.horizontalHeader().setMinimumSectionSize(150)
+        self.dsa_statistics_table.horizontalHeader().setDefaultSectionSize(190)
         self.dsa_statistics_table.horizontalHeader().setStretchLastSection(False)
         self.dsa_statistics_table.verticalHeader().setVisible(False)
         self.dsa_statistics_table.verticalHeader().setCascadingSectionResizes(False)
@@ -3169,6 +3269,7 @@ class Ui_MainWindow(object):
         self.key_statistics_table.setWordWrap(False)
         self.key_statistics_table.setRowCount(0)
         self.key_statistics_table.horizontalHeader().setVisible(False)
+        self.key_statistics_table.horizontalHeader().setMinimumSectionSize(150)
         self.key_statistics_table.horizontalHeader().setDefaultSectionSize(190)
         self.key_statistics_table.horizontalHeader().setHighlightSections(False)
         self.key_statistics_table.horizontalHeader().setProperty("showSortIndicator", False)
@@ -3611,9 +3712,9 @@ class Ui_MainWindow(object):
 "	color: rgb(210, 210, 210);\n"
 "	background-color: rgb(52, 58, 71);\n"
 "}")
-        icon8 = QIcon()
-        icon8.addFile(u":/16x16/icons/16x16/cil-link.png", QSize(), QIcon.Normal, QIcon.Off)
-        self.commandLinkButton.setIcon(icon8)
+        icon9 = QIcon()
+        icon9.addFile(u":/16x16/icons/16x16/cil-link.png", QSize(), QIcon.Normal, QIcon.Off)
+        self.commandLinkButton.setIcon(icon9)
 
         self.gridLayout_2.addWidget(self.commandLinkButton, 1, 6, 1, 1)
 
@@ -3954,11 +4055,12 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button_2.setText(QCoreApplication.translate("MainWindow", u"Download ciphertext", None))
         self.sign_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Sign", None))
         self.verify_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Verify", None))
-        self.dsa_verify_button.setText(QCoreApplication.translate("MainWindow", u"Verify your file", None))
         self.dsa_verify_button_status.setText(QCoreApplication.translate("MainWindow", u"Verify status", None))
         self.dsa_download_button.setText(QCoreApplication.translate("MainWindow", u"Download signature", None))
         self.dsa_upload_signature_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
         self.dsa_upload_signature_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose signature", None))
+        self.dsa_sign_button.setText(QCoreApplication.translate("MainWindow", u"SIGN IT", None))
+        self.dsa_verify_button.setText(QCoreApplication.translate("MainWindow", u"Verify your file", None))
         self.key_checkbox1.setText(QCoreApplication.translate("MainWindow", u"KEM - mceliece", None))
         self.key_checkbox2.setText(QCoreApplication.translate("MainWindow", u"KEM - saber", None))
         self.key_checkbox3.setText(QCoreApplication.translate("MainWindow", u"KEM - kyber", None))
@@ -3992,18 +4094,18 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem7 = self.enc_statistics_list_table.horizontalHeaderItem(3)
         ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"FileSize [B]", None));
         ___qtablewidgetitem8 = self.enc_statistics_list_table.horizontalHeaderItem(4)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"KEM time [s]", None));
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"KEM time [ms]", None));
         ___qtablewidgetitem9 = self.enc_statistics_list_table.horizontalHeaderItem(5)
-        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"AES time [s]", None));
+        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"AES time [ms]", None));
         self.enc_statistics_label.setText(QCoreApplication.translate("MainWindow", u"Encryption/Decryption statistics", None))
         ___qtablewidgetitem10 = self.enc_statistics_data_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"Average [s/B]", None));
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"Average [ms/B]", None));
         ___qtablewidgetitem11 = self.enc_statistics_data_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"Median [s/B]", None));
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"Median [ms/B]", None));
         ___qtablewidgetitem12 = self.enc_statistics_data_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Min [s/B]", None));
+        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Min [ms/B]", None));
         ___qtablewidgetitem13 = self.enc_statistics_data_table.horizontalHeaderItem(3)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"Max [s/B]", None));
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"Max [ms/B]", None));
         ___qtablewidgetitem14 = self.enc_statistics_data_table.verticalHeaderItem(0)
         ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"McEliece (encrypt)", None));
         ___qtablewidgetitem15 = self.enc_statistics_data_table.verticalHeaderItem(1)
@@ -4036,18 +4138,18 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem25 = self.dsa_statistics_table.horizontalHeaderItem(3)
         ___qtablewidgetitem25.setText(QCoreApplication.translate("MainWindow", u"FileSize [B]", None));
         ___qtablewidgetitem26 = self.dsa_statistics_table.horizontalHeaderItem(4)
-        ___qtablewidgetitem26.setText(QCoreApplication.translate("MainWindow", u"DSA time [s]", None));
+        ___qtablewidgetitem26.setText(QCoreApplication.translate("MainWindow", u"DSA time [ms]", None));
         self.dsa_statistics_label.setText(QCoreApplication.translate("MainWindow", u"Digital signature statistics", None))
         self.dsa_statistics_hw_box_label.setText(QCoreApplication.translate("MainWindow", u"Hardware information", None))
         self.dsa_statistics_hw_label.setText(QCoreApplication.translate("MainWindow", u"hw", None))
         ___qtablewidgetitem27 = self.dsa_statistics_data_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem27.setText(QCoreApplication.translate("MainWindow", u"Average [s/B]", None));
+        ___qtablewidgetitem27.setText(QCoreApplication.translate("MainWindow", u"Average [ms/B]", None));
         ___qtablewidgetitem28 = self.dsa_statistics_data_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem28.setText(QCoreApplication.translate("MainWindow", u"Median [s/B]", None));
+        ___qtablewidgetitem28.setText(QCoreApplication.translate("MainWindow", u"Median [ms/B]", None));
         ___qtablewidgetitem29 = self.dsa_statistics_data_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem29.setText(QCoreApplication.translate("MainWindow", u"Min [s/B]", None));
+        ___qtablewidgetitem29.setText(QCoreApplication.translate("MainWindow", u"Min [ms/B]", None));
         ___qtablewidgetitem30 = self.dsa_statistics_data_table.horizontalHeaderItem(3)
-        ___qtablewidgetitem30.setText(QCoreApplication.translate("MainWindow", u"Max [s/B]", None));
+        ___qtablewidgetitem30.setText(QCoreApplication.translate("MainWindow", u"Max [ms/B]", None));
         ___qtablewidgetitem31 = self.dsa_statistics_data_table.verticalHeaderItem(0)
         ___qtablewidgetitem31.setText(QCoreApplication.translate("MainWindow", u"Dilithium (sign)", None));
         ___qtablewidgetitem32 = self.dsa_statistics_data_table.verticalHeaderItem(1)
@@ -4070,16 +4172,16 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem38 = self.key_statistics_table.horizontalHeaderItem(1)
         ___qtablewidgetitem38.setText(QCoreApplication.translate("MainWindow", u"Alg", None));
         ___qtablewidgetitem39 = self.key_statistics_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem39.setText(QCoreApplication.translate("MainWindow", u"Generation Time [s]", None));
+        ___qtablewidgetitem39.setText(QCoreApplication.translate("MainWindow", u"Generation Time [ms]", None));
         self.key_statistics_label.setText(QCoreApplication.translate("MainWindow", u"Key generation statistics", None))
         ___qtablewidgetitem40 = self.key_statistics_data_table.horizontalHeaderItem(0)
-        ___qtablewidgetitem40.setText(QCoreApplication.translate("MainWindow", u"Average [s]", None));
+        ___qtablewidgetitem40.setText(QCoreApplication.translate("MainWindow", u"Average [ms]", None));
         ___qtablewidgetitem41 = self.key_statistics_data_table.horizontalHeaderItem(1)
-        ___qtablewidgetitem41.setText(QCoreApplication.translate("MainWindow", u"Median [s]", None));
+        ___qtablewidgetitem41.setText(QCoreApplication.translate("MainWindow", u"Median [ms]", None));
         ___qtablewidgetitem42 = self.key_statistics_data_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem42.setText(QCoreApplication.translate("MainWindow", u"Min [s]", None));
+        ___qtablewidgetitem42.setText(QCoreApplication.translate("MainWindow", u"Min [ms]", None));
         ___qtablewidgetitem43 = self.key_statistics_data_table.horizontalHeaderItem(3)
-        ___qtablewidgetitem43.setText(QCoreApplication.translate("MainWindow", u"Max [s]", None));
+        ___qtablewidgetitem43.setText(QCoreApplication.translate("MainWindow", u"Max [ms]", None));
         ___qtablewidgetitem44 = self.key_statistics_data_table.verticalHeaderItem(0)
         ___qtablewidgetitem44.setText(QCoreApplication.translate("MainWindow", u"KEM - mceliece", None));
         ___qtablewidgetitem45 = self.key_statistics_data_table.verticalHeaderItem(1)
@@ -4186,6 +4288,8 @@ class Ui_MainWindow(object):
         self.login_image.setAlignment(Qt.AlignCenter)
         #self.enc_dsa_selected_key_line.setClearButtonEnabled(True)
         self.enc_dec_moonit_button.clicked.connect(self.moonIt)
+        self.dsa_sign_button.clicked.connect(self.signFile)
+        self.dsa_verify_button.clicked.connect(self.verifyFile)
 
         hwText = f"Architecture: {platform.architecture()[0]}"
         hwText += f"\nMachine: {platform.machine()}"

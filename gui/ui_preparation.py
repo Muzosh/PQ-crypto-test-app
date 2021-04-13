@@ -79,8 +79,10 @@ class MainWindow(QMainWindow):
         self.updateLoginPageButtonText()
         self.ui.enc_dsa_upload_button.clicked.connect(self.openFileKey)
         self.ui.enc_dec_upload_ciphertext_button.clicked.connect(self.openFileCipherText)
+        self.ui.dsa_upload_signature_button.clicked.connect(self.openFileSignature)
         self.ui.enc_dec_download_file_button.clicked.connect(self.downloadFile)
         self.ui.enc_dec_download_file_button_2.clicked.connect(self.downloadCipher)
+        self.ui.dsa_download_button.clicked.connect(self.downloadSignature)
 
 
         ## ==> CREATE MENUS
@@ -302,7 +304,13 @@ class MainWindow(QMainWindow):
         self.ui.enc_dsa_upload_line.setText(name)
         self.ui.enc_dsa_upload_line.setEnabled(True)
         self.ui.enc_dsa_upload_line.setStyleSheet(qLineDefault)
-        self.ui.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
+
+        if self.ui.dec_radiobutton.isChecked() or self.ui.enc_radiobutton.isChecked():
+            self.ui.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
+        elif self.ui.sign_radiobutton.isChecked():
+            self.ui.dsa_sign_button.setStyleSheet(qPushButtonDefault)
+        elif self.ui.verify_radiobutton.isChecked():
+            self.ui.dsa_verify_button.setStyleSheet(qPushButtonDefault)
 
     def openFileCipherText(self):
         name = self.openFile()
@@ -310,6 +318,13 @@ class MainWindow(QMainWindow):
         self.ui.enc_dec_upload_ciphertext_line.setEnabled(True)
         self.ui.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDefault)
         self.ui.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
+
+    def openFileSignature(self):
+        name = self.openFile()
+        self.ui.dsa_upload_signature_line.setText(name)
+        self.ui.dsa_upload_signature_line.setEnabled(True)
+        self.ui.dsa_upload_signature_line.setStyleSheet(qLineDefault)
+        self.ui.dsa_verify_button.setStyleSheet(qPushButtonDefault)
 
     def downloadFile(self):
         if self.ui.dec_radiobutton.isChecked():
@@ -330,6 +345,13 @@ class MainWindow(QMainWindow):
             if filePath != '':
                 with open(filePath, 'wb+') as file:
                     file.write(self.ui.cipher_text)
+    
+    def downloadSignature(self):
+        if self.ui.sign_radiobutton.isChecked():
+            filePath = QFileDialog.getSaveFileName(self, "Save signature", downloadsFolder + "/signature.sig")[0]
+            if filePath != '':
+                with open(filePath, 'wb+') as file:
+                    file.write(self.ui.signature)
 
             
 class UIFunctions(MainWindow):

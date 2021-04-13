@@ -96,7 +96,7 @@ class PqSigningManager:
         dsaTime = time.time() - start
         
         # log operations
-        self.__statisticsManager.addDsaEntry(datetime.now(), privateKeyStore[1], "Sign", len(fileToSign), dsaTime)
+        self.__statisticsManager.addDsaEntry(datetime.now(), privateKeyStore[1], "Sign", len(fileToSign), dsaTime/1000)
         
         # obfuscate signature
         signatureObf = base64.b64encode(signature)
@@ -122,7 +122,7 @@ class PqSigningManager:
         dsaTime = time.time() - start
 
         # log operation and return verify result
-        self.__statisticsManager.addDsaEntry(datetime.now(), publicKeyStore[1], "Verify", len(signedFile), dsaTime)
+        self.__statisticsManager.addDsaEntry(datetime.now(), publicKeyStore[1], "Verify", len(signedFile), dsaTime/1000)
         return verifyResult
 
 # # TEST AREA

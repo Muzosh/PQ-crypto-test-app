@@ -123,7 +123,7 @@ class PqKeyGenManager:
         keyGenTime = time.time() - start
         
         # log operation and add two keys into database
-        self.__statisticsManager.addKeyGenEntry(now, alg, keyGenTime)
+        self.__statisticsManager.addKeyGenEntry(now, alg, keyGenTime/1000)
         self.__passwordManager.addKeyStore(nameText, alg, "Public", keyPair[0])
         self.__passwordManager.addKeyStore(nameText, alg, "Private", keyPair[1])
 

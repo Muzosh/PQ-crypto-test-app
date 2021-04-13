@@ -4,9 +4,9 @@ import statistics
 class StatisticsManager:
     """This class handles everything around statistics, data mining, collecting data, etc...
     Available public methods:
-        addKeyGenEntry(datetime:datetime, alg:str, timeInSeconds:float) -> None
-        addKemAesEntry(datetime:datetime, alg:str, operationType:str, aesBlockSize:int, fileSize:int, kemTimeInSeconds:float, aesTimeInSeconds:float) -> None
-        addDsaEntry(datetime:datetime, alg:str, operationType:str, fileSize:int, timeInSeconds:float) -> None
+        addKeyGenEntry(datetime:datetime, alg:str, timeInMiliseconds:float) -> None
+        addKemAesEntry(datetime:datetime, alg:str, operationType:str, aesBlockSize:int, fileSize:int, kemTimeInMiliseconds:float, aesTimeInMiliseconds:float) -> None
+        addDsaEntry(datetime:datetime, alg:str, operationType:str, fileSize:int, timeInMiliseconds:float) -> None
     """
     
     def __init__(self, passwordManager):
@@ -15,14 +15,14 @@ class StatisticsManager:
         self.dsaEntries = []
         self.passwordManager = passwordManager
     
-    def addKeyGenEntry(self, datetime:datetime, alg:str, timeInSeconds:float):
-        self.keyGenEntries.append((datetime, alg, timeInSeconds))
+    def addKeyGenEntry(self, datetime:datetime, alg:str, timeInMiliseconds:float):
+        self.keyGenEntries.append((datetime, alg, timeInMiliseconds))
         
-    def addKemAesEntry(self, datetime:datetime, alg:str, operationType:str, aesBlockSize:int, fileSize:int, kemTimeInSeconds:float, aesTimeInSeconds:float):
-        self.kemAesEntries.append((datetime, alg, operationType, aesBlockSize, fileSize, kemTimeInSeconds, aesTimeInSeconds))
+    def addKemAesEntry(self, datetime:datetime, alg:str, operationType:str, aesBlockSize:int, fileSize:int, kemTimeInMiliseconds:float, aesTimeInMiliseconds:float):
+        self.kemAesEntries.append((datetime, alg, operationType, aesBlockSize, fileSize, kemTimeInMiliseconds, aesTimeInMiliseconds))
         
-    def addDsaEntry(self, datetime:datetime, alg:str, operationType:str, fileSize:int, timeInSeconds:float):
-        self.__dsaEntries.append((datetime, alg, operationType, fileSize, timeInSeconds))
+    def addDsaEntry(self, datetime:datetime, alg:str, operationType:str, fileSize:int, timeInMiliseconds:float):
+        self.dsaEntries.append((datetime, alg, operationType, fileSize, timeInMiliseconds))
     
     def saveStatisticsToFile(self):
         self.passwordManager.writeStatistics(self.keyGenEntries, self.kemAesEntries, self.dsaEntries)
@@ -80,14 +80,14 @@ class StatisticsManager:
 
     def filterSignList_handler(self):
         dilithium = [tup[4]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Dilithium' and tup[2] == 'Sign')]
-        rainbow = [tup[2]/tup[3] for tup in self.dsaEntries if (tup[1] == 'RainbowVc' and tup[2] == 'Sign')]
-        sphincs = [tup[2]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Sphincs' and tup[2] == 'Sign')]
+        rainbow = [tup[4]/tup[3] for tup in self.dsaEntries if (tup[1] == 'RainbowVc' and tup[2] == 'Sign')]
+        sphincs = [tup[4]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Sphincs' and tup[2] == 'Sign')]
         return dilithium, rainbow, sphincs
 
     def filterVerifyList_handler(self):
         dilithium = [tup[4]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Dilithium' and tup[2] == 'Verify')]
-        rainbow = [tup[2]/tup[3] for tup in self.dsaEntries if (tup[1] == 'RainbowVc' and tup[2] == 'Verify')]
-        sphincs = [tup[2]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Sphincs' and tup[2] == 'Verify')]
+        rainbow = [tup[4]/tup[3] for tup in self.dsaEntries if (tup[1] == 'RainbowVc' and tup[2] == 'Verify')]
+        sphincs = [tup[4]/tup[3] for tup in self.dsaEntries if (tup[1] == 'Sphincs' and tup[2] == 'Verify')]
         return dilithium, rainbow, sphincs    
 
     def getKeyAverages(self):

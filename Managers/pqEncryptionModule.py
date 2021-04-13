@@ -84,7 +84,7 @@ class PqEncryptionManager:
         aesTime = time.time() - start
 
         # log operations
-        self.__statisticsManager.addKemAesEntry(datetime.now(), publicKeyStore[1], "Encrypt", 256, len(fileToEncrypt), kemTime, aesTime)
+        self.__statisticsManager.addKemAesEntry(datetime.now(), publicKeyStore[1], "Encrypt", 256, len(fileToEncrypt), kemTime/1000, aesTime/1000)
         
         # obfuscate encrypted file
         encryptedFileObf = base64.b64encode(str(encryptedFile).encode())
@@ -115,7 +115,7 @@ class PqEncryptionManager:
         aesTime = time.time() - start
 
         # log operations and return decrypted file
-        self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, len(decryptedFile), kemTime, aesTime)
+        self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, len(decryptedFile), kemTime/1000, aesTime/1000)
         return decryptedFile
         
 # # TEST AREA

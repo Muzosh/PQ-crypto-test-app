@@ -2851,57 +2851,6 @@ border-radius: 5px;</string>
                       </item>
                      </layout>
                     </widget>
-                    <widget class="QPushButton" name="dsa_verify_button">
-                     <property name="geometry">
-                      <rect>
-                       <x>90</x>
-                       <y>180</y>
-                       <width>250</width>
-                       <height>40</height>
-                      </rect>
-                     </property>
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="font">
-                      <font>
-                       <family>Open Sans</family>
-                       <pointsize>10</pointsize>
-                      </font>
-                     </property>
-                     <property name="styleSheet">
-                      <string notr="true">QPushButton {
-	border: 2px solid rgb(52, 59, 72);
-border-radius: 15px;	
-	background-color: rgb(52, 59, 72);
-}
-QPushButton:hover {
-	background-color: rgb(57, 65, 80);
-	border: 2px solid rgb(61, 70, 86);
-}
-QPushButton:pressed {	
-	background-color: rgb(35, 40, 49);
-	border: 2px solid rgb(43, 50, 61);
-}</string>
-                     </property>
-                     <property name="text">
-                      <string>Verify your file</string>
-                     </property>
-                     <property name="icon">
-                      <iconset>
-                       <normalon>:/16x16/icons/16x16/cil-speedometer.png</normalon>
-                      </iconset>
-                     </property>
-                    </widget>
                     <widget class="QLabel" name="dsa_verify_button_status">
                      <property name="geometry">
                       <rect>
@@ -3071,6 +3020,114 @@ QLineEdit:pressed {
                      <property name="placeholderText">
                       <string>Choose signature</string>
                      </property>
+                    </widget>
+                    <widget class="QWidget" name="horizontalLayoutWidget_6">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>160</y>
+                       <width>421</width>
+                       <height>81</height>
+                      </rect>
+                     </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_14">
+                      <property name="leftMargin">
+                       <number>10</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>10</number>
+                      </property>
+                      <item>
+                       <widget class="QPushButton" name="dsa_sign_button">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QPushButton {
+	border: 2px solid rgb(52, 59, 72);
+border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+}
+QPushButton:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QPushButton:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>SIGN IT</string>
+                        </property>
+                        <property name="icon">
+                         <iconset>
+                          <normalon>:/16x16/icons/16x16/cil-pen-alt.png</normalon>
+                         </iconset>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="dsa_verify_button">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QPushButton {
+	border: 2px solid rgb(52, 59, 72);
+border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+}
+QPushButton:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QPushButton:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                        </property>
+                        <property name="text">
+                         <string>Verify your file</string>
+                        </property>
+                        <property name="icon">
+                         <iconset>
+                          <normalon>:/16x16/icons/16x16/cil-speedometer.png</normalon>
+                         </iconset>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </widget>
                    <widget class="Line" name="line">
@@ -4449,12 +4506,12 @@ QHeaderView::section:vertical
                        </column>
                        <column>
                         <property name="text">
-                         <string>KEM time [s]</string>
+                         <string>KEM time [ms]</string>
                         </property>
                        </column>
                        <column>
                         <property name="text">
-                         <string>AES time [s]</string>
+                         <string>AES time [ms]</string>
                         </property>
                        </column>
                       </widget>
@@ -4715,7 +4772,7 @@ QHeaderView::section:vertical
                         </row>
                         <column>
                          <property name="text">
-                          <string>Average [s/B]</string>
+                          <string>Average [ms/B]</string>
                          </property>
                          <property name="font">
                           <font>
@@ -4725,17 +4782,17 @@ QHeaderView::section:vertical
                         </column>
                         <column>
                          <property name="text">
-                          <string>Median [s/B]</string>
+                          <string>Median [ms/B]</string>
                          </property>
                         </column>
                         <column>
                          <property name="text">
-                          <string>Min [s/B]</string>
+                          <string>Min [ms/B]</string>
                          </property>
                         </column>
                         <column>
                          <property name="text">
-                          <string>Max [s/B]</string>
+                          <string>Max [ms/B]</string>
                          </property>
                         </column>
                         <item row="0" column="0">
@@ -5193,10 +5250,10 @@ QHeaderView::section:vertical
                         <bool>false</bool>
                        </attribute>
                        <attribute name="horizontalHeaderMinimumSectionSize">
-                        <number>20</number>
+                        <number>150</number>
                        </attribute>
                        <attribute name="horizontalHeaderDefaultSectionSize">
-                        <number>180</number>
+                        <number>190</number>
                        </attribute>
                        <attribute name="horizontalHeaderStretchLastSection">
                         <bool>false</bool>
@@ -5235,7 +5292,7 @@ QHeaderView::section:vertical
                        </column>
                        <column>
                         <property name="text">
-                         <string>DSA time [s]</string>
+                         <string>DSA time [ms]</string>
                         </property>
                        </column>
                       </widget>
@@ -5384,7 +5441,7 @@ border-radius: 5px;</string>
                       <rect>
                        <x>0</x>
                        <y>0</y>
-                       <width>753</width>
+                       <width>631</width>
                        <height>261</height>
                       </rect>
                      </property>
@@ -5533,22 +5590,22 @@ QHeaderView::section:vertical
                         </row>
                         <column>
                          <property name="text">
-                          <string>Average [s/B]</string>
+                          <string>Average [ms/B]</string>
                          </property>
                         </column>
                         <column>
                          <property name="text">
-                          <string>Median [s/B]</string>
+                          <string>Median [ms/B]</string>
                          </property>
                         </column>
                         <column>
                          <property name="text">
-                          <string>Min [s/B]</string>
+                          <string>Min [ms/B]</string>
                          </property>
                         </column>
                         <column>
                          <property name="text">
-                          <string>Max [s/B]</string>
+                          <string>Max [ms/B]</string>
                          </property>
                         </column>
                         <item row="0" column="0">
@@ -5926,6 +5983,9 @@ QHeaderView::section:vertical
                        <attribute name="horizontalHeaderVisible">
                         <bool>false</bool>
                        </attribute>
+                       <attribute name="horizontalHeaderMinimumSectionSize">
+                        <number>150</number>
+                       </attribute>
                        <attribute name="horizontalHeaderDefaultSectionSize">
                         <number>190</number>
                        </attribute>
@@ -5953,7 +6013,7 @@ QHeaderView::section:vertical
                        </column>
                        <column>
                         <property name="text">
-                         <string>Generation Time [s]</string>
+                         <string>Generation Time [ms]</string>
                         </property>
                        </column>
                       </widget>
@@ -6193,7 +6253,7 @@ QHeaderView::section:vertical
                         </row>
                         <column>
                          <property name="text">
-                          <string>Average [s]</string>
+                          <string>Average [ms]</string>
                          </property>
                          <property name="font">
                           <font>
@@ -6203,17 +6263,17 @@ QHeaderView::section:vertical
                         </column>
                         <column>
                          <property name="text">
-                          <string>Median [s]</string>
+                          <string>Median [ms]</string>
                          </property>
                         </column>
                         <column>
                          <property name="text">
-                          <string>Min [s]</string>
+                          <string>Min [ms]</string>
                          </property>
                         </column>
                         <column>
                          <property name="text">
-                          <string>Max [s]</string>
+                          <string>Max [ms]</string>
                          </property>
                         </column>
                         <item row="0" column="0">
