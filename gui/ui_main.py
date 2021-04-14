@@ -41,6 +41,8 @@ qRadioButtonRed = "QRadioButton{color:rgb(255,0,0)}"
 qRadioButtonDefault = "QRadioButton{color:#fff}"
 qRadioButtonDisable = "QRadioButton{color:#555}"
 
+
+
 def change_page(self, param):
     if param == 0:
         self.stackedWidget.setCurrentWidget(self.page_login)
@@ -86,6 +88,28 @@ class Ui_MainWindow(object):
         self.decrypted_file = b""
         self.signature = b""
         self.keyStoreList = []
+        self.keyLengths = {
+            "Public":
+            {
+                "McEliece": 1357824,
+                "Saber": 992,
+                "Kyber": 1568,
+                "Nthrups": 699,
+                "Dilithium": 1760,
+                "RainbowVc": 1705536,
+                "Sphincs": 64
+            },
+            "Private":
+            {
+                "McEliece": 14080,
+                "Saber": 2304,
+                "Kyber": 3168,
+                "Nthrups": 935,
+                "Dilithium": 3856,
+                "RainbowVc": 1227104,
+                "Sphincs": 128
+            }
+        }
 
     def SaveStatisticsToFile(self):
         self.statisticsManager.saveStatisticsToFile()
@@ -212,6 +236,54 @@ class Ui_MainWindow(object):
             self.updateTableKey()
         else:
             print("Vypln pravdzivo vsetok obsah!")
+
+    def updateRequestedKeyLengthLabel(self):
+        selected_key = ""
+        name = ""
+
+        keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2, self.key_checkbox4_3, self.key_checkbox4_4]
+        for k in keys:
+            if k.isChecked():
+                selected_key = k.text()
+                #print(selected_key)
+                k.setStyleSheet(qRadioButtonGreen)
+            else:
+                k.setStyleSheet(qRadioButtonDefault)
+        if self.key_inputname_line.text() != "":
+            name = self.key_inputname_line.text()
+            self.key_inputname_line.setStyleSheet(qLineGreen)
+            self.key_checking_name.setText("Your key name is: " + name)
+        else:
+            self.key_inputname_line.setStyleSheet(qLineRed)
+            self.key_checking_name.setText("No key name entered!")
+
+        print(name)
+        print(selected_key)
+
+        keyType = ""
+        if self.key_private_radio_button.isChecked():
+            keyType = "Private"
+        elif self.key_public_radio_button.isChecked():
+            keyType = "Public"
+
+        if name != "" and selected_key != "" and keyType != "":
+            print("Generujem us ten kluc naah")
+            if selected_key == "KEM - mceliece":
+                self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["McEliece"]))
+            if selected_key == "KEM - saber":
+                self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Saber"]))
+            if selected_key == "KEM - kyber":
+                self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Kyber"]))
+            if selected_key == "KEM - ntruhps":
+                self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Nthrups"]))
+            if selected_key == "DSA - dilithium":
+                self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Dilithium"]))
+            if selected_key == "DSA - rainbow":
+                self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["RainbowVc"]))
+            if selected_key == "DSA - sphincs":
+                self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Sphincs"]))
+        else:
+            self.key_requested_length_label.setText("Requested length: N/A")
 
     def updateTableKey(self):
         self.key_maintable.setRowCount(0)
@@ -4305,6 +4377,30 @@ class Ui_MainWindow(object):
         self.key_statistics_hw_label.setText(hwText)
         
         self.key_maintable.horizontalHeader().setVisible(True)
-        self.dsa_statistics_table.horizontalHeader().setVisible(True)
+        self.key_maintable.horizontalHeader().setMinimumSectionSize(150)
+        self.key_maintable.horizontalHeader().setDefaultSectionSize(190)
+        self.key_maintable.horizontalHeader().setStretchLastSection(True)
+
         self.enc_statistics_list_table.horizontalHeader().setVisible(True)
+        self.enc_statistics_list_table.horizontalHeader().setMinimumSectionSize(150)
+        self.enc_statistics_list_table.horizontalHeader().setDefaultSectionSize(190)
+        self.enc_statistics_list_table.horizontalHeader().setStretchLastSection(True)
+
+        self.dsa_statistics_table.horizontalHeader().setVisible(True)
+        self.dsa_statistics_table.horizontalHeader().setMinimumSectionSize(150)
+        self.dsa_statistics_table.horizontalHeader().setDefaultSectionSize(190)
+        self.dsa_statistics_table.horizontalHeader().setStretchLastSection(True)
+
         self.key_statistics_table.horizontalHeader().setVisible(True)
+        self.key_statistics_table.horizontalHeader().setMinimumSectionSize(150)
+        self.key_statistics_table.horizontalHeader().setDefaultSectionSize(190)
+        self.key_statistics_table.horizontalHeader().setStretchLastSection(True)
+
+        self.enc_statistics_data_table.horizontalHeader().setVisible(True)
+        self.enc_statistics_data_table.verticalHeader().setVisible(True)
+
+        self.dsa_statistics_data_table.horizontalHeader().setVisible(True)
+        self.dsa_statistics_data_table.verticalHeader().setVisible(True)
+
+        self.key_statistics_data_table.horizontalHeader().setVisible(True)
+        self.key_statistics_data_table.verticalHeader().setVisible(True)

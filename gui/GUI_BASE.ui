@@ -3246,6 +3246,9 @@ border-radius: 5px;</string>
                         <property name="text">
                          <string>KEM - mceliece</string>
                         </property>
+                        <property name="autoExclusive">
+                         <bool>true</bool>
+                        </property>
                        </widget>
                       </item>
                       <item>
@@ -3377,7 +3380,7 @@ border-radius: 5px;</string>
                        <x>270</x>
                        <y>10</y>
                        <width>291</width>
-                       <height>281</height>
+                       <height>291</height>
                       </rect>
                      </property>
                      <layout class="QVBoxLayout" name="layout_setkey_box">
@@ -3537,35 +3540,20 @@ QPushButton:pressed {
                       </item>
                      </layout>
                     </widget>
-                    <widget class="QWidget" name="horizontalLayoutWidget_4">
+                    <widget class="QWidget" name="gridLayoutWidget">
                      <property name="geometry">
                       <rect>
                        <x>570</x>
                        <y>10</y>
                        <width>291</width>
-                       <height>281</height>
+                       <height>291</height>
                       </rect>
                      </property>
-                     <layout class="QVBoxLayout" name="layout_key_uploadkey">
+                     <layout class="QGridLayout" name="key_layout_upload_key" rowstretch="0,0,0,0,0,0,0,0">
                       <property name="spacing">
-                       <number>0</number>
+                       <number>6</number>
                       </property>
-                      <property name="sizeConstraint">
-                       <enum>QLayout::SetDefaultConstraint</enum>
-                      </property>
-                      <property name="leftMargin">
-                       <number>20</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>20</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>20</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>20</number>
-                      </property>
-                      <item>
+                      <item row="0" column="0" colspan="2">
                        <widget class="QLabel" name="key_uploadkey_label">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -3590,21 +3578,12 @@ QPushButton:pressed {
                         <property name="text">
                          <string>Upload your key</string>
                         </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QRadioButton" name="key_public_radio_button">
-                        <property name="font">
-                         <font>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Public</string>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
                         </property>
                        </widget>
                       </item>
-                      <item>
+                      <item row="1" column="0">
                        <widget class="QRadioButton" name="key_private_radio_button">
                         <property name="font">
                          <font>
@@ -3616,7 +3595,83 @@ QPushButton:pressed {
                         </property>
                        </widget>
                       </item>
-                      <item>
+                      <item row="5" column="0" colspan="2">
+                       <widget class="QLineEdit" name="key_upload_line">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                         </font>
+                        </property>
+                        <property name="styleSheet">
+                         <string notr="true">QLineEdit {
+	border: 2px solid rgb(52, 59, 72);
+	border-radius: 15px;	
+	background-color: rgb(52, 59, 72);
+}
+QLineEdit:hover {
+	background-color: rgb(57, 65, 80);
+	border: 2px solid rgb(61, 70, 86);
+}
+QLineEdit:pressed {	
+	background-color: rgb(35, 40, 49);
+	border: 2px solid rgb(43, 50, 61);
+}</string>
+                        </property>
+                        <property name="placeholderText">
+                         <string>Upload key file</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="1">
+                       <widget class="QRadioButton" name="key_public_radio_button">
+                        <property name="font">
+                         <font>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Public</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="0">
+                       <widget class="QLabel" name="key_requested_length_label">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                          <italic>true</italic>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Requested length:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="1">
                        <widget class="QPushButton" name="key_upload_button">
                         <property name="minimumSize">
                          <size>
@@ -3654,7 +3709,7 @@ QPushButton:pressed {
                         </property>
                        </widget>
                       </item>
-                      <item>
+                      <item row="7" column="0" colspan="2">
                        <widget class="QPushButton" name="key_generate_button_2">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -3706,9 +3761,9 @@ QPushButton:pressed {
                     <property name="geometry">
                      <rect>
                       <x>9</x>
-                      <y>310</y>
+                      <y>309</y>
                       <width>870</width>
-                      <height>280</height>
+                      <height>281</height>
                      </rect>
                     </property>
                     <property name="minimumSize">
@@ -4048,7 +4103,7 @@ QHeaderView::section:vertical
                         <number>4</number>
                        </property>
                        <attribute name="horizontalHeaderVisible">
-                        <bool>false</bool>
+                        <bool>true</bool>
                        </attribute>
                        <attribute name="horizontalHeaderCascadingSectionResizes">
                         <bool>false</bool>
@@ -4057,7 +4112,7 @@ QHeaderView::section:vertical
                         <number>150</number>
                        </attribute>
                        <attribute name="horizontalHeaderDefaultSectionSize">
-                        <number>200</number>
+                        <number>190</number>
                        </attribute>
                        <attribute name="horizontalHeaderHighlightSections">
                         <bool>true</bool>
