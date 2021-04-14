@@ -1677,7 +1677,7 @@ QPushButton:pressed {
                    <enum>QFrame::Plain</enum>
                   </property>
                   <property name="currentIndex">
-                   <number>0</number>
+                   <number>7</number>
                   </property>
                   <widget class="QWidget" name="page_login">
                    <property name="styleSheet">
@@ -6364,6 +6364,64 @@ QHeaderView::section:vertical
                        </widget>
                       </item>
                      </layout>
+                    </widget>
+                   </widget>
+                  </widget>
+                  <widget class="QWidget" name="page_about">
+                   <widget class="QFrame" name="about_title">
+                    <property name="geometry">
+                     <rect>
+                      <x>10</x>
+                      <y>10</y>
+                      <width>880</width>
+                      <height>50</height>
+                     </rect>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(39, 44, 54);
+border-radius: 5px;</string>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <widget class="QLabel" name="about_label">
+                     <property name="geometry">
+                      <rect>
+                       <x>0</x>
+                       <y>0</y>
+                       <width>870</width>
+                       <height>50</height>
+                      </rect>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <family>Open Sans</family>
+                       <pointsize>12</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>About cryptoanalysis of post-quantum algorithms</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
                     </widget>
                    </widget>
                   </widget>
