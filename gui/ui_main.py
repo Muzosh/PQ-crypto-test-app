@@ -4675,7 +4675,7 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem70 = self.about_table.item(3, 0)
         ___qtablewidgetitem70.setText(QCoreApplication.translate("MainWindow", u"Lattice", None));
         ___qtablewidgetitem71 = self.about_table.item(3, 1)
-        ___qtablewidgetitem71.setText(QCoreApplication.translate("MainWindow", u">> 1", None));
+        ___qtablewidgetitem71.setText(QCoreApplication.translate("MainWindow", u"1", None));
         ___qtablewidgetitem72 = self.about_table.item(3, 2)
         ___qtablewidgetitem72.setText(QCoreApplication.translate("MainWindow", u"669", None));
         ___qtablewidgetitem73 = self.about_table.item(4, 0)
