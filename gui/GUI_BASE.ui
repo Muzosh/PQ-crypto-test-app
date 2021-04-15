@@ -1677,7 +1677,7 @@ QPushButton:pressed {
                    <enum>QFrame::Plain</enum>
                   </property>
                   <property name="currentIndex">
-                   <number>4</number>
+                   <number>7</number>
                   </property>
                   <widget class="QWidget" name="page_login">
                    <property name="styleSheet">
@@ -6781,7 +6781,7 @@ QHeaderView::section:vertical
                         </item>
                         <item row="3" column="1">
                          <property name="text">
-                          <string>&gt;&gt; 1</string>
+                          <string>&lt;&lt; 1</string>
                          </property>
                          <property name="textAlignment">
                           <set>AlignCenter</set>
@@ -7102,7 +7102,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>According to our measurements and public research for KEM the best performance usually has Crystals-Kyber, followed by NTRU-HPS, Saber and finally McEliece.</string>
+                         <string>According to our measurements and public research for KEM the best performance usually has Crystals-Kyber, followed by NTRU-HPS, SABER and finally McEliece.</string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignCenter</set>
@@ -7117,7 +7117,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>For DSA algorithms the best performance has Crystals-Dilithium followed by Sphinics and Rainbow Vc (the latency of Rainbow is really high due to lenght of keys).</string>
+                         <string>For DSA algorithms the best performance has Crystals-Dilithium followed by SPHINCS and Rainbow Vc (the latency of Rainbow Vc is really high due to lenght of keys).</string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignCenter</set>
@@ -7132,7 +7132,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>*** The latency and overall performance is directly related with the hardware of machine.</string>
+                         <string>*** The latency and overall performance is directly related to the hardware of machine.</string>
                         </property>
                         <property name="alignment">
                          <set>Qt::AlignCenter</set>
@@ -7474,7 +7474,7 @@ QScrollBar:horizontal {
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>274</width>
+                              <width>218</width>
                               <height>218</height>
                              </rect>
                             </property>

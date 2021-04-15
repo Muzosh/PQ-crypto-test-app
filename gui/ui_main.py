@@ -225,19 +225,19 @@ class Ui_MainWindow(object):
 
         if name != "" and selected_key != "":
             print("Generujem us ten kluc naah")
-            if selected_key == "KEM - mceliece":
+            if selected_key == "KEM - McEliece":
                 self.pqKeyGenManager.generate_keypair_mceliece8192128(name)
-            if selected_key == "KEM - saber":
+            if selected_key == "KEM - SABER":
                 self.pqKeyGenManager.generate_keypair_saber(name)
-            if selected_key == "KEM - kyber":
+            if selected_key == "KEM - Kyber":
                 self.pqKeyGenManager.generate_keypair_kyber1024(name)
-            if selected_key == "KEM - ntruhps":
+            if selected_key == "KEM - NTRU-HPS":
                 self.pqKeyGenManager.generate_keypair_ntruhps2048509(name)
-            if selected_key == "DSA - dilithium":
+            if selected_key == "DSA - Dilithium":
                 self.pqKeyGenManager.generate_keypair_dilithium4(name)
-            if selected_key == "DSA - rainbow":
+            if selected_key == "DSA - Rainbow Vc":
                 self.pqKeyGenManager.generate_keypair_rainbowVc_classic(name)
-            if selected_key == "DSA - sphincs":
+            if selected_key == "DSA - SPHINCS":
                 self.pqKeyGenManager.generate_keypair_sphincs_shake256_256s_simple(name)
             self.updateTableKey()
         else:
@@ -275,22 +275,22 @@ class Ui_MainWindow(object):
 
         if name != "" and selected_key != "" and keyType != "":
             print("Generujem us ten kluc naah")
-            if selected_key == "KEM - mceliece":
+            if selected_key == "KEM - McEliece":
                 self.key_requested_length_label.setText(
                     "Requested length: " + str(self.keyLengths[keyType]["McEliece"]))
-            if selected_key == "KEM - saber":
+            if selected_key == "KEM - SABER":
                 self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Saber"]))
-            if selected_key == "KEM - kyber":
+            if selected_key == "KEM - Kyber":
                 self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Kyber"]))
-            if selected_key == "KEM - ntruhps":
+            if selected_key == "KEM - NTRU-HPS":
                 self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Nthrups"]))
-            if selected_key == "DSA - dilithium":
+            if selected_key == "DSA - Dilithium":
                 self.key_requested_length_label.setText(
                     "Requested length: " + str(self.keyLengths[keyType]["Dilithium"]))
-            if selected_key == "DSA - rainbow":
+            if selected_key == "DSA - Rainbow Vc":
                 self.key_requested_length_label.setText(
                     "Requested length: " + str(self.keyLengths[keyType]["RainbowVc"]))
-            if selected_key == "DSA - sphincs":
+            if selected_key == "DSA - SPHINCS":
                 self.key_requested_length_label.setText("Requested length: " + str(self.keyLengths[keyType]["Sphincs"]))
         else:
             self.key_requested_length_label.setText("Requested length: N/A")
@@ -4712,10 +4712,10 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", u"5 - equivalent to AES-256 key search", None))
         self.about_latency_title_label.setText(QCoreApplication.translate("MainWindow", u"Latency Overview", None))
         self.about_latency_text_KEM_label.setText(QCoreApplication.translate("MainWindow",
-                                                                             u"According to our measurements and public research for KEM the best performance usually has Crystals-Kyber, followed by NTRU-HPS, Saber and finally McEliece.",
+                                                                             u"According to our measurements and public research for KEM the best performance usually has Crystals-Kyber, followed by NTRU-HPS, SABER and finally McEliece.",
                                                                              None))
         self.about_latency_text_DSA_label.setText(QCoreApplication.translate("MainWindow",
-                                                                             u"For DSA algorithms the best performance has Crystals-Dilithium followed by Sphinics and Rainbow Vc (the latency of Rainbow is really high due to lenght of keys).",
+                                                                             u"For DSA algorithms the best performance has Crystals-Dilithium followed by SPHINCS and Rainbow Vc (the latency of Rainbow Vc is really high due to lenght of keys).",
                                                                              None))
         self.about_latency_text_note_label.setText(QCoreApplication.translate("MainWindow",
                                                                               u"*** The latency and overall performance is directly related with the hardware of machine.",
