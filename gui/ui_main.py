@@ -4687,7 +4687,7 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem76 = self.about_table.item(5, 0)
         ___qtablewidgetitem76.setText(QCoreApplication.translate("MainWindow", u"Multivariate", None));
         ___qtablewidgetitem77 = self.about_table.item(5, 1)
-        ___qtablewidgetitem77.setText(QCoreApplication.translate("MainWindow", u"1", None));
+        ___qtablewidgetitem77.setText(QCoreApplication.translate("MainWindow", u"5", None));
         ___qtablewidgetitem78 = self.about_table.item(5, 2)
         ___qtablewidgetitem78.setText(QCoreApplication.translate("MainWindow", u"1 705 536", None));
         ___qtablewidgetitem79 = self.about_table.item(6, 0)
