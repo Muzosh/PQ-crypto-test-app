@@ -1677,7 +1677,7 @@ QPushButton:pressed {
                    <enum>QFrame::Plain</enum>
                   </property>
                   <property name="currentIndex">
-                   <number>7</number>
+                   <number>4</number>
                   </property>
                   <widget class="QWidget" name="page_login">
                    <property name="styleSheet">
@@ -3244,7 +3244,7 @@ border-radius: 5px;</string>
                          <string notr="true"/>
                         </property>
                         <property name="text">
-                         <string>KEM - mceliece</string>
+                         <string>KEM - McEliece</string>
                         </property>
                         <property name="autoExclusive">
                          <bool>true</bool>
@@ -3266,7 +3266,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>KEM - saber</string>
+                         <string>KEM - SABER</string>
                         </property>
                        </widget>
                       </item>
@@ -3285,7 +3285,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>KEM - kyber</string>
+                         <string>KEM - Kyber</string>
                         </property>
                        </widget>
                       </item>
@@ -3304,7 +3304,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>KEM - ntruhps</string>
+                         <string>KEM - NTRU-HPS</string>
                         </property>
                        </widget>
                       </item>
@@ -3323,7 +3323,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>DSA - dilithium</string>
+                         <string>DSA - Dilithium</string>
                         </property>
                        </widget>
                       </item>
@@ -3342,7 +3342,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>DSA - rainbow</string>
+                         <string>DSA - Rainbow Vc</string>
                         </property>
                        </widget>
                       </item>
@@ -3361,7 +3361,7 @@ border-radius: 5px;</string>
                          </font>
                         </property>
                         <property name="text">
-                         <string>DSA - sphincs</string>
+                         <string>DSA - SPHINCS</string>
                         </property>
                        </widget>
                       </item>
@@ -4103,7 +4103,7 @@ QHeaderView::section:vertical
                         <number>4</number>
                        </property>
                        <attribute name="horizontalHeaderVisible">
-                        <bool>true</bool>
+                        <bool>false</bool>
                        </attribute>
                        <attribute name="horizontalHeaderCascadingSectionResizes">
                         <bool>false</bool>
@@ -4797,12 +4797,12 @@ QHeaderView::section:vertical
                         </row>
                         <row>
                          <property name="text">
-                          <string>Saber (encrypt)</string>
+                          <string>SABER (encrypt)</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>Nthrubs (encrypt)</string>
+                          <string>NTRU-HPS (encrypt)</string>
                          </property>
                         </row>
                         <row>
@@ -4817,12 +4817,12 @@ QHeaderView::section:vertical
                         </row>
                         <row>
                          <property name="text">
-                          <string>Saber (decrypt)</string>
+                          <string>SABER (decrypt)</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>Ntrhubs (decrypt)</string>
+                          <string>NTRU-HPS (decrypt)</string>
                          </property>
                         </row>
                         <column>
@@ -5620,12 +5620,12 @@ QHeaderView::section:vertical
                         </row>
                         <row>
                          <property name="text">
-                          <string>RainbowVc (sign)</string>
+                          <string>Rainbow Vc (sign)</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>Sphincs (sign)</string>
+                          <string>SPHINCS (sign)</string>
                          </property>
                         </row>
                         <row>
@@ -5635,12 +5635,12 @@ QHeaderView::section:vertical
                         </row>
                         <row>
                          <property name="text">
-                          <string>RainbowVc (verify)</string>
+                          <string>Rainbow Vc (verify)</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>Sphincs (verify)</string>
+                          <string>SPHINCS (verify)</string>
                          </property>
                         </row>
                         <column>
@@ -6268,7 +6268,7 @@ QHeaderView::section:vertical
                         </attribute>
                         <row>
                          <property name="text">
-                          <string>KEM - mceliece</string>
+                          <string>KEM - McEliece</string>
                          </property>
                          <property name="font">
                           <font>
@@ -6278,32 +6278,32 @@ QHeaderView::section:vertical
                         </row>
                         <row>
                          <property name="text">
-                          <string>KEM - kyber</string>
+                          <string>KEM - Kyber</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>KEM - saber</string>
+                          <string>KEM - SABER</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>KEM - ntruhps</string>
+                          <string>KEM - NTRU-HPS</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>DSA - dilithium</string>
+                          <string>DSA - Dilithium</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>DSA - rainbow</string>
+                          <string>DSA - Rainbow Vc</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>DSA - sphincs</string>
+                          <string>DSA - SPHINCS</string>
                          </property>
                         </row>
                         <column>
@@ -6622,7 +6622,7 @@ QHeaderView::section:vertical
                         </attribute>
                         <row>
                          <property name="text">
-                          <string>KEM - mceliece</string>
+                          <string>KEM - McEliece</string>
                          </property>
                          <property name="font">
                           <font>
@@ -6632,32 +6632,32 @@ QHeaderView::section:vertical
                         </row>
                         <row>
                          <property name="text">
-                          <string>KEM - kyber</string>
+                          <string>KEM - Kyber</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>KEM - saber</string>
+                          <string>KEM - SABER</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>KEM - ntruhps</string>
+                          <string>KEM - NTRU-HPS</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>DSA - dilithium</string>
+                          <string>DSA - Dilithium</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>DSA - rainbow</string>
+                          <string>DSA - Rainbow Vc</string>
                          </property>
                         </row>
                         <row>
                          <property name="text">
-                          <string>DSA - sphincs</string>
+                          <string>DSA - SPHINCS</string>
                          </property>
                         </row>
                         <column>
@@ -6781,7 +6781,7 @@ QHeaderView::section:vertical
                         </item>
                         <item row="3" column="1">
                          <property name="text">
-                          <string>1</string>
+                          <string>&gt;&gt; 1</string>
                          </property>
                          <property name="textAlignment">
                           <set>AlignCenter</set>
@@ -7048,7 +7048,7 @@ border-radius: 5px;</string>
                     <property name="frameShadow">
                      <enum>QFrame::Raised</enum>
                     </property>
-                    <widget class="QLabel" name="about_label_2">
+                    <widget class="QLabel" name="about_latency_title_label">
                      <property name="geometry">
                       <rect>
                        <x>0</x>
@@ -7083,6 +7083,63 @@ border-radius: 5px;</string>
                      <property name="alignment">
                       <set>Qt::AlignCenter</set>
                      </property>
+                    </widget>
+                    <widget class="QWidget" name="verticalLayoutWidget_3">
+                     <property name="geometry">
+                      <rect>
+                       <x>-1</x>
+                       <y>49</y>
+                       <width>888</width>
+                       <height>171</height>
+                      </rect>
+                     </property>
+                     <layout class="QVBoxLayout" name="about_latency_layout">
+                      <item>
+                       <widget class="QLabel" name="about_latency_text_KEM_label">
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>According to our measurements and public research for KEM the best performance usually has Crystals-Kyber, followed by NTRU-HPS, Saber and finally McEliece.</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="about_latency_text_DSA_label">
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>For DSA algorithms the best performance has Crystals-Dilithium followed by Sphinics and Rainbow Vc (the latency of Rainbow is really high due to lenght of keys).</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLabel" name="about_latency_text_note_label">
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>*** The latency and overall performance is directly related with the hardware of machine.</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </widget>
                   </widget>
@@ -7417,7 +7474,7 @@ QScrollBar:horizontal {
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>218</width>
+                              <width>274</width>
                               <height>218</height>
                              </rect>
                             </property>
