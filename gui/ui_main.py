@@ -4636,7 +4636,7 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem52 = self.about_table.horizontalHeaderItem(1)
         ___qtablewidgetitem52.setText(QCoreApplication.translate("MainWindow", u"Security Level", None));
         ___qtablewidgetitem53 = self.about_table.horizontalHeaderItem(2)
-        ___qtablewidgetitem53.setText(QCoreApplication.translate("MainWindow", u"Public Key [b]", None));
+        ___qtablewidgetitem53.setText(QCoreApplication.translate("MainWindow", u"Public Key [B]", None));
         ___qtablewidgetitem54 = self.about_table.verticalHeaderItem(0)
         ___qtablewidgetitem54.setText(QCoreApplication.translate("MainWindow", u"KEM - McEliece", None));
         ___qtablewidgetitem55 = self.about_table.verticalHeaderItem(1)

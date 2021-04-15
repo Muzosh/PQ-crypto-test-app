@@ -6683,7 +6683,7 @@ QHeaderView::section:vertical
                         </column>
                         <column>
                          <property name="text">
-                          <string>Public Key [b]</string>
+                          <string>Public Key [B]</string>
                          </property>
                          <property name="font">
                           <font>
