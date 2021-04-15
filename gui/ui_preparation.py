@@ -95,6 +95,7 @@ class MainWindow(QMainWindow):
         ## ==> ADD CUSTOM MENUS
         self.ui.stackedWidget.setMinimumWidth(20)
         UIFunctions.addNewMenu(self, "Login", "btn_login", "url(:/16x16/icons/16x16/cil-exit-to-app.png)", True)
+        UIFunctions.addNewMenu(self, "About", "btn_about", "url(:/16x16/icons/16x16/cil-chat-bubble.png)", True)
         UIFunctions.addNewMenu(self, "Key", "btn_key", "url(:/16x16/icons/16x16/cil-settings.png)", True)
         UIFunctions.addNewMenu(self, "ENC", "btn_enc", "url(:/16x16/icons/16x16/cil-user-follow.png)", True)
         UIFunctions.addNewMenu(self, "Key statistics", "btn_kstatistics", "url(:/16x16/icons/16x16/cil-chart.png)", True)
@@ -190,6 +191,14 @@ class MainWindow(QMainWindow):
             UIFunctions.resetStyle(self, "btn_login")
             UIFunctions.labelPage(self, "LOGIN")
             btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
+        # PAGE DSA STATISTICS
+        if btnWidget.objectName() == "btn_about":
+            self.ui.stackedWidget.setCurrentWidget(self.ui.page_about)
+            UIFunctions.resetStyle(self, "btn_about")
+            UIFunctions.labelPage(self, "About PQ")
+            btnWidget.setStyleSheet(UIFunctions.selectMenu(btnWidget.styleSheet()))
+
 
         # PAGE KEY
         if btnWidget.objectName() == "btn_key":
