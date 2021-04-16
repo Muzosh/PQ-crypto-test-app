@@ -3710,7 +3710,7 @@ QPushButton:pressed {
                        </widget>
                       </item>
                       <item row="7" column="0" colspan="2">
-                       <widget class="QPushButton" name="key_generate_button_2">
+                       <widget class="QPushButton" name="key_upload_key_button">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -7474,7 +7474,7 @@ QScrollBar:horizontal {
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>218</width>
+                              <width>274</width>
                               <height>218</height>
                              </rect>
                             </property>

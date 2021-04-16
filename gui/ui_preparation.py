@@ -77,8 +77,9 @@ class MainWindow(QMainWindow):
 
         ##CUSTOM CONNECTIONS
         self.updateLoginPageButtonText()
-        self.ui.enc_dsa_upload_button.clicked.connect(self.openFileKey)
+        self.ui.enc_dsa_upload_button.clicked.connect(self.openEncDsaFile)
         self.ui.enc_dec_upload_ciphertext_button.clicked.connect(self.openFileCipherText)
+        self.ui.key_upload_button.clicked.connect(self.openKeyFile)
         self.ui.dsa_upload_signature_button.clicked.connect(self.openFileSignature)
         self.ui.enc_dec_download_file_button.clicked.connect(self.downloadFile)
         self.ui.enc_dec_download_file_button_2.clicked.connect(self.downloadCipher)
@@ -308,7 +309,7 @@ class MainWindow(QMainWindow):
         )
         return response[0]
 
-    def openFileKey(self):
+    def openEncDsaFile(self):
         name = self.openFile()
         self.ui.enc_dsa_upload_line.setText(name)
         self.ui.enc_dsa_upload_line.setEnabled(True)
@@ -327,6 +328,12 @@ class MainWindow(QMainWindow):
         self.ui.enc_dec_upload_ciphertext_line.setEnabled(True)
         self.ui.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDefault)
         self.ui.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
+
+    def openKeyFile(self):
+        name = self.openFile()
+        self.ui.key_upload_line.setText(name)
+        self.ui.key_upload_line.setEnabled(True)
+        self.ui.key_upload_line.setStyleSheet(qLineDefault)
 
     def openFileSignature(self):
         name = self.openFile()
