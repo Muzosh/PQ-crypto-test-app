@@ -3383,52 +3383,13 @@ border-radius: 5px;</string>
                        <height>291</height>
                       </rect>
                      </property>
-                     <layout class="QGridLayout" name="key_layout_upload_key" rowstretch="0,0,0,0,0,0,0,0">
+                     <layout class="QGridLayout" name="key_layout_upload_key">
+                      <property name="sizeConstraint">
+                       <enum>QLayout::SetDefaultConstraint</enum>
+                      </property>
                       <property name="spacing">
                        <number>6</number>
                       </property>
-                      <item row="0" column="0" colspan="2">
-                       <widget class="QLabel" name="key_uploadkey_label">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>40</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>12</pointsize>
-                          <weight>75</weight>
-                          <bold>true</bold>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Upload your key</string>
-                        </property>
-                        <property name="alignment">
-                         <set>Qt::AlignCenter</set>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="1" column="0">
-                       <widget class="QRadioButton" name="key_private_radio_button">
-                        <property name="font">
-                         <font>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Private</string>
-                        </property>
-                       </widget>
-                      </item>
                       <item row="5" column="0" colspan="2">
                        <widget class="QLineEdit" name="key_upload_line">
                         <property name="sizePolicy">
@@ -3468,18 +3429,6 @@ QLineEdit:pressed {
                         </property>
                        </widget>
                       </item>
-                      <item row="1" column="1">
-                       <widget class="QRadioButton" name="key_public_radio_button">
-                        <property name="font">
-                         <font>
-                          <pointsize>10</pointsize>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Public</string>
-                        </property>
-                       </widget>
-                      </item>
                       <item row="2" column="0">
                        <widget class="QLabel" name="key_requested_length_label">
                         <property name="sizePolicy">
@@ -3502,6 +3451,48 @@ QLineEdit:pressed {
                         </property>
                         <property name="text">
                          <string>Requested length:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="0" colspan="2">
+                       <widget class="QLabel" name="key_uploadkey_label">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                          <pointsize>12</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Upload your key</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="1">
+                       <widget class="QRadioButton" name="key_public_radio_button">
+                        <property name="font">
+                         <font>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Public</string>
                         </property>
                        </widget>
                       </item>
@@ -3540,6 +3531,18 @@ QPushButton:pressed {
                         <property name="icon">
                          <iconset resource="files.qrc">
                           <normaloff>:/16x16/icons/16x16/cil-folder-open.png</normaloff>:/16x16/icons/16x16/cil-folder-open.png</iconset>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="1" column="0">
+                       <widget class="QRadioButton" name="key_private_radio_button">
+                        <property name="font">
+                         <font>
+                          <pointsize>10</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Private</string>
                         </property>
                        </widget>
                       </item>
@@ -3600,7 +3603,7 @@ QPushButton:pressed {
                       </rect>
                      </property>
                      <layout class="QGridLayout" name="gridLayout_3">
-                      <item row="3" column="0">
+                      <item row="3" column="1">
                        <widget class="QLabel" name="key_setname_label_2">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -3628,9 +3631,12 @@ QPushButton:pressed {
                         <property name="alignment">
                          <set>Qt::AlignCenter</set>
                         </property>
+                        <property name="margin">
+                         <number>0</number>
+                        </property>
                        </widget>
                       </item>
-                      <item row="2" column="0">
+                      <item row="2" column="1">
                        <widget class="QLabel" name="key_checking_name">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -3661,7 +3667,7 @@ QPushButton:pressed {
                         </property>
                        </widget>
                       </item>
-                      <item row="1" column="0">
+                      <item row="1" column="1">
                        <widget class="QLineEdit" name="key_inputname_line">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
@@ -3700,7 +3706,7 @@ QLineEdit:pressed {
                         </property>
                        </widget>
                       </item>
-                      <item row="0" column="0">
+                      <item row="0" column="1">
                        <widget class="QLabel" name="key_setname_label">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -3730,7 +3736,7 @@ QLineEdit:pressed {
                         </property>
                        </widget>
                       </item>
-                      <item row="4" column="0">
+                      <item row="4" column="1">
                        <widget class="QPushButton" name="key_generate_button">
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">

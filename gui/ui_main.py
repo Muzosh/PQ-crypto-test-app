@@ -2353,28 +2353,8 @@ class Ui_MainWindow(object):
         self.key_layout_upload_key = QGridLayout(self.gridLayoutWidget)
         self.key_layout_upload_key.setSpacing(6)
         self.key_layout_upload_key.setObjectName(u"key_layout_upload_key")
+        self.key_layout_upload_key.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.key_layout_upload_key.setContentsMargins(0, 0, 0, 0)
-        self.key_uploadkey_label = QLabel(self.gridLayoutWidget)
-        self.key_uploadkey_label.setObjectName(u"key_uploadkey_label")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        sizePolicy9.setHorizontalStretch(0)
-        sizePolicy9.setVerticalStretch(0)
-        sizePolicy9.setHeightForWidth(self.key_uploadkey_label.sizePolicy().hasHeightForWidth())
-        self.key_uploadkey_label.setSizePolicy(sizePolicy9)
-        self.key_uploadkey_label.setMinimumSize(QSize(0, 40))
-        self.key_uploadkey_label.setFont(font8)
-        self.key_uploadkey_label.setAlignment(Qt.AlignCenter)
-
-        self.key_layout_upload_key.addWidget(self.key_uploadkey_label, 0, 0, 1, 2)
-
-        self.key_private_radio_button = QRadioButton(self.gridLayoutWidget)
-        self.key_private_radio_button.setObjectName(u"key_private_radio_button")
-        font14 = QFont()
-        font14.setPointSize(10)
-        self.key_private_radio_button.setFont(font14)
-
-        self.key_layout_upload_key.addWidget(self.key_private_radio_button, 1, 0, 1, 1)
-
         self.key_upload_line = QLineEdit(self.gridLayoutWidget)
         self.key_upload_line.setObjectName(u"key_upload_line")
         sizePolicy8.setHeightForWidth(self.key_upload_line.sizePolicy().hasHeightForWidth())
@@ -2397,12 +2377,6 @@ class Ui_MainWindow(object):
 
         self.key_layout_upload_key.addWidget(self.key_upload_line, 5, 0, 1, 2)
 
-        self.key_public_radio_button = QRadioButton(self.gridLayoutWidget)
-        self.key_public_radio_button.setObjectName(u"key_public_radio_button")
-        self.key_public_radio_button.setFont(font14)
-
-        self.key_layout_upload_key.addWidget(self.key_public_radio_button, 1, 1, 1, 1)
-
         self.key_requested_length_label = QLabel(self.gridLayoutWidget)
         self.key_requested_length_label.setObjectName(u"key_requested_length_label")
         sizePolicy8.setHeightForWidth(self.key_requested_length_label.sizePolicy().hasHeightForWidth())
@@ -2411,6 +2385,27 @@ class Ui_MainWindow(object):
         self.key_requested_length_label.setFont(font7)
 
         self.key_layout_upload_key.addWidget(self.key_requested_length_label, 2, 0, 1, 1)
+
+        self.key_uploadkey_label = QLabel(self.gridLayoutWidget)
+        self.key_uploadkey_label.setObjectName(u"key_uploadkey_label")
+        sizePolicy9 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy9.setHorizontalStretch(0)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.key_uploadkey_label.sizePolicy().hasHeightForWidth())
+        self.key_uploadkey_label.setSizePolicy(sizePolicy9)
+        self.key_uploadkey_label.setMinimumSize(QSize(0, 40))
+        self.key_uploadkey_label.setFont(font8)
+        self.key_uploadkey_label.setAlignment(Qt.AlignCenter)
+
+        self.key_layout_upload_key.addWidget(self.key_uploadkey_label, 0, 0, 1, 2)
+
+        self.key_public_radio_button = QRadioButton(self.gridLayoutWidget)
+        self.key_public_radio_button.setObjectName(u"key_public_radio_button")
+        font14 = QFont()
+        font14.setPointSize(10)
+        self.key_public_radio_button.setFont(font14)
+
+        self.key_layout_upload_key.addWidget(self.key_public_radio_button, 1, 1, 1, 1)
 
         self.key_upload_button = QPushButton(self.gridLayoutWidget)
         self.key_upload_button.setObjectName(u"key_upload_button")
@@ -2432,6 +2427,12 @@ class Ui_MainWindow(object):
         self.key_upload_button.setIcon(icon4)
 
         self.key_layout_upload_key.addWidget(self.key_upload_button, 2, 1, 1, 1)
+
+        self.key_private_radio_button = QRadioButton(self.gridLayoutWidget)
+        self.key_private_radio_button.setObjectName(u"key_private_radio_button")
+        self.key_private_radio_button.setFont(font14)
+
+        self.key_layout_upload_key.addWidget(self.key_private_radio_button, 1, 0, 1, 1)
 
         self.key_upload_key_button = QPushButton(self.gridLayoutWidget)
         self.key_upload_key_button.setObjectName(u"key_upload_key_button")
@@ -2469,8 +2470,9 @@ class Ui_MainWindow(object):
         self.key_setname_label_2.setMinimumSize(QSize(0, 40))
         self.key_setname_label_2.setFont(font8)
         self.key_setname_label_2.setAlignment(Qt.AlignCenter)
+        self.key_setname_label_2.setMargin(0)
 
-        self.gridLayout_3.addWidget(self.key_setname_label_2, 3, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.key_setname_label_2, 3, 1, 1, 1)
 
         self.key_checking_name = QLabel(self.gridLayoutWidget_2)
         self.key_checking_name.setObjectName(u"key_checking_name")
@@ -2481,7 +2483,7 @@ class Ui_MainWindow(object):
         self.key_checking_name.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.key_checking_name.setMargin(13)
 
-        self.gridLayout_3.addWidget(self.key_checking_name, 2, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.key_checking_name, 2, 1, 1, 1)
 
         self.key_inputname_line = QLineEdit(self.gridLayoutWidget_2)
         self.key_inputname_line.setObjectName(u"key_inputname_line")
@@ -2503,7 +2505,7 @@ class Ui_MainWindow(object):
 "	border: 2px solid rgb(43, 50, 61);\n"
 "}")
 
-        self.gridLayout_3.addWidget(self.key_inputname_line, 1, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.key_inputname_line, 1, 1, 1, 1)
 
         self.key_setname_label = QLabel(self.gridLayoutWidget_2)
         self.key_setname_label.setObjectName(u"key_setname_label")
@@ -2516,7 +2518,7 @@ class Ui_MainWindow(object):
         self.key_setname_label.setFont(font12)
         self.key_setname_label.setAlignment(Qt.AlignBottom|Qt.AlignLeading|Qt.AlignLeft)
 
-        self.gridLayout_3.addWidget(self.key_setname_label, 0, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.key_setname_label, 0, 1, 1, 1)
 
         self.key_generate_button = QPushButton(self.gridLayoutWidget_2)
         self.key_generate_button.setObjectName(u"key_generate_button")
@@ -2539,7 +2541,7 @@ class Ui_MainWindow(object):
 "}")
         self.key_generate_button.setFlat(False)
 
-        self.gridLayout_3.addWidget(self.key_generate_button, 4, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.key_generate_button, 4, 1, 1, 1)
 
         self.key_table_frame = QFrame(self.page_key)
         self.key_table_frame.setObjectName(u"key_table_frame")
@@ -4591,12 +4593,12 @@ class Ui_MainWindow(object):
         self.key_checkbox4_2.setText(QCoreApplication.translate("MainWindow", u"DSA - Dilithium", None))
         self.key_checkbox4_4.setText(QCoreApplication.translate("MainWindow", u"DSA - Rainbow Vc", None))
         self.key_checkbox4_3.setText(QCoreApplication.translate("MainWindow", u"DSA - SPHINCS", None))
-        self.key_uploadkey_label.setText(QCoreApplication.translate("MainWindow", u"Upload your key", None))
-        self.key_private_radio_button.setText(QCoreApplication.translate("MainWindow", u"Private", None))
         self.key_upload_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Upload key file", None))
-        self.key_public_radio_button.setText(QCoreApplication.translate("MainWindow", u"Public", None))
         self.key_requested_length_label.setText(QCoreApplication.translate("MainWindow", u"Requested length:", None))
+        self.key_uploadkey_label.setText(QCoreApplication.translate("MainWindow", u"Upload your key", None))
+        self.key_public_radio_button.setText(QCoreApplication.translate("MainWindow", u"Public", None))
         self.key_upload_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
+        self.key_private_radio_button.setText(QCoreApplication.translate("MainWindow", u"Private", None))
         self.key_upload_key_button.setText(QCoreApplication.translate("MainWindow", u"Add my key", None))
         self.key_setname_label_2.setText(QCoreApplication.translate("MainWindow", u"Generate your key", None))
         self.key_checking_name.setText(QCoreApplication.translate("MainWindow", u"Checking name", None))
