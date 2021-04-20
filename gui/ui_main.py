@@ -201,6 +201,7 @@ class Ui_MainWindow(object):
             print("Myslis si, ze tu budes skuskat spravne masterpass?")
 
     def generateKey(self):
+        self.key_export_key_button.setStyleSheet(qPushButtonDefault)
         print("idzeme generovac klusik")
         selected_key = ""
         name = ""
@@ -238,6 +239,7 @@ class Ui_MainWindow(object):
             print("Vypln pravdzivo vsetok obsah!")
 
     def addKeyFile(self):
+        self.key_export_key_button.setStyleSheet(qPushButtonDefault)
         print("idzeme pridat klusik")
         selected_key = ""
         name = ""
@@ -302,6 +304,15 @@ class Ui_MainWindow(object):
             self.updateTableKey()
         else:
             print("Vypln pravdzivo vsetok obsah!")
+
+    def checkInputNameLine(self):
+        if self.key_inputname_line.text() != "":
+            name = self.key_inputname_line.text()
+            self.key_inputname_line.setStyleSheet(qLineGreen)
+            self.key_checking_name.setText("Your key name is: " + name)
+        else:
+            self.key_inputname_line.setStyleSheet(qLineRed)
+            self.key_checking_name.setText("No key name entered!")
 
     def updateRequestedKeyLengthLabel(self):
         selected_key = ""
@@ -2336,80 +2347,6 @@ class Ui_MainWindow(object):
         self.key_checkbox4_2.raise_()
         self.key_checkbox4_3.raise_()
         self.key_checkbox4_4.raise_()
-        self.horizontalLayoutWidget_3 = QWidget(self.key_frame)
-        self.horizontalLayoutWidget_3.setObjectName(u"horizontalLayoutWidget_3")
-        self.horizontalLayoutWidget_3.setGeometry(QRect(270, 10, 291, 291))
-        self.layout_setkey_box = QVBoxLayout(self.horizontalLayoutWidget_3)
-        self.layout_setkey_box.setSpacing(0)
-        self.layout_setkey_box.setObjectName(u"layout_setkey_box")
-        self.layout_setkey_box.setSizeConstraint(QLayout.SetDefaultConstraint)
-        self.layout_setkey_box.setContentsMargins(20, 20, 20, 20)
-        self.key_setname_label = QLabel(self.horizontalLayoutWidget_3)
-        self.key_setname_label.setObjectName(u"key_setname_label")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy9.setHorizontalStretch(0)
-        sizePolicy9.setVerticalStretch(0)
-        sizePolicy9.setHeightForWidth(self.key_setname_label.sizePolicy().hasHeightForWidth())
-        self.key_setname_label.setSizePolicy(sizePolicy9)
-        self.key_setname_label.setMinimumSize(QSize(0, 40))
-        self.key_setname_label.setFont(font8)
-
-        self.layout_setkey_box.addWidget(self.key_setname_label)
-
-        self.key_inputname_line = QLineEdit(self.horizontalLayoutWidget_3)
-        self.key_inputname_line.setObjectName(u"key_inputname_line")
-        sizePolicy8.setHeightForWidth(self.key_inputname_line.sizePolicy().hasHeightForWidth())
-        self.key_inputname_line.setSizePolicy(sizePolicy8)
-        self.key_inputname_line.setMinimumSize(QSize(0, 40))
-        self.key_inputname_line.setFont(font5)
-        self.key_inputname_line.setStyleSheet(u"QLineEdit {\n"
-"	border: 2px solid rgb(52, 59, 72);\n"
-"	border-radius: 15px;	\n"
-"	background-color: rgb(52, 59, 72);\n"
-"}\n"
-"QLineEdit:hover {\n"
-"	background-color: rgb(57, 65, 80);\n"
-"	border: 2px solid rgb(61, 70, 86);\n"
-"}\n"
-"QLineEdit:pressed {	\n"
-"	background-color: rgb(35, 40, 49);\n"
-"	border: 2px solid rgb(43, 50, 61);\n"
-"}")
-
-        self.layout_setkey_box.addWidget(self.key_inputname_line)
-
-        self.key_checking_name = QLabel(self.horizontalLayoutWidget_3)
-        self.key_checking_name.setObjectName(u"key_checking_name")
-        sizePolicy7.setHeightForWidth(self.key_checking_name.sizePolicy().hasHeightForWidth())
-        self.key_checking_name.setSizePolicy(sizePolicy7)
-        self.key_checking_name.setMinimumSize(QSize(0, 40))
-        self.key_checking_name.setFont(font7)
-
-        self.layout_setkey_box.addWidget(self.key_checking_name, 0, Qt.AlignRight)
-
-        self.key_generate_button = QPushButton(self.horizontalLayoutWidget_3)
-        self.key_generate_button.setObjectName(u"key_generate_button")
-        sizePolicy7.setHeightForWidth(self.key_generate_button.sizePolicy().hasHeightForWidth())
-        self.key_generate_button.setSizePolicy(sizePolicy7)
-        self.key_generate_button.setMinimumSize(QSize(0, 40))
-        self.key_generate_button.setFont(font12)
-        self.key_generate_button.setStyleSheet(u"QPushButton {\n"
-"	border: 2px solid rgb(52, 59, 72);\n"
-"border-radius: 15px;	\n"
-"	background-color: rgb(52, 59, 72);\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(57, 65, 80);\n"
-"	border: 2px solid rgb(61, 70, 86);\n"
-"}\n"
-"QPushButton:pressed {	\n"
-"	background-color: rgb(35, 40, 49);\n"
-"	border: 2px solid rgb(43, 50, 61);\n"
-"}")
-        self.key_generate_button.setFlat(False)
-
-        self.layout_setkey_box.addWidget(self.key_generate_button)
-
         self.gridLayoutWidget = QWidget(self.key_frame)
         self.gridLayoutWidget.setObjectName(u"gridLayoutWidget")
         self.gridLayoutWidget.setGeometry(QRect(570, 10, 291, 291))
@@ -2419,11 +2356,11 @@ class Ui_MainWindow(object):
         self.key_layout_upload_key.setContentsMargins(0, 0, 0, 0)
         self.key_uploadkey_label = QLabel(self.gridLayoutWidget)
         self.key_uploadkey_label.setObjectName(u"key_uploadkey_label")
-        sizePolicy10 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        sizePolicy10.setHorizontalStretch(0)
-        sizePolicy10.setVerticalStretch(0)
-        sizePolicy10.setHeightForWidth(self.key_uploadkey_label.sizePolicy().hasHeightForWidth())
-        self.key_uploadkey_label.setSizePolicy(sizePolicy10)
+        sizePolicy9 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        sizePolicy9.setHorizontalStretch(0)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.key_uploadkey_label.sizePolicy().hasHeightForWidth())
+        self.key_uploadkey_label.setSizePolicy(sizePolicy9)
         self.key_uploadkey_label.setMinimumSize(QSize(0, 40))
         self.key_uploadkey_label.setFont(font8)
         self.key_uploadkey_label.setAlignment(Qt.AlignCenter)
@@ -2519,9 +2456,94 @@ class Ui_MainWindow(object):
 
         self.key_layout_upload_key.addWidget(self.key_upload_key_button, 7, 0, 1, 2)
 
+        self.gridLayoutWidget_2 = QWidget(self.key_frame)
+        self.gridLayoutWidget_2.setObjectName(u"gridLayoutWidget_2")
+        self.gridLayoutWidget_2.setGeometry(QRect(270, 10, 291, 291))
+        self.gridLayout_3 = QGridLayout(self.gridLayoutWidget_2)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.gridLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.key_setname_label_2 = QLabel(self.gridLayoutWidget_2)
+        self.key_setname_label_2.setObjectName(u"key_setname_label_2")
+        sizePolicy9.setHeightForWidth(self.key_setname_label_2.sizePolicy().hasHeightForWidth())
+        self.key_setname_label_2.setSizePolicy(sizePolicy9)
+        self.key_setname_label_2.setMinimumSize(QSize(0, 40))
+        self.key_setname_label_2.setFont(font8)
+        self.key_setname_label_2.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_3.addWidget(self.key_setname_label_2, 3, 0, 1, 1)
+
+        self.key_checking_name = QLabel(self.gridLayoutWidget_2)
+        self.key_checking_name.setObjectName(u"key_checking_name")
+        sizePolicy7.setHeightForWidth(self.key_checking_name.sizePolicy().hasHeightForWidth())
+        self.key_checking_name.setSizePolicy(sizePolicy7)
+        self.key_checking_name.setMinimumSize(QSize(0, 40))
+        self.key_checking_name.setFont(font7)
+        self.key_checking_name.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.key_checking_name.setMargin(13)
+
+        self.gridLayout_3.addWidget(self.key_checking_name, 2, 0, 1, 1)
+
+        self.key_inputname_line = QLineEdit(self.gridLayoutWidget_2)
+        self.key_inputname_line.setObjectName(u"key_inputname_line")
+        sizePolicy8.setHeightForWidth(self.key_inputname_line.sizePolicy().hasHeightForWidth())
+        self.key_inputname_line.setSizePolicy(sizePolicy8)
+        self.key_inputname_line.setMinimumSize(QSize(0, 40))
+        self.key_inputname_line.setFont(font5)
+        self.key_inputname_line.setStyleSheet(u"QLineEdit {\n"
+"	border: 2px solid rgb(52, 59, 72);\n"
+"	border-radius: 15px;	\n"
+"	background-color: rgb(52, 59, 72);\n"
+"}\n"
+"QLineEdit:hover {\n"
+"	background-color: rgb(57, 65, 80);\n"
+"	border: 2px solid rgb(61, 70, 86);\n"
+"}\n"
+"QLineEdit:pressed {	\n"
+"	background-color: rgb(35, 40, 49);\n"
+"	border: 2px solid rgb(43, 50, 61);\n"
+"}")
+
+        self.gridLayout_3.addWidget(self.key_inputname_line, 1, 0, 1, 1)
+
+        self.key_setname_label = QLabel(self.gridLayoutWidget_2)
+        self.key_setname_label.setObjectName(u"key_setname_label")
+        sizePolicy10 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy10.setHorizontalStretch(0)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(self.key_setname_label.sizePolicy().hasHeightForWidth())
+        self.key_setname_label.setSizePolicy(sizePolicy10)
+        self.key_setname_label.setMinimumSize(QSize(0, 40))
+        self.key_setname_label.setFont(font12)
+        self.key_setname_label.setAlignment(Qt.AlignBottom|Qt.AlignLeading|Qt.AlignLeft)
+
+        self.gridLayout_3.addWidget(self.key_setname_label, 0, 0, 1, 1)
+
+        self.key_generate_button = QPushButton(self.gridLayoutWidget_2)
+        self.key_generate_button.setObjectName(u"key_generate_button")
+        sizePolicy7.setHeightForWidth(self.key_generate_button.sizePolicy().hasHeightForWidth())
+        self.key_generate_button.setSizePolicy(sizePolicy7)
+        self.key_generate_button.setMinimumSize(QSize(0, 40))
+        self.key_generate_button.setFont(font12)
+        self.key_generate_button.setStyleSheet(u"QPushButton {\n"
+"	border: 2px solid rgb(52, 59, 72);\n"
+"border-radius: 15px;	\n"
+"	background-color: rgb(52, 59, 72);\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(57, 65, 80);\n"
+"	border: 2px solid rgb(61, 70, 86);\n"
+"}\n"
+"QPushButton:pressed {	\n"
+"	background-color: rgb(35, 40, 49);\n"
+"	border: 2px solid rgb(43, 50, 61);\n"
+"}")
+        self.key_generate_button.setFlat(False)
+
+        self.gridLayout_3.addWidget(self.key_generate_button, 4, 0, 1, 1)
+
         self.key_table_frame = QFrame(self.page_key)
         self.key_table_frame.setObjectName(u"key_table_frame")
-        self.key_table_frame.setGeometry(QRect(9, 309, 870, 281))
+        self.key_table_frame.setGeometry(QRect(9, 309, 870, 231))
         self.key_table_frame.setMinimumSize(QSize(0, 150))
         self.key_table_frame.setFrameShape(QFrame.StyledPanel)
         self.key_table_frame.setFrameShadow(QFrame.Raised)
@@ -2667,6 +2689,27 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_13.addWidget(self.key_maintable)
 
+        self.key_export_key_button = QPushButton(self.page_key)
+        self.key_export_key_button.setObjectName(u"key_export_key_button")
+        self.key_export_key_button.setGeometry(QRect(10, 550, 861, 40))
+        sizePolicy7.setHeightForWidth(self.key_export_key_button.sizePolicy().hasHeightForWidth())
+        self.key_export_key_button.setSizePolicy(sizePolicy7)
+        self.key_export_key_button.setMinimumSize(QSize(0, 40))
+        self.key_export_key_button.setFont(font12)
+        self.key_export_key_button.setStyleSheet(u"QPushButton {\n"
+"	border: 2px solid rgb(52, 59, 72);\n"
+"border-radius: 15px;	\n"
+"	background-color: rgb(52, 59, 72);\n"
+"}\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(57, 65, 80);\n"
+"	border: 2px solid rgb(61, 70, 86);\n"
+"}\n"
+"QPushButton:pressed {	\n"
+"	background-color: rgb(35, 40, 49);\n"
+"	border: 2px solid rgb(43, 50, 61);\n"
+"}")
+        self.key_export_key_button.setFlat(False)
         self.stackedWidget.addWidget(self.page_key)
         self.page_enc_statistics = QWidget()
         self.page_enc_statistics.setObjectName(u"page_enc_statistics")
@@ -4524,20 +4567,20 @@ class Ui_MainWindow(object):
         self.change_pass_button.setText(QCoreApplication.translate("MainWindow", u"CHANGE IT", None))
         self.enc_dsa_maintitle_label.setText(QCoreApplication.translate("MainWindow", u"Select a file", None))
         self.enc_dsa_upload_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose your file", None))
-        self.enc_dsa_upload_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
+        self.enc_dsa_upload_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.enc_dsa_maintitle_label_2.setText(QCoreApplication.translate("MainWindow", u"Selected key", None))
         self.dec_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Encryption", None))
         self.enc_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Decryption", None))
         self.enc_dec_moonit_button.setText(QCoreApplication.translate("MainWindow", u"MOON IT", None))
         self.enc_dec_download_file_button.setText(QCoreApplication.translate("MainWindow", u"Download encrypted file", None))
         self.enc_dec_upload_ciphertext_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose ciphertext", None))
-        self.enc_dec_upload_ciphertext_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
+        self.enc_dec_upload_ciphertext_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.enc_dec_download_file_button_2.setText(QCoreApplication.translate("MainWindow", u"Download ciphertext", None))
         self.sign_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Sign", None))
         self.verify_radiobutton.setText(QCoreApplication.translate("MainWindow", u"Verify", None))
         self.dsa_verify_button_status.setText(QCoreApplication.translate("MainWindow", u"Verify status", None))
         self.dsa_download_button.setText(QCoreApplication.translate("MainWindow", u"Download signature", None))
-        self.dsa_upload_signature_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
+        self.dsa_upload_signature_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.dsa_upload_signature_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose signature", None))
         self.dsa_sign_button.setText(QCoreApplication.translate("MainWindow", u"SIGN IT", None))
         self.dsa_verify_button.setText(QCoreApplication.translate("MainWindow", u"Verify your file", None))
@@ -4548,17 +4591,18 @@ class Ui_MainWindow(object):
         self.key_checkbox4_2.setText(QCoreApplication.translate("MainWindow", u"DSA - Dilithium", None))
         self.key_checkbox4_4.setText(QCoreApplication.translate("MainWindow", u"DSA - Rainbow Vc", None))
         self.key_checkbox4_3.setText(QCoreApplication.translate("MainWindow", u"DSA - SPHINCS", None))
-        self.key_setname_label.setText(QCoreApplication.translate("MainWindow", u"Set key name", None))
-        self.key_inputname_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter key name", None))
-        self.key_checking_name.setText(QCoreApplication.translate("MainWindow", u"Checking name", None))
-        self.key_generate_button.setText(QCoreApplication.translate("MainWindow", u"Generate", None))
         self.key_uploadkey_label.setText(QCoreApplication.translate("MainWindow", u"Upload your key", None))
         self.key_private_radio_button.setText(QCoreApplication.translate("MainWindow", u"Private", None))
         self.key_upload_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Upload key file", None))
         self.key_public_radio_button.setText(QCoreApplication.translate("MainWindow", u"Public", None))
         self.key_requested_length_label.setText(QCoreApplication.translate("MainWindow", u"Requested length:", None))
-        self.key_upload_button.setText(QCoreApplication.translate("MainWindow", u"Open Blender", None))
+        self.key_upload_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.key_upload_key_button.setText(QCoreApplication.translate("MainWindow", u"Add my key", None))
+        self.key_setname_label_2.setText(QCoreApplication.translate("MainWindow", u"Generate your key", None))
+        self.key_checking_name.setText(QCoreApplication.translate("MainWindow", u"Checking name", None))
+        self.key_inputname_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter key name", None))
+        self.key_setname_label.setText(QCoreApplication.translate("MainWindow", u"Set key name", None))
+        self.key_generate_button.setText(QCoreApplication.translate("MainWindow", u"Generate", None))
         ___qtablewidgetitem = self.key_maintable.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"Name", None));
         ___qtablewidgetitem1 = self.key_maintable.horizontalHeaderItem(1)
@@ -4567,6 +4611,7 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Key type", None));
         ___qtablewidgetitem3 = self.key_maintable.horizontalHeaderItem(3)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Key length [B]", None));
+        self.key_export_key_button.setText(QCoreApplication.translate("MainWindow", u"Export selected key", None))
         ___qtablewidgetitem4 = self.enc_statistics_list_table.horizontalHeaderItem(0)
         ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"DateTime", None));
         ___qtablewidgetitem5 = self.enc_statistics_list_table.horizontalHeaderItem(1)
@@ -4832,6 +4877,7 @@ class Ui_MainWindow(object):
         self.label_version.setText(QCoreApplication.translate("MainWindow", u"v.2022", None))
     # retranslateUi
 
+
         # OUR CODE
 
         self.key_generate_button.clicked.connect(self.generateKey)
@@ -4898,3 +4944,5 @@ class Ui_MainWindow(object):
 
         for key in keys:
             key.toggled.connect(self.updateRequestedKeyLengthLabel)
+
+        self.key_inputname_line.textChanged.connect(self.checkInputNameLine)

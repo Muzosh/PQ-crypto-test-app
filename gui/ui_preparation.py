@@ -28,6 +28,9 @@ from ui_styles import Style
 
 qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}QLineEdit:hover{background-color:#394150;border:2px solid #3d4656;color:#fff}QLineEdit:pressed{background-color:#232831;border:2px solid #2b323d;color:#fff}"
 qPushButtonDefault = "QPushButton{border:2px solid #343b48;border-radius:15px;background-color:#343b48}QPushButton:hover{background-color:#394150;border:2px solid #3d4656}QPushButton:pressed{background-color:#232831;border:2px solid #2b323d}"
+qPushButtonRed = "QPushButton{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}"
+qPushButtonGreen = "QPushButton{border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}"
+qPushButtonDisabled = "QPushButton{border:2px solid #000;color:#555;border-radius:15px;background-color:#000}"
 
 downloadsFolder = dirname(dirname(abspath(__file__))) + "/Downloads"
 if not os.path.exists(downloadsFolder):
@@ -84,6 +87,7 @@ class MainWindow(QMainWindow):
         self.ui.enc_dec_download_file_button.clicked.connect(self.downloadFile)
         self.ui.enc_dec_download_file_button_2.clicked.connect(self.downloadCipher)
         self.ui.dsa_download_button.clicked.connect(self.downloadSignature)
+        self.ui.key_export_key_button.clicked.connect(self.exportSelectedKey)
 
 
         ## ==> CREATE MENUS
@@ -96,12 +100,12 @@ class MainWindow(QMainWindow):
         ## ==> ADD CUSTOM MENUS
         self.ui.stackedWidget.setMinimumWidth(20)
         UIFunctions.addNewMenu(self, "Login", "btn_login", "url(:/16x16/icons/16x16/cil-exit-to-app.png)", True)
-        UIFunctions.addNewMenu(self, "About", "btn_about", "url(:/16x16/icons/16x16/cil-chat-bubble.png)", True)
-        UIFunctions.addNewMenu(self, "Key", "btn_key", "url(:/16x16/icons/16x16/cil-settings.png)", True)
-        UIFunctions.addNewMenu(self, "ENC", "btn_enc", "url(:/16x16/icons/16x16/cil-user-follow.png)", True)
-        UIFunctions.addNewMenu(self, "Key statistics", "btn_kstatistics", "url(:/16x16/icons/16x16/cil-chart.png)", True)
+        UIFunctions.addNewMenu(self, "About", "btn_about", "url(:/16x16/icons/16x16/cil-notes.png)", True)
+        UIFunctions.addNewMenu(self, "Key", "btn_key", "url(:/16x16/icons/16x16/cil-equalizer.png)", True)
+        UIFunctions.addNewMenu(self, "ENC", "btn_enc", "url(:/16x16/icons/16x16/cil-lock-locked.png)", True)
+        UIFunctions.addNewMenu(self, "Key statistics", "btn_kstatistics", "url(:/16x16/icons/16x16/cil-chart-pie.png)", True)
         UIFunctions.addNewMenu(self, "ENC/DEC statistics", "btn_estatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
-        UIFunctions.addNewMenu(self, "DSA statistics", "btn_dstatistics", "url(:/16x16/icons/16x16/cil-chart.png)",True)
+        UIFunctions.addNewMenu(self, "DSA statistics", "btn_dstatistics", "url(:/16x16/icons/16x16/cil-chart-line.png)",True)
         UIFunctions.addNewMenu(self, "Change masterpass", "btn_changepass", "url(:/16x16/icons/16x16/cil-fingerprint.png)",True)
 
         for x in range(2,8):
@@ -334,6 +338,7 @@ class MainWindow(QMainWindow):
         self.ui.key_upload_line.setText(name)
         self.ui.key_upload_line.setEnabled(True)
         self.ui.key_upload_line.setStyleSheet(qLineDefault)
+        self.ui.key_export_key_button.setStyleSheet(qPushButtonDefault)
 
     def openFileSignature(self):
         name = self.openFile()
@@ -368,6 +373,19 @@ class MainWindow(QMainWindow):
             if filePath != '':
                 with open(filePath, 'wb+') as file:
                     file.write(self.ui.signature)
+    
+    def exportSelectedKey(self):
+        if self.ui.selectedId != "":
+            filePath = QFileDialog.getSaveFileName(self, "Save selected key", downloadsFolder + "/exportedKey.key")[0]
+
+            keyStore = next((x for x in self.ui.passwordManager.loadKeyStoreList() if x[0] == self.ui.selectedId), None)
+
+            if filePath != '' and keyStore != None:
+                with open(filePath, 'wb+') as file:
+                    file.write(keyStore[3])
+                self.ui.key_export_key_button.setStyleSheet(qPushButtonGreen)
+            else:
+                self.ui.key_export_key_button.setStyleSheet(qPushButtonRed)
 
             
 class UIFunctions(MainWindow):
