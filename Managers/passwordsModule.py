@@ -21,7 +21,8 @@ class PasswordManager:
     """
     
     # database folder
-    __databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database"
+    __databaseFolder = "C:/Database"
+   #__databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database"
     
     # file for keyStores
     __keyStoresFileName = __databaseFolder + "/secrets" 

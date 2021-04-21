@@ -17,20 +17,20 @@
 import os
 import sys
 import platform
-import files_rc
+import Gui.files_rc
 
 # Add project root directory to sys.path so it can find 
 from os.path import dirname, abspath
 sys.path.append(dirname(dirname(abspath(__file__))))
 
-from ui_preparation import *
+from Gui.ui_preparation import *
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     QtGui.QFontDatabase.addApplicationFont('fonts/segoeui.ttf')
     QtGui.QFontDatabase.addApplicationFont('fonts/segoeuib.ttf')
+    QtGui.QIcon('favicon.ico')
     window = MainWindow()
-
     ret = app.exec_()
 
     window.SaveStatisticsToFile()

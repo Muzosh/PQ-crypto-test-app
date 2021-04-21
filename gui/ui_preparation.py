@@ -23,8 +23,8 @@ from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtCore import (QCoreApplication, QPropertyAnimation, QDate, QDateTime, QMetaObject, QObject, QPoint, QRect, QSize, QTime, QUrl, Qt, QEvent)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont, QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter, QPixmap, QRadialGradient)
 from PySide2.QtWidgets import *
-from ui_main import Ui_MainWindow
-from ui_styles import Style
+from Gui.ui_main import Ui_MainWindow
+from Gui.ui_styles import Style
 
 qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}QLineEdit:hover{background-color:#394150;border:2px solid #3d4656;color:#fff}QLineEdit:pressed{background-color:#232831;border:2px solid #2b323d;color:#fff}"
 qPushButtonDefault = "QPushButton{border:2px solid #343b48;border-radius:15px;background-color:#343b48}QPushButton:hover{background-color:#394150;border:2px solid #3d4656}QPushButton:pressed{background-color:#232831;border:2px solid #2b323d}"
@@ -32,7 +32,8 @@ qPushButtonRed = "QPushButton{border:2px solid rgb(170,0,0);border-radius:15px;b
 qPushButtonGreen = "QPushButton{border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}"
 qPushButtonDisabled = "QPushButton{border:2px solid #000;color:#555;border-radius:15px;background-color:#000}"
 
-downloadsFolder = dirname(dirname(abspath(__file__))) + "/Downloads"
+#downloadsFolder = dirname(dirname(abspath(__file__))) + "/Downloads"
+downloadsFolder = "C:/Downloads"
 if not os.path.exists(downloadsFolder):
     os.mkdir(downloadsFolder)
 
@@ -51,6 +52,7 @@ class MainWindow(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
 
         ## PRINT ==> SYSTEM
         print('System: ' + platform.system())
@@ -295,7 +297,8 @@ class MainWindow(QMainWindow):
     ############################## ---/--/--- ##############################
     
     def updateLoginPageButtonText(self):
-        __databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/keychain"
+        #__databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/keychain"
+        __databaseFolder = "C:/Database/keychain"
         if not os.path.exists(__databaseFolder):
             print("Im not here")
             self.ui.login_button.setText("Create your first pass")
