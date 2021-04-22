@@ -300,11 +300,9 @@ class MainWindow(QMainWindow):
         #__databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/keychain"
         __databaseFolder = "C:/Database/keychain"
         if not os.path.exists(__databaseFolder):
-            print("Im not here")
             self.ui.login_button.setText("Create your first pass")
         else:
-            self.ui.login_button.setText("Log me IN NOW")
-            print("File exists = not today, bro!")
+            self.ui.login_button.setText("Log in")
 
     def openFile(self):
         file_filter = "All Files (*);"

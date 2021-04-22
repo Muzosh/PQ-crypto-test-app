@@ -1677,7 +1677,7 @@ QPushButton:pressed {
                    <enum>QFrame::Plain</enum>
                   </property>
                   <property name="currentIndex">
-                   <number>7</number>
+                   <number>2</number>
                   </property>
                   <widget class="QWidget" name="page_login">
                    <property name="styleSheet">
@@ -1925,6 +1925,12 @@ QPushButton:pressed {
                       <property name="text">
                        <string>Log me in</string>
                       </property>
+                      <property name="autoDefault">
+                       <bool>true</bool>
+                      </property>
+                      <property name="default">
+                       <bool>true</bool>
+                      </property>
                       <property name="flat">
                        <bool>true</bool>
                       </property>
@@ -2138,9 +2144,9 @@ QLineEdit:pressed {
                      </property>
                      <property name="geometry">
                       <rect>
-                       <x>350</x>
+                       <x>300</x>
                        <y>250</y>
-                       <width>200</width>
+                       <width>300</width>
                        <height>40</height>
                       </rect>
                      </property>
@@ -2152,7 +2158,7 @@ QLineEdit:pressed {
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>200</width>
+                       <width>300</width>
                        <height>40</height>
                       </size>
                      </property>
@@ -2188,7 +2194,7 @@ QPushButton:pressed {
                       <set>Qt::ImhNone</set>
                      </property>
                      <property name="text">
-                      <string>CHANGE IT</string>
+                      <string>Change your current password</string>
                      </property>
                      <property name="icon">
                       <iconset>
@@ -2197,6 +2203,22 @@ QPushButton:pressed {
                      </property>
                      <property name="flat">
                       <bool>true</bool>
+                     </property>
+                    </widget>
+                    <widget class="QLabel" name="change_pass_label">
+                     <property name="geometry">
+                      <rect>
+                       <x>36</x>
+                       <y>150</y>
+                       <width>341</width>
+                       <height>20</height>
+                      </rect>
+                     </property>
+                     <property name="text">
+                      <string>Status:</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                      </property>
                     </widget>
                    </widget>
@@ -3603,10 +3625,10 @@ QPushButton:pressed {
                       </rect>
                      </property>
                      <layout class="QGridLayout" name="gridLayout_3">
-                      <item row="3" column="1">
-                       <widget class="QLabel" name="key_setname_label_2">
+                      <item row="0" column="1">
+                       <widget class="QLabel" name="key_setname_label">
                         <property name="sizePolicy">
-                         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                           <horstretch>0</horstretch>
                           <verstretch>0</verstretch>
                          </sizepolicy>
@@ -3620,50 +3642,16 @@ QPushButton:pressed {
                         <property name="font">
                          <font>
                           <family>Open Sans</family>
-                          <pointsize>12</pointsize>
+                          <pointsize>10</pointsize>
                           <weight>75</weight>
                           <bold>true</bold>
                          </font>
                         </property>
                         <property name="text">
-                         <string>Generate your key</string>
+                         <string>Set key name</string>
                         </property>
                         <property name="alignment">
-                         <set>Qt::AlignCenter</set>
-                        </property>
-                        <property name="margin">
-                         <number>0</number>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="2" column="1">
-                       <widget class="QLabel" name="key_checking_name">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>40</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <italic>true</italic>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Checking name</string>
-                        </property>
-                        <property name="alignment">
-                         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                        </property>
-                        <property name="margin">
-                         <number>13</number>
+                         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
                         </property>
                        </widget>
                       </item>
@@ -3703,36 +3691,6 @@ QLineEdit:pressed {
                         </property>
                         <property name="placeholderText">
                          <string>Enter key name</string>
-                        </property>
-                       </widget>
-                      </item>
-                      <item row="0" column="1">
-                       <widget class="QLabel" name="key_setname_label">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                         <size>
-                          <width>0</width>
-                          <height>40</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <family>Open Sans</family>
-                          <pointsize>10</pointsize>
-                          <weight>75</weight>
-                          <bold>true</bold>
-                         </font>
-                        </property>
-                        <property name="text">
-                         <string>Set key name</string>
-                        </property>
-                        <property name="alignment">
-                         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
                         </property>
                        </widget>
                       </item>
@@ -3778,6 +3736,70 @@ QPushButton:pressed {
                         </property>
                         <property name="flat">
                          <bool>false</bool>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="2" column="1">
+                       <widget class="QLabel" name="key_checking_name">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                          <italic>true</italic>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Checking name</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                        </property>
+                        <property name="margin">
+                         <number>13</number>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="3" column="1">
+                       <widget class="QLabel" name="key_setname_label_2">
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>40</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <family>Open Sans</family>
+                          <pointsize>12</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Generate your key</string>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignCenter</set>
+                        </property>
+                        <property name="margin">
+                         <number>0</number>
                         </property>
                        </widget>
                       </item>
@@ -6604,7 +6626,7 @@ border-radius: 5px;</string>
                          <enum>Qt::LeftToRight</enum>
                         </property>
                         <property name="autoFillBackground">
-                         <bool>false</bool>
+                         <bool>true</bool>
                         </property>
                         <property name="styleSheet">
                          <string notr="true">QTableWidget {	
@@ -6660,7 +6682,7 @@ QHeaderView::section:vertical
 {
     border: 1px solid rgb(44, 49, 60);
 }
-</string>
+QHeaderView::item:selected{background-color: rgb(27, 29, 35);}</string>
                         </property>
                         <property name="verticalScrollBarPolicy">
                          <enum>Qt::ScrollBarAsNeeded</enum>
@@ -6686,6 +6708,9 @@ QHeaderView::section:vertical
                         <property name="wordWrap">
                          <bool>false</bool>
                         </property>
+                        <attribute name="horizontalHeaderVisible">
+                         <bool>false</bool>
+                        </attribute>
                         <attribute name="horizontalHeaderCascadingSectionResizes">
                          <bool>false</bool>
                         </attribute>
@@ -7552,7 +7577,7 @@ QScrollBar:horizontal {
                              <rect>
                               <x>0</x>
                               <y>0</y>
-                              <width>274</width>
+                              <width>218</width>
                               <height>218</height>
                              </rect>
                             </property>
@@ -8297,7 +8322,7 @@ QHeaderView::section:vertical
                       <set>Qt::ImhNone</set>
                      </property>
                      <property name="text">
-                      <string>v.2022</string>
+                      <string>v.2023</string>
                      </property>
                      <property name="alignment">
                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -8349,8 +8374,8 @@ QHeaderView::section:vertical
   </widget>
  </widget>
  <tabstops>
-  <tabstop>login_input_line</tabstop>
   <tabstop>login_button</tabstop>
+  <tabstop>login_input_line</tabstop>
   <tabstop>btn_toggle_menu</tabstop>
   <tabstop>checkBox</tabstop>
   <tabstop>comboBox</tabstop>
@@ -8366,6 +8391,49 @@ QHeaderView::section:vertical
   <tabstop>btn_close</tabstop>
   <tabstop>btn_minimize</tabstop>
   <tabstop>btn_maximize_restore</tabstop>
+  <tabstop>change_pass_old_line</tabstop>
+  <tabstop>change_pass_new_line1</tabstop>
+  <tabstop>change_pass_new_line2</tabstop>
+  <tabstop>change_pass_button</tabstop>
+  <tabstop>enc_dsa_upload_line</tabstop>
+  <tabstop>enc_dsa_upload_button</tabstop>
+  <tabstop>enc_dsa_selected_key_line</tabstop>
+  <tabstop>dec_radiobutton</tabstop>
+  <tabstop>enc_radiobutton</tabstop>
+  <tabstop>enc_dec_moonit_button</tabstop>
+  <tabstop>enc_dec_download_file_button</tabstop>
+  <tabstop>enc_dec_upload_ciphertext_line</tabstop>
+  <tabstop>enc_dec_upload_ciphertext_button</tabstop>
+  <tabstop>enc_dec_download_file_button_2</tabstop>
+  <tabstop>sign_radiobutton</tabstop>
+  <tabstop>verify_radiobutton</tabstop>
+  <tabstop>dsa_download_button</tabstop>
+  <tabstop>dsa_upload_signature_button</tabstop>
+  <tabstop>dsa_upload_signature_line</tabstop>
+  <tabstop>dsa_sign_button</tabstop>
+  <tabstop>dsa_verify_button</tabstop>
+  <tabstop>key_checkbox1</tabstop>
+  <tabstop>key_checkbox2</tabstop>
+  <tabstop>key_checkbox3</tabstop>
+  <tabstop>key_checkbox4</tabstop>
+  <tabstop>key_checkbox4_2</tabstop>
+  <tabstop>key_checkbox4_4</tabstop>
+  <tabstop>key_checkbox4_3</tabstop>
+  <tabstop>key_upload_line</tabstop>
+  <tabstop>key_public_radio_button</tabstop>
+  <tabstop>key_upload_button</tabstop>
+  <tabstop>key_private_radio_button</tabstop>
+  <tabstop>key_upload_key_button</tabstop>
+  <tabstop>key_inputname_line</tabstop>
+  <tabstop>key_maintable</tabstop>
+  <tabstop>key_export_key_button</tabstop>
+  <tabstop>enc_statistics_list_table</tabstop>
+  <tabstop>enc_statistics_data_table</tabstop>
+  <tabstop>dsa_statistics_table</tabstop>
+  <tabstop>dsa_statistics_data_table</tabstop>
+  <tabstop>key_statistics_table</tabstop>
+  <tabstop>key_statistics_data_table</tabstop>
+  <tabstop>about_table</tabstop>
  </tabstops>
  <resources>
   <include location="files.qrc"/>

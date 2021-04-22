@@ -125,14 +125,13 @@ class Ui_MainWindow(object):
         entered_password = self.login_input_line.text()
 
         if entered_password == '':
-            print("empty pass")
             self.login_input_line.setStyleSheet(qLineRed)
-            self.login_status_label.setText("You're empty bitch")
+            self.login_status_label.setText("No password entered!")
         else:
             try:
                 self.passwordManager = PasswordManager(entered_password)
                 self.login_input_line.setStyleSheet(qLineGreen)
-                self.login_status_label.setText("Your secrets has been revealed!")
+                self.login_status_label.setText("Correct password entered")
                 change_page(self, 7)
 
                 self.statisticsManager = StatisticsManager(self.passwordManager)
@@ -146,14 +145,13 @@ class Ui_MainWindow(object):
 
             except ValueError:
                 self.login_input_line.setStyleSheet(qLineRed)
-                self.login_status_label.setText("Incorrect password!")
+                self.login_status_label.setText("Incorrect password entered!")
 
     def changing_password(self):
         old_pass = self.change_pass_old_line.text()
         if self.passwordManager.authenticate(old_pass):
-            print("som true")
             self.change_pass_old_line.setStyleSheet(qLineGreen)
-            print("Trafil si masterpass, uz ho iba zmenit..")
+            self.change_pass_label.setText("Status: Old password is correct")
 
             new_pass = self.change_pass_new_line1.text()
             new_pass2 = self.change_pass_new_line2.text()
@@ -161,7 +159,7 @@ class Ui_MainWindow(object):
             if new_pass == new_pass2 and new_pass != "" and new_pass2 != "" and new_pass != old_pass:
                 self.change_pass_new_line1.setStyleSheet(qLineGreen)
                 self.change_pass_new_line2.setStyleSheet(qLineGreen)
-                print("Obe nove hesla su rovnake, idem ta teda zmenit")
+                self.change_pass_label.setText("Status: New password is correct")
 
                 self.passwordManager.changeMasterPassword(old_pass, new_pass2)
                 self.change_pass_old_line.setText("")
@@ -171,10 +169,11 @@ class Ui_MainWindow(object):
                 self.change_pass_new_line2.setText("")
                 self.change_pass_new_line2.setStyleSheet(qLineDefault)
                 self.login_input_line.setText("")
+                self.login_input_line.setPlaceholderText("Enter your new password")
                 self.login_input_line.setStyleSheet(qLineDefault)
-
-                self.login_status_label.setText("C'mon, you have to enter your real password!")
-
+                self.login_status_label.setText("")
+                #self.login_input_line.setText("Enter your new password")
+                self.login_button.setText("Log in with a new pass")
                 self.stackedWidget.setCurrentWidget(self.page_login)
                 hideMenuItems(self)
 
@@ -182,30 +181,33 @@ class Ui_MainWindow(object):
                 # polia sa nerovnaju, zmena na cervene pole
                 self.change_pass_new_line1.setStyleSheet(qLineRed)
                 self.change_pass_new_line2.setStyleSheet(qLineRed)
-                print("Lol, nevies zadat dve rovnake hesla?")
+                self.change_pass_label.setText("Status: New passwords are not same!")
             elif old_pass == new_pass or old_pass == new_pass2:
+                self.change_pass_old_line.setStyleSheet(qLineRed)
                 self.change_pass_new_line1.setStyleSheet(qLineRed)
                 self.change_pass_new_line2.setStyleSheet(qLineRed)
-                print("Nebudes si davat rovnake heslo zas")
+                self.change_pass_label.setText("Status: New password is a same as old password. Change it!")
             elif new_pass == "" or new_pass2 == "":
                 # prazdne polia, styl sa nemeni
-                print("Neposielaj mi tu prazdne hesla.. Co si to za admina..")
+                self.change_pass_new_line1.setStyleSheet(qLineRed)
+                self.change_pass_new_line2.setStyleSheet(qLineRed)
+                self.change_pass_label.setText("Status: No input for new passwords!")
             else:
                 pass
         elif old_pass == '':
-            self.change_pass_old_line.setStyleSheet(
-                "QLineEdit{border:2px solid rgb(52,59,72);border-radius:15px;background-color:rgb(52,59,72);color:white;}")
-            print("Lol, nic si nezadal")
+            #self.change_pass_old_line.setStyleSheet("QLineEdit{border:2px solid rgb(52,59,72);border-radius:15px;background-color:rgb(52,59,72);color:white;}")
+            self.change_pass_label.setText("Status: No input!")
+            self.change_pass_old_line.setStyleSheet(qLineRed)
+            self.change_pass_new_line1.setStyleSheet(qLineRed)
+            self.change_pass_new_line2.setStyleSheet(qLineRed)
         else:
             self.change_pass_old_line.setStyleSheet(qLineRed)
-            print("Myslis si, ze tu budes skuskat spravne masterpass?")
+            self.change_pass_label.setText("Status: Old password is incorrect")
 
     def generateKey(self):
         self.key_export_key_button.setStyleSheet(qPushButtonDefault)
-        print("idzeme generovac klusik")
         selected_key = ""
         name = ""
-
         keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2,
                 self.key_checkbox4_3, self.key_checkbox4_4]
         for k in keys:
@@ -215,32 +217,38 @@ class Ui_MainWindow(object):
         if self.key_inputname_line.text() != "":
             name = self.key_inputname_line.text()
 
-        print(name)
-        print(selected_key)
-
         if name != "" and selected_key != "":
-            print("Generujem us ten kluc naah")
             if selected_key == "KEM - McEliece":
+                self.key_checking_name.setText("Generated KEM - McEliece | "+ name)
                 self.pqKeyGenManager.generate_keypair_mceliece8192128(name)
+                self.key_inputname_line.setStyleSheet(qLineDefault)
             if selected_key == "KEM - SABER":
+                self.key_checking_name.setText("Generated KEM - SABER | " + name)
                 self.pqKeyGenManager.generate_keypair_saber(name)
             if selected_key == "KEM - Kyber":
+                self.key_checking_name.setText("Generated KEM - Kyber | " + name)
                 self.pqKeyGenManager.generate_keypair_kyber1024(name)
             if selected_key == "KEM - NTRU-HPS":
+                self.key_checking_name.setText("Generated KEM - NTRU-HPS | " + name)
                 self.pqKeyGenManager.generate_keypair_ntruhps2048509(name)
             if selected_key == "DSA - Dilithium":
+                self.key_checking_name.setText("Generated DSA - Dilithium | " + name)
                 self.pqKeyGenManager.generate_keypair_dilithium4(name)
             if selected_key == "DSA - Rainbow Vc":
+                self.key_checking_name.setText("Generated DSA - Rainbow Vc | " + name)
                 self.pqKeyGenManager.generate_keypair_rainbowVc_classic(name)
             if selected_key == "DSA - SPHINCS":
+                self.key_checking_name.setText("Generated DSA - SPHINCS | " + name)
                 self.pqKeyGenManager.generate_keypair_sphincs_shake256_256s_simple(name)
             self.updateTableKey()
+            self.currentWidgetChangedHandler()
+            self.key_inputname_line.setStyleSheet(qLineDefault)
+            self.key_checking_name.setText("")
         else:
-            print("Vypln pravdzivo vsetok obsah!")
+            self.key_checking_name.setText("Some missing information!")
 
     def addKeyFile(self):
         self.key_export_key_button.setStyleSheet(qPushButtonDefault)
-        print("idzeme pridat klusik")
         selected_key = ""
         name = ""
 
@@ -253,11 +261,7 @@ class Ui_MainWindow(object):
         if self.key_inputname_line.text() != "":
             name = "|"+ str(datetime.datetime.now()) + "|" + self.key_inputname_line.text()
 
-        print(name)
-        print(selected_key)
-
         if name != "" and selected_key != "":
-
             alg = ""
             if selected_key == "KEM - McEliece":
                 alg = "McEliece"
@@ -296,14 +300,15 @@ class Ui_MainWindow(object):
                 try:
                     self.passwordManager.addKeyStore(name, alg, keyType, uploaded_file)
                     self.key_upload_key_button.setStyleSheet(qPushButtonGreen)
-                    print("finished adding key")
                 except Exception as err:
                     print(traceback.format_exc())
                     self.key_upload_key_button.setStyleSheet(qPushButtonRed)
 
             self.updateTableKey()
+            self.currentWidgetChangedHandler()
+            self.key_upload_line.setStyleSheet(qLineRed)
         else:
-            print("Vypln pravdzivo vsetok obsah!")
+            self.key_checking_name.setText("Some missing information!")
 
     def checkInputNameLine(self):
         if self.key_inputname_line.text() != "":
@@ -312,7 +317,6 @@ class Ui_MainWindow(object):
             self.key_checking_name.setText("Your key name is: " + name)
         else:
             self.key_inputname_line.setStyleSheet(qLineRed)
-            self.key_checking_name.setText("No key name entered!")
 
     def updateRequestedKeyLengthLabel(self):
         selected_key = ""
@@ -374,6 +378,13 @@ class Ui_MainWindow(object):
 
     def currentWidgetChangedHandler(self):
         if self.stackedWidget.currentWidget().objectName() == "page_key":
+            self.key_inputname_line.setStyleSheet(qLineDefault)
+            self.key_inputname_line.setText("")
+            self.key_private_radio_button.setChecked(False)
+            self.key_public_radio_button.setChecked(False)
+            self.key_upload_line.setText("")
+            self.key_upload_line.setStyleSheet(qLineDefault)
+            self.key_upload_key_button.setStyleSheet(qPushButtonDefault)
             if self.keyStoreList == []:
                 self.updateTableKey()
             # reset styles
@@ -382,8 +393,7 @@ class Ui_MainWindow(object):
                     self.key_checkbox4_3, self.key_checkbox4_4]
             for k in keys:
                 k.setStyleSheet(qRadioButtonDefault)
-            self.key_inputname_line.setStyleSheet(qLineDefault)
-            self.key_checking_name.setText("")
+                k.setChecked(False)
         elif self.stackedWidget.currentWidget().objectName() == "page_enc_dsa":
             self.itemChangedHandler()
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
@@ -482,10 +492,10 @@ class Ui_MainWindow(object):
     def updateKeyLayoutDisable(self):
         # lockdown pre vsetky inputy, kvoli nezvolenemu klucu
         self.enc_dsa_upload_line.setEnabled(False)
-        self.enc_dsa_upload_line.setStyleSheet(qLineRed)
+        #self.enc_dsa_upload_line.setStyleSheet(qLineRed)
         self.enc_dsa_upload_line.setPlaceholderText("No key selected ! Return to key page to select your key.")
         self.enc_dsa_selected_key_line.setEnabled(False)
-        self.enc_dsa_selected_key_line.setStyleSheet(qLineRed)
+        #self.enc_dsa_selected_key_line.setStyleSheet(qLineRed)
         self.enc_dsa_selected_key_line.setPlaceholderText("No key selected ! Return to key page to select your key.")
         self.enc_dsa_upload_button.setEnabled(False)
         self.enc_dsa_upload_button.setStyleSheet(qPushButtonDisabled)
@@ -499,10 +509,10 @@ class Ui_MainWindow(object):
         self.verify_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.enc_dec_upload_ciphertext_line.setEnabled(False)
         self.enc_dec_upload_ciphertext_line.setPlaceholderText("")
-        self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineRed)
+        #self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineRed)
         self.dsa_upload_signature_line.setEnabled(False)
         self.dsa_upload_signature_line.setPlaceholderText("")
-        self.dsa_upload_signature_line.setStyleSheet(qLineRed)
+        #self.dsa_upload_signature_line.setStyleSheet(qLineRed)
         self.enc_dec_upload_ciphertext_button.setEnabled(False)
         self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
         self.dsa_upload_signature_button.setEnabled(False)
@@ -533,7 +543,7 @@ class Ui_MainWindow(object):
         self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDefault)
         self.enc_dec_upload_ciphertext_button.setEnabled(True)
         self.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
-        self.enc_dec_moonit_button.setText("Decrypt file to M00N")
+        self.enc_dec_moonit_button.setText("Decrypt file")
         self.enc_dec_moonit_button.setEnabled(True)
         self.enc_dec_download_file_button.setStyleSheet(qPushButtonDefault)
         self.enc_dec_download_file_button.setText("Download decrypted file")
@@ -572,7 +582,7 @@ class Ui_MainWindow(object):
         self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
         self.enc_dec_upload_ciphertext_button.setEnabled(False)
         self.enc_dec_moonit_button.setStyleSheet(qPushButtonDefault)
-        self.enc_dec_moonit_button.setText("Encrypt file to M00N")
+        self.enc_dec_moonit_button.setText("Encrypt file")
         self.enc_dec_moonit_button.setEnabled(True)
         self.enc_dec_download_file_button.setStyleSheet(qPushButtonDefault)
         self.enc_dec_download_file_button.setText("Download encrypted file")
@@ -673,7 +683,6 @@ class Ui_MainWindow(object):
             return next((x for x in self.keyStoreList if self.selectedId == x[0] and self.selectedType == x[2]), None)
 
     def signFile(self):
-        print("signujem, nevyrusuj")
         keyStore = self.selectedCipher()
         try:
             file_path = self.enc_dsa_upload_line.text()
@@ -687,13 +696,11 @@ class Ui_MainWindow(object):
         try:
             self.signature = self.pqSigningManager.signFile(uploaded_file, keyStore)
             self.dsa_sign_button.setStyleSheet(qPushButtonGreen)
-            print("finished signing")
         except Exception as err:
             print(traceback.format_exc())
             self.dsa_sign_button.setStyleSheet(qPushButtonRed)
 
     def verifyFile(self):
-        print("uz iba chvilu, hned mame tvuj podpis overeny")
         keyStore = self.selectedCipher()
         try:
             file_path = self.enc_dsa_upload_line.text()
@@ -715,7 +722,6 @@ class Ui_MainWindow(object):
 
         try:
             verifyResult = self.pqSigningManager.verifySignature(uploaded_signature, uploaded_file, keyStore)
-            print("finished verifying")
         except Exception as err:
             print(traceback.format_exc())
             self.dsa_verify_button_status.setText("Verification unsuccessful for unknown reason")
@@ -729,7 +735,6 @@ class Ui_MainWindow(object):
             self.dsa_verify_button.setStyleSheet(qPushButtonRed)
 
     def encryptFile(self):
-        print("encryptujem, nevyrusuj")
         keyStore = self.selectedCipher()
         try:
             file_path = self.enc_dsa_upload_line.text()
@@ -743,13 +748,11 @@ class Ui_MainWindow(object):
         try:
             self.cipher_text, self.encrypted_file = self.pqEncryptionManager.encryptFile(uploaded_file, keyStore)
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonGreen)
-            print("finished encrypting")
         except Exception as err:
             print(traceback.format_exc())
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonRed)
 
     def decryptFile(self):
-        print("uz iba chvilu, hned mame tvoje tajomstvo decryptovane")
         keyStore = self.selectedCipher()
         try:
             file_path = self.enc_dsa_upload_line.text()
@@ -772,7 +775,6 @@ class Ui_MainWindow(object):
         try:
             self.decrypted_file = self.pqEncryptionManager.decryptFile(uploaded_file, uploaded_cipher_text, keyStore)
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonGreen)
-            print("finished decrypting")
         except Exception as err:
             print(traceback.format_exc())
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonRed)
@@ -783,7 +785,7 @@ class Ui_MainWindow(object):
         elif self.enc_radiobutton.isChecked():
             self.decryptFile()
         else:
-            print("Ziadne radio nezvolil si, whats up")
+            pass
 
     def keyTableItemDoubleClicked(self):
         change_page(self, 2)
@@ -1717,6 +1719,7 @@ class Ui_MainWindow(object):
 "	border: 2px solid rgb(43, 50, 61);\n"
 "}")
         self.login_button.setInputMethodHints(Qt.ImhNone)
+        self.login_button.setAutoDefault(True)
         self.login_button.setFlat(True)
 
         self.verticalLayout_10.addWidget(self.login_button, 0, Qt.AlignHCenter)
@@ -1818,31 +1821,35 @@ class Ui_MainWindow(object):
         self.change_pass_button = QPushButton(self.change_pass_frame)
         self.change_pass_button.setObjectName(u"change_pass_button")
         self.change_pass_button.setEnabled(True)
-        self.change_pass_button.setGeometry(QRect(350, 250, 200, 40))
+        self.change_pass_button.setGeometry(QRect(300, 250, 300, 40))
         sizePolicy6.setHeightForWidth(self.change_pass_button.sizePolicy().hasHeightForWidth())
         self.change_pass_button.setSizePolicy(sizePolicy6)
-        self.change_pass_button.setMinimumSize(QSize(200, 40))
+        self.change_pass_button.setMinimumSize(QSize(300, 40))
         self.change_pass_button.setMaximumSize(QSize(200, 50))
         self.change_pass_button.setFont(font4)
         self.change_pass_button.setStyleSheet(u"QPushButton {\n"
-"	border: 2px solid rgb(52, 59, 72);\n"
-"	border-radius: 15px;	\n"
-"	background-color: rgb(52, 59, 72);\n"
-"color:white;\n"
-"}\n"
-"QPushButton:hover {\n"
-"	background-color: rgb(57, 65, 80);\n"
-"	border: 2px solid rgb(61, 70, 86);\n"
-"}\n"
-"QPushButton:pressed {	\n"
-"	background-color: rgb(35, 40, 49);\n"
-"	border: 2px solid rgb(43, 50, 61);\n"
-"}")
+                                              "	border: 2px solid rgb(52, 59, 72);\n"
+                                              "	border-radius: 15px;	\n"
+                                              "	background-color: rgb(52, 59, 72);\n"
+                                              "color:white;\n"
+                                              "}\n"
+                                              "QPushButton:hover {\n"
+                                              "	background-color: rgb(57, 65, 80);\n"
+                                              "	border: 2px solid rgb(61, 70, 86);\n"
+                                              "}\n"
+                                              "QPushButton:pressed {	\n"
+                                              "	background-color: rgb(35, 40, 49);\n"
+                                              "	border: 2px solid rgb(43, 50, 61);\n"
+                                              "}")
         self.change_pass_button.setInputMethodHints(Qt.ImhNone)
         icon3 = QIcon()
         icon3.addFile(u":/16x16/icons/login_gandalf.png", QSize(), QIcon.Normal, QIcon.On)
         self.change_pass_button.setIcon(icon3)
         self.change_pass_button.setFlat(True)
+        self.change_pass_label = QLabel(self.change_pass_frame)
+        self.change_pass_label.setObjectName(u"change_pass_label")
+        self.change_pass_label.setGeometry(QRect(36, 150, 341, 20))
+        self.change_pass_label.setAlignment(Qt.AlignRight | Qt.AlignTrailing | Qt.AlignVCenter)
         self.stackedWidget.addWidget(self.page_change_masterpass)
         self.page_enc_dsa = QWidget()
         self.page_enc_dsa.setObjectName(u"page_enc_dsa")
@@ -4513,8 +4520,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.frame_main)
 
         MainWindow.setCentralWidget(self.centralwidget)
-        QWidget.setTabOrder(self.login_input_line, self.login_button)
-        QWidget.setTabOrder(self.login_button, self.btn_toggle_menu)
+        QWidget.setTabOrder(self.login_button, self.login_input_line)
+        QWidget.setTabOrder(self.login_input_line, self.btn_toggle_menu)
         QWidget.setTabOrder(self.btn_toggle_menu, self.checkBox)
         QWidget.setTabOrder(self.checkBox, self.comboBox)
         QWidget.setTabOrder(self.comboBox, self.radioButton)
@@ -4567,7 +4574,8 @@ class Ui_MainWindow(object):
         self.change_pass_old_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter your old password", None))
         self.change_pass_new_line1.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Enter your new password", None))
         self.change_pass_new_line2.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Confirm  your new passoword", None))
-        self.change_pass_button.setText(QCoreApplication.translate("MainWindow", u"CHANGE IT", None))
+        self.change_pass_button.setText(QCoreApplication.translate("MainWindow", u"Change your current password", None))
+        self.change_pass_label.setText(QCoreApplication.translate("MainWindow", u"Status:", None))
         self.enc_dsa_maintitle_label.setText(QCoreApplication.translate("MainWindow", u"Select a file", None))
         self.enc_dsa_upload_line.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Choose your file", None))
         self.enc_dsa_upload_button.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
@@ -4877,7 +4885,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setSortingEnabled(__sortingEnabled4)
 
         self.label_credits.setText(QCoreApplication.translate("MainWindow", u"Design: Wanderson M. Pimenta | Created: Bc. Dzad\u00edkov\u00e1, Bc. Janout, Bc. Lovinger, Bc. Muzikant", None))
-        self.label_version.setText(QCoreApplication.translate("MainWindow", u"v.2022", None))
+        self.label_version.setText(QCoreApplication.translate("MainWindow", u"v.2023", None))
     # retranslateUi
 
 
@@ -4889,9 +4897,12 @@ class Ui_MainWindow(object):
         self.key_maintable.itemSelectionChanged.connect(self.itemChangedHandler)
         self.key_maintable.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.stackedWidget.currentChanged.connect(self.currentWidgetChangedHandler)
+        self.change_pass_old_line.setEchoMode(QLineEdit.Password)
+        self.change_pass_new_line1.setEchoMode(QLineEdit.Password)
+        self.change_pass_new_line2.setEchoMode(QLineEdit.Password)
         self.change_pass_button.clicked.connect(self.changing_password)
         self.login_button.clicked.connect(self.checking_password)
-        pixmap = QPixmap("Gui/icons/login_icon.png")
+        pixmap = QPixmap("./Gui/icon.png")
         pixmap = pixmap.scaledToWidth(128)
         self.login_image.setPixmap(pixmap)
         self.login_image.setAlignment(Qt.AlignCenter)
