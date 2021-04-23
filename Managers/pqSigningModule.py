@@ -65,6 +65,10 @@ class PqSigningManager:
     """
     
     def __init__(self, statisticsManager):
+        """
+        Constructor of the class:
+            statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
+        """
         self.__statisticsManager = statisticsManager
         
         # dictionary is a substitue for switch case, which is absent in Python
@@ -81,6 +85,17 @@ class PqSigningManager:
         }
     
     def signFile(self, fileToSign:bytes, privateKeyStore:tuple) -> bytes:
+        """
+        This method is used for creating signature of the file with using PQ private key. The method also measures time 
+        needed for signature creation.
+        
+        Args:
+            fileToSign (bytes): File for signing
+            privateKeyStore (tuple): PQ private key
+            
+        Returns:
+            bytes: Signature
+        """
         if privateKeyStore[2] != "Private":
             raise ValueError("Private key is needed for signing.")
         
@@ -104,6 +119,18 @@ class PqSigningManager:
         return signatureObf
     
     def verifySignature(self, signatureObf:bytes, signedFile:bytes, publicKeyStore:tuple) -> bool:
+        """
+        This method is used for verification signature of the file with using PQ public key. The method also measures the time 
+        needed for verification of signature.
+        
+        Args:
+            signatureObf (bytes): Signature of the file
+            signedFile (bytes): File from which the signature was obtained
+            publicKeyStore (tuple): PQ public key
+            
+        Returns:
+            bool: valid or invalid
+        """
         if publicKeyStore[2] != "Public":
             raise ValueError("Public key is needed for signature verification.")
         
