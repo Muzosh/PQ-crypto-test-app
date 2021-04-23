@@ -120,7 +120,10 @@ class PqKeyGenManager:
         """
         Private method that is used for measuring time of keypair generation and adding to database.
         
-        # cols.Callable[[], [bytes]] specifies that methods takes a function (which returns bytes) as a argument so it can run it later
+        Args:
+            generateFunction (cols.Callable[[], [bytes]]): Specifies that methods takes a function (which returns bytes) as a argument so it can run it later
+            alg (str): Name of the PQ algorithm
+            name (str): Name that user set for keypair
         """
         # get current datetime
         now = datetime.datetime.now()

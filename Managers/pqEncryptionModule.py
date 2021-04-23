@@ -70,8 +70,16 @@ class PqEncryptionManager:
     
     def encryptFile(self, fileToEncrypt:bytes, publicKeyStore:tuple) -> (bytes, bytes):
         """
-        encryptFile method provides encapsulation using PQ public key to generate ciphertext (needed for decapsulation process) and secret key used for the next AES-256 
+        This method provides encapsulation using PQ public key to generate ciphertext (needed for decapsulation process) and symmetric secret key used for the next AES-256 
         encryption of the file. The method also provides measurements of encapsulation time for statictics.
+        
+        Args:
+            fileToEncrypt (bytes): File for the encryption - plaintext
+            publicKeyStore (tuple): PQ public key
+        
+        Returns:
+            bytes: Ciphertext
+            bytes: Encrypted data
         """
         if publicKeyStore[2] != "Public":
             raise ValueError("Public key is needed for encryption.")
@@ -102,8 +110,16 @@ class PqEncryptionManager:
     
     def decryptFile(self, encryptedFileObf:bytes, ciphertext:bytes, privateKeyStore:tuple) -> bytes:
         """
-        decryptFile method provides decapsulation using PQ private key and ciphertext to obtain secret key used for AES-256 decryption of the file. 
+        This method provides decapsulation using PQ private key and ciphertext to obtain symmetric secret key used for AES-256 decryption of the file. 
         The method also records time needed for decapsulation which is logged to statisticsManager.
+        
+        Args:
+            encryptedFileObf (bytes): Encrypted file for decryption - cipher
+            ciphertext (bytes): Cipher text needed for decapsulation and obtaining symmetric secret key
+            privateKeyStore (tuple): PQ private key
+            
+        Returns:
+            bytes: Decrypted data
         """
         if privateKeyStore[2] != "Private":
             raise ValueError("Private key is needed for decryption.")
