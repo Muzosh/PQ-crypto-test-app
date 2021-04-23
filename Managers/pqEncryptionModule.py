@@ -37,7 +37,8 @@ from datetime import datetime
 from Managers.aesModule import aesEncrypt, aesDecrypt
 
 class PqEncryptionManager:    
-    """This class handles everything around key en/decapsulation and file en/decryption using pq-algorithms and AES.
+    """
+    This class handles everything around en/decapsulation and file en/decryption using  PQ algorithms (KEM scheme) and AES.
     Constructor:
         statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
     Available public methods:
@@ -46,6 +47,10 @@ class PqEncryptionManager:
     """
     
     def __init__(self, statisticsManager):
+        """
+        Constructor od the class:
+            statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
+        """
         self.__statisticsManager = statisticsManager
         
         # dictionary is a substitue for switch case, which is absent in Python
@@ -64,6 +69,10 @@ class PqEncryptionManager:
         }
     
     def encryptFile(self, fileToEncrypt:bytes, publicKeyStore:tuple) -> (bytes, bytes):
+        """
+        encryptFile method provides encapsulation using PQ public key to generate ciphertext (needed for decapsulation process) and secret key used for the next AES-256 
+        encryption of the file. The method also provides measurements of encapsulation time for statictics.
+        """
         if publicKeyStore[2] != "Public":
             raise ValueError("Public key is needed for encryption.")
         
@@ -92,6 +101,10 @@ class PqEncryptionManager:
         return ciphertext, encryptedFileObf
     
     def decryptFile(self, encryptedFileObf:bytes, ciphertext:bytes, privateKeyStore:tuple) -> bytes:
+        """
+        decryptFile method provides decapsulation using PQ private key and ciphertext to obtain secret key used for AES-256 decryption of the file. 
+        The method also records time needed for decapsulation which is logged to statisticsManager.
+        """
         if privateKeyStore[2] != "Private":
             raise ValueError("Private key is needed for decryption.")
         
