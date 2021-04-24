@@ -1,24 +1,17 @@
 # -*- coding: utf-8 -*-
 
-################################################################################
-## Form generated from reading UI file
-##
-## Created by: Qt User Interface Compiler version 5.14.1
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
+# import packages
 import platform
-from Managers.passwordsModule import PasswordManager
-from Managers.pqEncryptionModule import PqEncryptionManager
-from Managers.pqKeyGenModule import PqKeyGenManager
-from Managers.pqSigningModule import PqSigningManager
-from Managers.statisticsModule import StatisticsManager
 import traceback
 import sys
 import os
 import datetime
 from os.path import dirname, abspath
-
+from Managers.passwordsModule import PasswordManager
+from Managers.pqEncryptionModule import PqEncryptionManager
+from Managers.pqKeyGenModule import PqKeyGenManager
+from Managers.pqSigningModule import PqSigningManager
+from Managers.statisticsModule import StatisticsManager
 from PySide2.QtCore import (QCoreApplication, QMetaObject, QObject, QPoint,
                             QRect, QSize, QUrl, Qt, QDir)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
@@ -27,65 +20,77 @@ from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont,
 from PySide2.QtWidgets import *
 from PyQt5.QtWidgets import QFileDialog
 
+
+# Predefined GUI components CSS styles
 qPushButtonDefault = "QPushButton{border:2px solid #343b48;border-radius:15px;background-color:#343b48}QPushButton:hover{background-color:#394150;border:2px solid #3d4656}QPushButton:pressed{background-color:#232831;border:2px solid #2b323d}"
 qPushButtonRed = "QPushButton{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}"
 qPushButtonGreen = "QPushButton{border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}"
 qPushButtonDisabled = "QPushButton{border:2px solid #000;color:#555;border-radius:15px;background-color:#000}"
-
 qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}QLineEdit:hover{background-color:#394150;border:2px solid #3d4656;color:#fff}QLineEdit:pressed{background-color:#232831;border:2px solid #2b323d;color:#fff}"
 qLineRed = "QLineEdit{border:2px solid rgb(170,0,0);border-radius:15px;background-color:rgb(255,0,0);color:black;}"
 qLineGreen = "QLineEdit{border: 2px solid rgb(0, 170, 0);border-radius: 15px;background-color:rgb(0, 255, 0);color:black;}"
 qLineDisable = "QLineEdit{border:2px solid #000;color:#555;border-radius:15px;background-color:#000}"
-
 qRadioButtonGreen = "QRadioButton{color:rgb(0, 255, 0);font-weight: 600;}"
 qRadioButtonRed = "QRadioButton{color:rgb(255,0,0)}"
 qRadioButtonDefault = "QRadioButton{color:#fff}"
 qRadioButtonDisable = "QRadioButton{color:#555}"
 
 
+# Changing GUI page layout function
 def change_page(self, param):
+    # Switch case based on inserted number
     if param == 0:
+        # Load login page
         self.stackedWidget.setCurrentWidget(self.page_login)
         self.label_top_info_2.setText("| LOGIN")
     if param == 1:
+        # Load key page
         self.stackedWidget.setCurrentWidget(self.page_key)
         self.label_top_info_2.setText("| KEY")
     if param == 2:
+        # Load encryption/decryption/digital signature page
         self.stackedWidget.setCurrentWidget(self.page_enc_dsa)
         self.label_top_info_2.setText("| ENC/DEC/DSA")
     if param == 3:
+        # Load key statistics page
         self.stackedWidget.setCurrentWidget(self.page_key_statistics)
         self.label_top_info_2.setText("| Key statistics")
     if param == 4:
+        # Load encryption/decryption statistics page
         self.stackedWidget.setCurrentWidget(self.page_enc_statistics)
         self.label_top_info_2.setText("| Encryption/Decryption statistics")
     if param == 5:
+        # Load digital signiture statistics page
         self.stackedWidget.setCurrentWidget(self.page_dsa_statistics)
         self.label_top_info_2.setText("| Digital signature statistics")
     if param == 6:
+        # Load change master password page
         self.stackedWidget.setCurrentWidget(self.page_change_masterpass)
         self.label_top_info_2.setText("| Change master password")
     if param == 7:
+        # Load about page
         self.stackedWidget.setCurrentWidget(self.page_about)
         self.label_top_info_2.setText("| Page about")
     else:
         pass
 
 
+# Show hidden main menu links for logged users
 def unhideMenuItems(self):
     self.frame_left_menu.children()[1].children()[1].hide()
     for x in range(2, 8):
         self.frame_left_menu.children()[1].children()[x].show()
 
-
+# Hide main menu links for unlogged users
 def hideMenuItems(self):
     self.frame_left_menu.children()[1].children()[1].show()
     for x in range(2, 8):
         self.frame_left_menu.children()[1].children()[x].hide()
 
-
+# Main Window GUI class
 class Ui_MainWindow(object):
     def __init__(self):
+        # Global parameters
         self.selectedId = ""
         self.selectedAlg = ""
         self.selectedType = ""
@@ -118,17 +123,22 @@ class Ui_MainWindow(object):
                 }
         }
 
+    # Statistics function for saving a data to the file
     def SaveStatisticsToFile(self):
         self.statisticsManager.saveStatisticsToFile()
 
+    # Checking master password function on the login page
     def checking_password(self):
+        # Loading password input
         entered_password = self.login_input_line.text()
 
+        # Login page logic based on the entered password
         if entered_password == '':
             self.login_input_line.setStyleSheet(qLineRed)
             self.login_status_label.setText("No password entered!")
         else:
             try:
+                # If entered pass is correct, create all managers, load database, change GUI components and change page
                 self.passwordManager = PasswordManager(entered_password)
                 self.login_input_line.setStyleSheet(qLineGreen)
                 self.login_status_label.setText("Correct password entered")
@@ -140,27 +150,32 @@ class Ui_MainWindow(object):
                 self.pqKeyGenManager = PqKeyGenManager(self.passwordManager, self.statisticsManager)
 
                 self.statisticsManager.loadStatisticsFromFile()
-
                 unhideMenuItems(self)
-
             except ValueError:
                 self.login_input_line.setStyleSheet(qLineRed)
                 self.login_status_label.setText("Incorrect password entered!")
 
+    # Changing master password function on the changepass page
     def changing_password(self):
+        # Loading old master password input
         old_pass = self.change_pass_old_line.text()
+
+        # Old password authentication
         if self.passwordManager.authenticate(old_pass):
             self.change_pass_old_line.setStyleSheet(qLineGreen)
             self.change_pass_label.setText("Status: Old password is correct")
 
+            # Possibility to change to a new password
             new_pass = self.change_pass_new_line1.text()
             new_pass2 = self.change_pass_new_line2.text()
 
+            # Changing master password logic with GUI components CSS styles
             if new_pass == new_pass2 and new_pass != "" and new_pass2 != "" and new_pass != old_pass:
                 self.change_pass_new_line1.setStyleSheet(qLineGreen)
                 self.change_pass_new_line2.setStyleSheet(qLineGreen)
                 self.change_pass_label.setText("Status: New password is correct")
 
+                # Change to a new password in the Password Manager
                 self.passwordManager.changeMasterPassword(old_pass, new_pass2)
                 self.change_pass_old_line.setText("")
                 self.change_pass_old_line.setStyleSheet(qLineDefault)
@@ -168,48 +183,54 @@ class Ui_MainWindow(object):
                 self.change_pass_new_line1.setStyleSheet(qLineDefault)
                 self.change_pass_new_line2.setText("")
                 self.change_pass_new_line2.setStyleSheet(qLineDefault)
+
+                # Resetting a login page / locking out a user
                 self.login_input_line.setText("")
                 self.login_input_line.setPlaceholderText("Enter your new password")
                 self.login_input_line.setStyleSheet(qLineDefault)
                 self.login_status_label.setText("")
-                #self.login_input_line.setText("Enter your new password")
                 self.login_button.setText("Log in with a new pass")
                 self.stackedWidget.setCurrentWidget(self.page_login)
                 hideMenuItems(self)
 
             elif new_pass is not new_pass2:
-                # polia sa nerovnaju, zmena na cervene pole
+                # New passwords are not same, change CSS styles
                 self.change_pass_new_line1.setStyleSheet(qLineRed)
                 self.change_pass_new_line2.setStyleSheet(qLineRed)
                 self.change_pass_label.setText("Status: New passwords are not same!")
             elif old_pass == new_pass or old_pass == new_pass2:
+                # New password is same as an old one, change CSS styles
                 self.change_pass_old_line.setStyleSheet(qLineRed)
                 self.change_pass_new_line1.setStyleSheet(qLineRed)
                 self.change_pass_new_line2.setStyleSheet(qLineRed)
                 self.change_pass_label.setText("Status: New password is a same as old password. Change it!")
             elif new_pass == "" or new_pass2 == "":
-                # prazdne polia, styl sa nemeni
+                # Inputs are empty
                 self.change_pass_new_line1.setStyleSheet(qLineRed)
                 self.change_pass_new_line2.setStyleSheet(qLineRed)
                 self.change_pass_label.setText("Status: No input for new passwords!")
             else:
                 pass
         elif old_pass == '':
-            #self.change_pass_old_line.setStyleSheet("QLineEdit{border:2px solid rgb(52,59,72);border-radius:15px;background-color:rgb(52,59,72);color:white;}")
+            # Old password input is empty
             self.change_pass_label.setText("Status: No input!")
             self.change_pass_old_line.setStyleSheet(qLineRed)
             self.change_pass_new_line1.setStyleSheet(qLineRed)
             self.change_pass_new_line2.setStyleSheet(qLineRed)
         else:
+            # Old password is incorrect
             self.change_pass_old_line.setStyleSheet(qLineRed)
             self.change_pass_label.setText("Status: Old password is incorrect")
 
+    # Generating key function
     def generateKey(self):
         self.key_export_key_button.setStyleSheet(qPushButtonDefault)
         selected_key = ""
         name = ""
         keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2,
                 self.key_checkbox4_3, self.key_checkbox4_4]
+
+        # Load a selected key
         for k in keys:
             if k.isChecked():
                 selected_key = k.text()
@@ -217,6 +238,7 @@ class Ui_MainWindow(object):
         if self.key_inputname_line.text() != "":
             name = self.key_inputname_line.text()
 
+        # Menu for generating selected KEM or DSA via pqKeyGen Manager
         if name != "" and selected_key != "":
             if selected_key == "KEM - McEliece":
                 self.key_checking_name.setText("Generated KEM - McEliece | "+ name)
@@ -240,20 +262,25 @@ class Ui_MainWindow(object):
             if selected_key == "DSA - SPHINCS":
                 self.key_checking_name.setText("Generated DSA - SPHINCS | " + name)
                 self.pqKeyGenManager.generate_keypair_sphincs_shake256_256s_simple(name)
+
+            # Updating table with a new keypair, reset GUI components CSS styles
             self.updateTableKey()
             self.currentWidgetChangedHandler()
             self.key_inputname_line.setStyleSheet(qLineDefault)
             self.key_checking_name.setText("")
         else:
+            # Error
             self.key_checking_name.setText("Some missing information!")
 
+    # Adding key function
     def addKeyFile(self):
         self.key_export_key_button.setStyleSheet(qPushButtonDefault)
         selected_key = ""
         name = ""
-
         keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2,
                 self.key_checkbox4_3, self.key_checkbox4_4]
+
+        # Load a selected key
         for k in keys:
             if k.isChecked():
                 selected_key = k.text()
@@ -261,6 +288,7 @@ class Ui_MainWindow(object):
         if self.key_inputname_line.text() != "":
             name = "|"+ str(datetime.datetime.now()) + "|" + self.key_inputname_line.text()
 
+        # Loading user inputs for a final key upload
         if name != "" and selected_key != "":
             alg = ""
             if selected_key == "KEM - McEliece":
@@ -284,6 +312,7 @@ class Ui_MainWindow(object):
             elif self.key_public_radio_button.isChecked():
                 keyType = "Public"
 
+            # File open dialog for uploading a key
             try:
                 file_path = self.key_upload_line.text()
                 with open(file_path, 'rb') as f:
@@ -293,6 +322,7 @@ class Ui_MainWindow(object):
                 self.key_upload_line.setPlaceholderText("File not found")
                 return
 
+            # Checking a file length based on a preselected algorithm
             if len(uploaded_file) != self.keyLengths[keyType][alg]:
                 self.key_upload_key_button.setStyleSheet(qPushButtonRed)
                 self.key_checking_name.setText("Wrong key-file length!")
@@ -304,13 +334,17 @@ class Ui_MainWindow(object):
                     print(traceback.format_exc())
                     self.key_upload_key_button.setStyleSheet(qPushButtonRed)
 
+            # Updating table with a new keypair, reset GUI components CSS styles
             self.updateTableKey()
             self.currentWidgetChangedHandler()
             self.key_upload_line.setStyleSheet(qLineRed)
         else:
+            # Error
             self.key_checking_name.setText("Some missing information!")
 
+    # Checking key name input field function
     def checkInputNameLine(self):
+        # GUI component CSS changing based on input
         if self.key_inputname_line.text() != "":
             name = self.key_inputname_line.text()
             self.key_inputname_line.setStyleSheet(qLineGreen)
@@ -318,6 +352,7 @@ class Ui_MainWindow(object):
         else:
             self.key_inputname_line.setStyleSheet(qLineRed)
 
+    # Updating a upload key length GUI component function
     def updateRequestedKeyLengthLabel(self):
         selected_key = ""
         name = ""
@@ -325,12 +360,14 @@ class Ui_MainWindow(object):
         keys = [self.key_checkbox1, self.key_checkbox2, self.key_checkbox3, self.key_checkbox4, self.key_checkbox4_2,
                 self.key_checkbox4_3, self.key_checkbox4_4]
         for k in keys:
+            # Checking a user selected key
             if k.isChecked():
                 selected_key = k.text()
-                # print(selected_key)
                 k.setStyleSheet(qRadioButtonGreen)
             else:
                 k.setStyleSheet(qRadioButtonDefault)
+
+        # Checking user name key input
         if self.key_inputname_line.text() != "":
             name = self.key_inputname_line.text()
             self.key_inputname_line.setStyleSheet(qLineGreen)
@@ -345,6 +382,7 @@ class Ui_MainWindow(object):
         elif self.key_public_radio_button.isChecked():
             keyType = "Public"
 
+        # Return requested key length
         if selected_key != "" and keyType != "":
             if selected_key == "KEM - McEliece":
                 self.requestedLength = self.keyLengths[keyType]["McEliece"]
@@ -365,10 +403,15 @@ class Ui_MainWindow(object):
         else:
             self.key_requested_length_label.setText("Requested length: N/A")
 
+    # Updating main key GUI component table function
     def updateTableKey(self):
+        # Deleting all previous data in a GUI component table
         self.key_maintable.setRowCount(0)
+
+        # Loading a full key list from password manager
         self.keyStoreList = self.passwordManager.loadKeyStoreList()
 
+        # Inserting list values into a GUI component table
         for keyStore in self.keyStoreList:
             self.key_maintable.insertRow(0)
             self.key_maintable.setItem(0, 0, QTableWidgetItem(keyStore[0]))
@@ -376,6 +419,7 @@ class Ui_MainWindow(object):
             self.key_maintable.setItem(0, 2, QTableWidgetItem(keyStore[2]))
             self.key_maintable.setItem(0, 3, QTableWidgetItem(str(len(keyStore[3]))))
 
+    # GUI component style reset function
     def currentWidgetChangedHandler(self):
         if self.stackedWidget.currentWidget().objectName() == "page_key":
             self.key_inputname_line.setStyleSheet(qLineDefault)
@@ -405,6 +449,7 @@ class Ui_MainWindow(object):
         elif self.stackedWidget.currentWidget().objectName() == "page_dsa_statistics":
             self.loadDsaStatisticsTable()
 
+    # Selected key print into a console function
     def itemChangedHandler(self):
         self.enc_dsa_selected_key_line.setStyleSheet(qLineDefault)
         self.enc_dsa_selected_key_line.setText("")
@@ -416,11 +461,12 @@ class Ui_MainWindow(object):
         else:
             self.selectedId = ""
 
+    # Updating GUI component on a ENC/DEC/DSA page based on a selected key
     def layoutKeyChange(self):
         if self.selectedId != "":
             self.updateKeyLayoutEnable()
             if self.selectedAlg == "McEliece":
-                # sprav mceliece
+                # IF a selected algorithm is McEleice
                 if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
                 elif self.selectedType == "Public":
@@ -428,7 +474,7 @@ class Ui_MainWindow(object):
                 else:
                     self.updateKeyLayoutDisable()
             if self.selectedAlg == "Saber":
-                # sprav saber
+                # IF a selected algorithm is Saber
                 if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
                 elif self.selectedType == "Public":
@@ -436,7 +482,7 @@ class Ui_MainWindow(object):
                 else:
                     self.updateKeyLayoutDisable()
             if self.selectedAlg == "Kyber":
-                # sprav kyber
+                # IF a selected algorithm is Kyber
                 if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
                 elif self.selectedType == "Public":
@@ -444,7 +490,7 @@ class Ui_MainWindow(object):
                 else:
                     self.updateKeyLayoutDisable()
             if self.selectedAlg == "Nthrups":
-                # sprav nthrups
+                # IF a selected algorithm is Nthrups
                 if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateKEM()
                 elif self.selectedType == "Public":
@@ -452,7 +498,7 @@ class Ui_MainWindow(object):
                 else:
                     self.updateKeyLayoutDisable()
             if self.selectedAlg == "Dilithium":
-                # sprav dilithium
+                # IF a selected algorithm is Dilithium
                 if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateDSA()
                 elif self.selectedType == "Public":
@@ -460,7 +506,7 @@ class Ui_MainWindow(object):
                 else:
                     self.updateKeyLayoutDisable()
             if self.selectedAlg == "RainbowVc":
-                # sprav rainbow
+                # IF a selected algorithm is RainbowVc
                 if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateDSA()
                 elif self.selectedType == "Public":
@@ -468,7 +514,7 @@ class Ui_MainWindow(object):
                 else:
                     self.updateKeyLayoutDisable()
             if self.selectedAlg == "Sphincs":
-                # sprav sphincs
+                # IF a selected algorithm is Sphincs
                 if self.selectedType == "Private":
                     self.updateKeyLayoutPrivateDSA()
                 elif self.selectedType == "Public":
@@ -476,10 +522,12 @@ class Ui_MainWindow(object):
                 else:
                     self.updateKeyLayoutDisable()
         else:
+            # Disable all GUI components for user interaction
             self.updateKeyLayoutDisable()
 
+    # Update GUI layout based on a selected operation and key (page ENC/DEC/DSA)
     def updateKeyLayoutEnable(self):
-        # unlock pre prve dva inputy bez ohladu na zvoleny kluc
+        # Enable default layout with a selected key
         self.enc_dsa_upload_line.setEnabled(True)
         self.enc_dsa_upload_line.setStyleSheet(qLineDefault)
         self.enc_dsa_upload_line.setPlaceholderText("Choose your file")
@@ -489,13 +537,12 @@ class Ui_MainWindow(object):
         self.enc_dsa_upload_button.setEnabled(True)
         self.enc_dsa_upload_button.setStyleSheet(qPushButtonDefault)
 
+    # Update GUI layout based on a selected operation and key (page ENC/DEC/DSA)
     def updateKeyLayoutDisable(self):
-        # lockdown pre vsetky inputy, kvoli nezvolenemu klucu
+        # Disable all GUI components without a selected key
         self.enc_dsa_upload_line.setEnabled(False)
-        #self.enc_dsa_upload_line.setStyleSheet(qLineRed)
         self.enc_dsa_upload_line.setPlaceholderText("No key selected ! Return to key page to select your key.")
         self.enc_dsa_selected_key_line.setEnabled(False)
-        #self.enc_dsa_selected_key_line.setStyleSheet(qLineRed)
         self.enc_dsa_selected_key_line.setPlaceholderText("No key selected ! Return to key page to select your key.")
         self.enc_dsa_upload_button.setEnabled(False)
         self.enc_dsa_upload_button.setStyleSheet(qPushButtonDisabled)
@@ -509,10 +556,8 @@ class Ui_MainWindow(object):
         self.verify_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.enc_dec_upload_ciphertext_line.setEnabled(False)
         self.enc_dec_upload_ciphertext_line.setPlaceholderText("")
-        #self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineRed)
         self.dsa_upload_signature_line.setEnabled(False)
         self.dsa_upload_signature_line.setPlaceholderText("")
-        #self.dsa_upload_signature_line.setStyleSheet(qLineRed)
         self.enc_dec_upload_ciphertext_button.setEnabled(False)
         self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
         self.dsa_upload_signature_button.setEnabled(False)
@@ -531,7 +576,9 @@ class Ui_MainWindow(object):
         self.dsa_sign_button.setEnabled(False)
         self.dsa_sign_button.setStyleSheet(qPushButtonDisabled)
 
+    # Update GUI layout based on a selected operation and key (page ENC/DEC/DSA)
     def updateKeyLayoutPrivateKEM(self):
+        # Enable GUI components for a private KEM
         self.enc_radiobutton.setStyleSheet(qRadioButtonGreen)
         self.enc_radiobutton.setEnabled(True)
         self.enc_radiobutton.setChecked(True)
@@ -550,7 +597,7 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button.setEnabled(True)
         self.enc_dec_download_file_button_2.setEnabled(False)
         self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
-        # disable sign/verify side
+        # Disable sign/verify side
         self.sign_radiobutton.setEnabled(False)
         self.sign_radiobutton.setChecked(False)
         self.sign_radiobutton.setStyleSheet(qRadioButtonDisable)
@@ -570,14 +617,15 @@ class Ui_MainWindow(object):
         self.dsa_sign_button.setEnabled(False)
         self.dsa_sign_button.setStyleSheet(qPushButtonDisabled)
 
+    # Update GUI layout based on a selected operation and key (page ENC/DEC/DSA)
     def updateKeyLayoutPublicKEM(self):
+        # Enable GUI components for a public KEM
         self.dec_radiobutton.setStyleSheet(qRadioButtonGreen)
         self.dec_radiobutton.setEnabled(True)
         self.dec_radiobutton.setChecked(True)
         self.enc_radiobutton.setEnabled(False)
         self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDisable)
-        # self.enc_dec_upload_ciphertext_line.setPlaceholderText("Upload your ciphertext")
         self.enc_dec_upload_ciphertext_line.setEnabled(False)
         self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
         self.enc_dec_upload_ciphertext_button.setEnabled(False)
@@ -589,10 +637,12 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button.setEnabled(True)
         self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDefault)
         self.enc_dec_download_file_button_2.setEnabled(True)
-        # disable sign/verify side
+        # Disable sign/verify side
         self.sign_radiobutton.setEnabled(False)
+        self.sign_radiobutton.setChecked(False)
         self.sign_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.verify_radiobutton.setEnabled(False)
+        self.verify_radiobutton.setChecked(False)
         self.verify_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.dsa_upload_signature_line.setEnabled(False)
         self.dsa_upload_signature_line.setPlaceholderText("")
@@ -607,14 +657,16 @@ class Ui_MainWindow(object):
         self.dsa_sign_button.setEnabled(False)
         self.dsa_sign_button.setStyleSheet(qPushButtonDisabled)
 
+    # Update GUI layout based on a selected operation and key (page ENC/DEC/DSA)
     def updateKeyLayoutPublicDSA(self):
+        # Enable GUI components for a public DSA
         self.sign_radiobutton.setEnabled(False)
         self.sign_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.verify_radiobutton.setEnabled(True)
         self.verify_radiobutton.setChecked(True)
         self.verify_radiobutton.setStyleSheet(qRadioButtonGreen)
         self.dsa_upload_signature_line.setEnabled(True)
-        self.dsa_upload_signature_line.setPlaceholderText("Upload your ciphertext")
+        self.dsa_upload_signature_line.setPlaceholderText("Upload your signature")
         self.dsa_upload_signature_line.setStyleSheet(qLineDefault)
         self.dsa_upload_signature_button.setEnabled(True)
         self.dsa_upload_signature_button.setStyleSheet(qPushButtonDefault)
@@ -625,12 +677,13 @@ class Ui_MainWindow(object):
         self.dsa_download_button.setStyleSheet(qPushButtonDisabled)
         self.dsa_sign_button.setEnabled(False)
         self.dsa_sign_button.setStyleSheet(qPushButtonDisabled)
-
-        # disable enc/dec side
+        # Disable enc/dec side
         self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.enc_radiobutton.setEnabled(False)
+        self.enc_radiobutton.setChecked(False)
         self.dec_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.dec_radiobutton.setEnabled(False)
+        self.dec_radiobutton.setChecked(False)
         self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDisable)
         self.enc_dec_upload_ciphertext_line.setEnabled(False)
         self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
@@ -642,7 +695,9 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
         self.enc_dec_download_file_button_2.setEnabled(False)
 
+    # Update GUI layout based on a selected operation and key (page ENC/DEC/DSA)
     def updateKeyLayoutPrivateDSA(self):
+        # Enable GUI components for a private DSA
         self.sign_radiobutton.setEnabled(True)
         self.sign_radiobutton.setChecked(True)
         self.sign_radiobutton.setStyleSheet(qRadioButtonGreen)
@@ -661,12 +716,13 @@ class Ui_MainWindow(object):
         self.dsa_download_button.setText("Download signature")
         self.dsa_sign_button.setEnabled(True)
         self.dsa_sign_button.setStyleSheet(qPushButtonDefault)
-
-        # disable enc/dec side
+        # Disable enc/dec side
         self.enc_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.enc_radiobutton.setEnabled(False)
+        self.enc_radiobutton.setChecked(False)
         self.dec_radiobutton.setStyleSheet(qRadioButtonDisable)
         self.dec_radiobutton.setEnabled(False)
+        self.dec_radiobutton.setChecked(False)
         self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineDisable)
         self.enc_dec_upload_ciphertext_line.setEnabled(False)
         self.enc_dec_upload_ciphertext_button.setStyleSheet(qPushButtonDisabled)
@@ -678,12 +734,17 @@ class Ui_MainWindow(object):
         self.enc_dec_download_file_button_2.setStyleSheet(qPushButtonDisabled)
         self.enc_dec_download_file_button_2.setEnabled(False)
 
+    # Selected cipher information function
     def selectedCipher(self):
         if self.selectedId != "":
             return next((x for x in self.keyStoreList if self.selectedId == x[0] and self.selectedType == x[2]), None)
 
+    # Sign a file function
     def signFile(self):
+        # Get a selected cipher
         keyStore = self.selectedCipher()
+
+        # Uploading a user selected file
         try:
             file_path = self.enc_dsa_upload_line.text()
             with open(file_path, 'rb') as f:
@@ -693,6 +754,7 @@ class Ui_MainWindow(object):
             self.enc_dsa_upload_line.setPlaceholderText("File not found")
             return
 
+        # Signing a user selected file
         try:
             self.signature = self.pqSigningManager.signFile(uploaded_file, keyStore)
             self.dsa_sign_button.setStyleSheet(qPushButtonGreen)
@@ -700,8 +762,12 @@ class Ui_MainWindow(object):
             print(traceback.format_exc())
             self.dsa_sign_button.setStyleSheet(qPushButtonRed)
 
+    # Verify a file signature function
     def verifyFile(self):
+        # Get a selected cipher
         keyStore = self.selectedCipher()
+
+        # Uploading a user selected file
         try:
             file_path = self.enc_dsa_upload_line.text()
             with open(file_path, 'rb') as f:
@@ -711,6 +777,7 @@ class Ui_MainWindow(object):
             self.enc_dsa_upload_line.setPlaceholderText("File not found")
             return
 
+        # Verifying a user selected file
         try:
             signature_path = self.dsa_upload_signature_line.text()
             with open(signature_path, 'rb') as f:
@@ -720,6 +787,7 @@ class Ui_MainWindow(object):
             self.dsa_upload_signature_line.setStyleSheet(qLineRed)
             return
 
+        # Verifying a result
         try:
             verifyResult = self.pqSigningManager.verifySignature(uploaded_signature, uploaded_file, keyStore)
         except Exception as err:
@@ -727,6 +795,7 @@ class Ui_MainWindow(object):
             self.dsa_verify_button_status.setText("Verification unsuccessful for unknown reason")
             return
 
+        # Updating GUI components based on a result
         if verifyResult:
             self.dsa_verify_button_status.setText("Verification successful, signature is correct!")
             self.dsa_verify_button.setStyleSheet(qPushButtonGreen)
@@ -734,8 +803,12 @@ class Ui_MainWindow(object):
             self.dsa_verify_button_status.setText("Verification unsuccessful, signature is incorrect!")
             self.dsa_verify_button.setStyleSheet(qPushButtonRed)
 
+    # Encrypt a file function
     def encryptFile(self):
+        # Get a selected cipher
         keyStore = self.selectedCipher()
+
+        # Uploading a user selected file
         try:
             file_path = self.enc_dsa_upload_line.text()
             with open(file_path, 'rb') as f:
@@ -745,6 +818,7 @@ class Ui_MainWindow(object):
             self.enc_dsa_upload_line.setPlaceholderText("File not found")
             return
 
+        # Encrypting a user selected file, results are cipher text and encrypted file
         try:
             self.cipher_text, self.encrypted_file = self.pqEncryptionManager.encryptFile(uploaded_file, keyStore)
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonGreen)
@@ -752,8 +826,12 @@ class Ui_MainWindow(object):
             print(traceback.format_exc())
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonRed)
 
+    # Decrypt a file function
     def decryptFile(self):
+        # Get a selected cipher
         keyStore = self.selectedCipher()
+
+        # Uploading a user selected file
         try:
             file_path = self.enc_dsa_upload_line.text()
             with open(file_path, 'rb') as f:
@@ -763,6 +841,7 @@ class Ui_MainWindow(object):
             self.enc_dsa_upload_line.setPlaceholderText("File not found")
             return
 
+        # Uploading a user selected cipher text file
         try:
             text_path = self.enc_dec_upload_ciphertext_line.text()
             with open(text_path, 'rb') as f:
@@ -772,6 +851,7 @@ class Ui_MainWindow(object):
             self.enc_dec_upload_ciphertext_line.setStyleSheet(qLineRed)
             return
 
+        # Decrypting a user selected file, updating GUI components based on a result
         try:
             self.decrypted_file = self.pqEncryptionManager.decryptFile(uploaded_file, uploaded_cipher_text, keyStore)
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonGreen)
@@ -779,6 +859,7 @@ class Ui_MainWindow(object):
             print(traceback.format_exc())
             self.enc_dec_moonit_button.setStyleSheet(qPushButtonRed)
 
+    # Button moon it handler function - encrypt/decrypt button
     def moonIt(self):
         if self.dec_radiobutton.isChecked():
             self.encryptFile()
@@ -787,37 +868,48 @@ class Ui_MainWindow(object):
         else:
             pass
 
+    # Redirect function - After doubleclick on a selected key in a table redirect on a ENC/DEC/DSA page
     def keyTableItemDoubleClicked(self):
         change_page(self, 2)
 
+    # Loading a key statistics table function
     def loadKeyStatisticsTable(self):
+        # Delete all previous data in a GUI component table
         self.key_statistics_table.setRowCount(0)
 
+        # Inserting all data from statistics Manager int a GUI component table
         for entry in self.statisticsManager.keyGenEntries:
             self.key_statistics_table.insertRow(0)
             self.key_statistics_table.setItem(0, 0, QTableWidgetItem(str(entry[0])))
             self.key_statistics_table.setItem(0, 1, QTableWidgetItem(entry[1]))
             self.key_statistics_table.setItem(0, 2, QTableWidgetItem(str(entry[2])))
 
+        # Inserting all averages from statistics Manager
         averages = self.statisticsManager.getKeyAverages()
         for i in range(len(averages)):
             self.key_statistics_data_table.setItem(i, 0, QTableWidgetItem(str(averages[i])))
 
+        # Inserting all medians from statistics Manager
         medians = self.statisticsManager.getKeyMedians()
         for i in range(len(medians)):
             self.key_statistics_data_table.setItem(i, 1, QTableWidgetItem(str(medians[i])))
 
+        # Inserting all mins from statistics Manager
         mins = self.statisticsManager.getKeyMins()
         for i in range(len(mins)):
             self.key_statistics_data_table.setItem(i, 2, QTableWidgetItem(str(mins[i])))
 
+        # Inserting all maxes from statistics Manager
         maxes = self.statisticsManager.getKeyMaxes()
         for i in range(len(maxes)):
             self.key_statistics_data_table.setItem(i, 3, QTableWidgetItem(str(maxes[i])))
 
+    # Loading an enc statistics table function
     def loadEncStatisticsTable(self):
+        # Delete all previous data in a GUI component table
         self.enc_statistics_list_table.setRowCount(0)
 
+        # Inserting all data from statistics Manager int a GUI component table
         for entry in self.statisticsManager.kemAesEntries:
             self.enc_statistics_list_table.insertRow(0)
             self.enc_statistics_list_table.setItem(0, 0, QTableWidgetItem(str(entry[0])))
@@ -827,41 +919,52 @@ class Ui_MainWindow(object):
             self.enc_statistics_list_table.setItem(0, 4, QTableWidgetItem(str(entry[5])))
             self.enc_statistics_list_table.setItem(0, 5, QTableWidgetItem(str(entry[6])))
 
+        # Inserting all encrypt averages from statistics Manager
         averages = self.statisticsManager.getEncryptAverages()
         for i in range(len(averages)):
             self.enc_statistics_data_table.setItem(i, 0, QTableWidgetItem(str(averages[i])))
 
+        # Inserting all decrypt averages from statistics Manager
         averages = self.statisticsManager.getDecryptAverages()
         for i in range(len(averages)):
             self.enc_statistics_data_table.setItem(i + 4, 0, QTableWidgetItem(str(averages[i])))
 
+        # Inserting all encrypt medians from statistics Manager
         medians = self.statisticsManager.getEncryptMedians()
         for i in range(len(medians)):
             self.enc_statistics_data_table.setItem(i, 1, QTableWidgetItem(str(medians[i])))
 
+        # Inserting all decrypt medians from statistics Manager
         medians = self.statisticsManager.getDecryptMedians()
         for i in range(len(medians)):
             self.enc_statistics_data_table.setItem(i + 4, 1, QTableWidgetItem(str(medians[i])))
 
+        # Inserting all encrypt mins from statistics Manager
         mins = self.statisticsManager.getEncryptMins()
         for i in range(len(mins)):
             self.enc_statistics_data_table.setItem(i, 2, QTableWidgetItem(str(mins[i])))
 
+        # Inserting all decrypt mins from statistics Manager
         mins = self.statisticsManager.getDecryptMins()
         for i in range(len(mins)):
             self.enc_statistics_data_table.setItem(i + 4, 2, QTableWidgetItem(str(mins[i])))
 
+        # Inserting all encrypt maxes from statistics Manager
         maxes = self.statisticsManager.getEncryptMaxes()
         for i in range(len(maxes)):
             self.enc_statistics_data_table.setItem(i, 3, QTableWidgetItem(str(maxes[i])))
 
+        # Inserting all decrypt maxes from statistics Manager
         maxes = self.statisticsManager.getDecryptMaxes()
         for i in range(len(maxes)):
             self.enc_statistics_data_table.setItem(i + 4, 3, QTableWidgetItem(str(maxes[i])))
 
+    # Loading a DSA statistics table function
     def loadDsaStatisticsTable(self):
+        # Delete all previous data in a GUI component table
         self.dsa_statistics_table.setRowCount(0)
 
+        # Inserting all data from statistics Manager int a GUI component table
         for entry in self.statisticsManager.dsaEntries:
             self.dsa_statistics_table.insertRow(0)
             self.dsa_statistics_table.setItem(0, 0, QTableWidgetItem(str(entry[0])))
@@ -870,38 +973,47 @@ class Ui_MainWindow(object):
             self.dsa_statistics_table.setItem(0, 3, QTableWidgetItem(str(entry[3])))
             self.dsa_statistics_table.setItem(0, 4, QTableWidgetItem(str(entry[4])))
 
+        # Inserting all sign averages from statistics Manager
         averages = self.statisticsManager.getSignAverages()
         for i in range(len(averages)):
             self.dsa_statistics_data_table.setItem(i, 0, QTableWidgetItem(str(averages[i])))
 
+        # Inserting all verify averages from statistics Manager
         averages = self.statisticsManager.getVerifyAverages()
         for i in range(len(averages)):
             self.dsa_statistics_data_table.setItem(i + 3, 0, QTableWidgetItem(str(averages[i])))
 
+        # Inserting all sign medians from statistics Manager
         medians = self.statisticsManager.getSignMedians()
         for i in range(len(medians)):
             self.dsa_statistics_data_table.setItem(i, 1, QTableWidgetItem(str(medians[i])))
 
+        # Inserting all verify medians from statistics Manager
         medians = self.statisticsManager.getVerifyMedians()
         for i in range(len(medians)):
             self.dsa_statistics_data_table.setItem(i + 3, 1, QTableWidgetItem(str(medians[i])))
 
+        # Inserting all sign mins from statistics Manager
         mins = self.statisticsManager.getSignMins()
         for i in range(len(mins)):
             self.dsa_statistics_data_table.setItem(i, 2, QTableWidgetItem(str(mins[i])))
 
+        # Inserting all verify mins from statistics Manager
         mins = self.statisticsManager.getVerifyMins()
         for i in range(len(mins)):
             self.dsa_statistics_data_table.setItem(i + 3, 2, QTableWidgetItem(str(mins[i])))
 
+        # Inserting all sign maxes from statistics Manager
         maxes = self.statisticsManager.getSignMaxes()
         for i in range(len(maxes)):
             self.dsa_statistics_data_table.setItem(i, 3, QTableWidgetItem(str(maxes[i])))
 
+        # Inserting all verify maxes from statistics Manager
         maxes = self.statisticsManager.getVerifyMaxes()
         for i in range(len(maxes)):
             self.dsa_statistics_data_table.setItem(i + 3, 3, QTableWidgetItem(str(maxes[i])))
 
+    # Main GUI function, creating and inserting all GUI components with all CSS styles and fonts
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -4545,6 +4657,7 @@ class Ui_MainWindow(object):
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
+    # Inserting all default strings into a GUI components
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.btn_toggle_menu.setText("")
@@ -4885,12 +4998,11 @@ class Ui_MainWindow(object):
         self.tableWidget.setSortingEnabled(__sortingEnabled4)
 
         self.label_credits.setText(QCoreApplication.translate("MainWindow", u"Design: Wanderson M. Pimenta | Created: Bc. Dzad\u00edkov\u00e1, Bc. Janout, Bc. Lovinger, Bc. Muzikant", None))
-        self.label_version.setText(QCoreApplication.translate("MainWindow", u"v.2023", None))
+        self.label_version.setText(QCoreApplication.translate("MainWindow", u"v.2024", None))
     # retranslateUi
 
 
-        # OUR CODE
-
+        # Custom created GUI components connections to custom functions
         self.key_generate_button.clicked.connect(self.generateKey)
         self.key_maintable.doubleClicked.connect(self.keyTableItemDoubleClicked)
         self.key_maintable.setRowCount(0)
@@ -4902,11 +5014,12 @@ class Ui_MainWindow(object):
         self.change_pass_new_line2.setEchoMode(QLineEdit.Password)
         self.change_pass_button.clicked.connect(self.changing_password)
         self.login_button.clicked.connect(self.checking_password)
-        pixmap = QPixmap("./Gui/icon.png")
+
+        img = "icon.png"
+        pixmap = QPixmap(img)
         pixmap = pixmap.scaledToWidth(128)
         self.login_image.setPixmap(pixmap)
         self.login_image.setAlignment(Qt.AlignCenter)
-        # self.enc_dsa_selected_key_line.setClearButtonEnabled(True)
         self.enc_dec_moonit_button.clicked.connect(self.moonIt)
         self.dsa_sign_button.clicked.connect(self.signFile)
         self.dsa_verify_button.clicked.connect(self.verifyFile)
@@ -4960,3 +5073,4 @@ class Ui_MainWindow(object):
             key.toggled.connect(self.updateRequestedKeyLengthLabel)
 
         self.key_inputname_line.textChanged.connect(self.checkInputNameLine)
+        # end of custom GUI components connections

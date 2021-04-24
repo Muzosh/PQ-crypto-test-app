@@ -23,10 +23,14 @@ import Gui.files_rc
 from os.path import dirname, abspath
 sys.path.append(dirname(dirname(abspath(__file__))))
 
+# Imports all graphical elements
 from Gui.ui_preparation import *
 
+# Main function for application
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+
+    # Setup parameters
     QtGui.QFontDatabase.addApplicationFont('fonts/segoeui.ttf')
     QtGui.QFontDatabase.addApplicationFont('fonts/segoeuib.ttf')
     QtGui.QIcon('favicon.ico')

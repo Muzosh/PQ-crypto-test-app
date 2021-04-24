@@ -62,7 +62,7 @@ class PqEncryptionManager:
         }
         
         self.decFuncDict = {
-            "McLiece": decapsulate_mceliece8192128,
+            "McEliece": decapsulate_mceliece8192128,
             "Saber": decapsulate_saber,
             "Kyber": decapsulate_kyber1024,
             "Nthrups": decapsulate_ntruhps2048509
