@@ -15,14 +15,25 @@ This project works very well with Windows, however on Linux and macOS there are 
 # REQUERIMENTS:
 > ```sh
 > pip install pyside2==5.15.2
+> appdirs==1.4.4
+> cffi==1.14.5
+> click==7.1.2
+> distlib==0.3.1
+> filelock==3.0.12
+> pqcrypto==0.1.3
+> pycparser==2.20
+> pycryptodomex==3.10.1
+> PyQt5==5.15.2
+> pyqt5-plugins==5.15.2.2.1.0
+> PyQt5-sip==12.8.1
+> pyqt5-tools==5.15.2.3.0.2
+> PyQt5Designer==5.14.1
+> PySide2==5.15.2
+> python-dotenv==0.17.0
+> qt5-applications==5.15.2.2.1
+> qt5-tools==5.15.2.1.0.1
+> shiboken2==5.15.2
+> six==1.15.0
+> virtualenv==20.4.3
+
 > ```
-> PySide2 and PyQt5 in version 5.15.1 **are causing problems** due to several updates in process.
-
-# RUN FILE:
-main.py
-
-# ADD MENUS
-![add-MENUS](https://user-images.githubusercontent.com/60605512/94625100-56372c00-028e-11eb-978e-22165d8f77c8.png)
-
-# Youtube Video:
-> https://www.youtube.com/watch?v=iaIooM9FlRI
