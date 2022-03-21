@@ -9,7 +9,7 @@ School project orientated around post-quantum cryptography.
 - generated keypairs can be stored and re-used from file encrypted with AES-GCM using a master password
 
 # Usage
-- run `StartApplication.py` with python interpreter
+- run `gui/main.py` with python interpreter
 
 # HOW TO BUILD PQCRYPTO DIRECTLY
 1) unpack ".tar.gz" file into the repozitory folder (default name of folder: "pqcrypto-0.1.3")
