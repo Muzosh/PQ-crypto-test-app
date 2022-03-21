@@ -1,5 +1,15 @@
-# KRY_project
-School project orientated around post-quantum cryptography
+# PQ-crypto-test-app
+School project orientated around post-quantum cryptography.
+
+# Features (using various PQ algorithms from pqcrypto library)
+- key generation
+- PK encryption + decryption
+- digital signing + verification
+- performance statistics and algorithm comparison
+- generated keypairs can be stored and re-used from file encrypted with AES-GCM using a master password
+
+# Usage
+- run `StartApplication.py` with python interpreter
 
 # HOW TO BUILD PQCRYPTO DIRECTLY
 1) unpack ".tar.gz" file into the repozitory folder (default name of folder: "pqcrypto-0.1.3")
