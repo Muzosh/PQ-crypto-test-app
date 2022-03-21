@@ -3,7 +3,8 @@ import json
 import base64
 import hashlib
 
-from aesModule import aesEncrypt, aesDecrypt
+from datetime import datetime
+from Managers.aesModule import aesEncrypt, aesDecrypt
 
 class PasswordManager:
     """This class handles everything around user authentication, user-defined password storing, changing, adding, deleting keyStores, etc...
@@ -20,12 +21,15 @@ class PasswordManager:
     """
     
     # database folder
-    __databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database"
+    __databaseFolder = "C:/Database"
+    #__databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database"
     
     # file for keyStores
     __keyStoresFileName = __databaseFolder + "/secrets" 
     # file for masterPassword
     __keyChainFileName = __databaseFolder + "/keychain"
+    # file for statistics
+    __statisticsFileName = __databaseFolder + "/statistics"
     
     # masterPassword in plaintext
     __masterPassword = b""
@@ -38,6 +42,10 @@ class PasswordManager:
         # Create or check keyStores file
         if not os.path.exists(self.__keyStoresFileName):
             open(self.__keyStoresFileName, 'w').close()
+
+        # Create or check statistics file
+        if not os.path.exists(self.__statisticsFileName):
+            open(self.__statisticsFileName, 'w').close()
             
         # Create or check keyChain file
         if not os.path.exists(self.__keyChainFileName):
@@ -45,7 +53,7 @@ class PasswordManager:
             self.__writeKeyChain(masterPassword)
             
         # Authenticate - this will write 2x hashed password into memory
-        if not self.__authenticate(masterPassword):
+        if not self.authenticate(masterPassword):
             raise ValueError("Passwords don't match!")
 
     def __writeKeyChain(self, masterPassword):
@@ -98,7 +106,96 @@ class PasswordManager:
         with open(self.__keyStoresFileName, 'w') as file:
             file.write(base64.b64encode(str(encryptedList).encode()).decode())
 
-    def __authenticate(self, password):
+    def writeStatistics(self, keyGenEntries, kemAesEntries, dsaEntries):
+        '''
+        Write encrypted statistics to the file.
+        '''
+        encryptedList = []
+
+        tempList = []
+        for x in keyGenEntries:
+            tempList.append(
+                aesEncrypt(
+                    str(x[0]).encode() + b"\x00"*4 +
+                    x[1].encode() + b"\x00"*4 +
+                    str(x[2]).encode(),
+                    self.__masterPassword))
+        encryptedList.append(tempList)
+
+        tempList = []
+        for x in kemAesEntries:
+            tempList.append(
+                aesEncrypt(
+                    str(x[0]).encode() + b"\x00"*4 +
+                    x[1].encode() + b"\x00"*4 +
+                    x[2].encode() + b"\x00"*4 +
+                    str(x[3]).encode() + b"\x00"*4 +
+                    str(x[4]).encode() + b"\x00"*4 +
+                    str(x[5]).encode() + b"\x00"*4 +
+                    str(x[6]).encode(),
+                    self.__masterPassword))
+        encryptedList.append(tempList)
+
+        tempList = []
+        for x in dsaEntries:
+            tempList.append(
+                aesEncrypt(
+                    str(x[0]).encode() + b"\x00"*4 +
+                    x[1].encode() + b"\x00"*4 +
+                    x[2].encode() + b"\x00"*4 +
+                    str(x[3]).encode() + b"\x00"*4 +
+                    str(x[4]).encode(),
+                    self.__masterPassword))
+        encryptedList.append(tempList)
+            
+        with open(self.__statisticsFileName, 'w') as file:
+            file.write(base64.b64encode(str(encryptedList).encode()).decode())
+    
+    def readStatistics(self):
+        '''
+        Read keyStores from the file.
+        '''
+        with open(self.__statisticsFileName, 'r') as file:
+            encryptedList = base64.b64decode(file.readline().encode()).decode()
+        
+        statistics = json.loads(str(encryptedList).replace("'", "\"") or "[[],[],[]]")
+
+        keyGenEntries = []
+        for x in statistics[0]:
+            entry = aesDecrypt(x, self.__masterPassword).split(b"\x00"*4, 2)
+            
+            keyGenEntries.append(
+                (datetime.strptime(entry[0].decode(), '%Y-%m-%d %H:%M:%S.%f'),
+                entry[1].decode(),
+                float(entry[2].decode())))
+            
+        kemAesEntries = []
+        for x in statistics[1]:
+            entry = aesDecrypt(x, self.__masterPassword).split(b"\x00"*4, 6)
+            
+            kemAesEntries.append(
+                (datetime.strptime(entry[0].decode(), '%Y-%m-%d %H:%M:%S.%f'),
+                entry[1].decode(),
+                entry[2].decode(),
+                int(entry[3].decode()),
+                int(entry[4].decode()),
+                float(entry[5].decode()),
+                float(entry[6].decode())))
+            
+        dsaEntries = []
+        for x in statistics[2]:
+            entry = aesDecrypt(x, self.__masterPassword).split(b"\x00"*4, 4)
+            
+            dsaEntries.append(
+                (datetime.strptime(entry[0].decode(), '%Y-%m-%d %H:%M:%S.%f'),
+                entry[1].decode(),
+                entry[2].decode(),
+                int(entry[3].decode()),
+                float(entry[4].decode())))
+            
+        return keyGenEntries, kemAesEntries, dsaEntries
+
+    def authenticate(self, password):
         '''
         Auhthentication - hash checking.
         '''
@@ -126,7 +223,7 @@ class PasswordManager:
         '''
         Change masterPassword of the application.
         '''
-        if not self.__authenticate(old):
+        if not self.authenticate(old):
             raise ValueError("Old password does not match!")
         else:
             # save currenty used keyStores to variable
@@ -164,15 +261,13 @@ class PasswordManager:
         with open(self.__keyStoresFileName, 'w') as file:
             file.write(base64.b64encode(encryptedListString.encode()).decode())
 
-    def deleteKeyStore(self, name:str, alg:str, keyType:str, value:bytes):
+    def deleteKeyStore(self, name:str):
         '''
         Remove keyStore from the file.
         '''
         
-        keyStore = (name, alg, keyType, value)
-        
         keyStores = self.__readKeyStores()
-        self.__writeKeyStores([x for x in keyStores if x not in {keyStore}])
+        self.__writeKeyStores([x for x in keyStores if x[0] != name])
     
     # Public method for creating list of user-stored passwords
     def loadKeyStoreList(self):
@@ -191,7 +286,7 @@ class PasswordManager:
 # # add "added" password
 # x.addKeyStore("nameX", "algX", "keyTypeX", b"valueX")
 # # delete third password
-# x.deleteKeyStore("name3", "alg3", "keyType3", b"value3")
+# x.deleteKeyStore("name3")
 # # final print
 # print("final print: ", x.loadKeyStoreList())
 # # change master password

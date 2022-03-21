@@ -34,10 +34,11 @@ import base64
 import json
 from datetime import datetime
 
-from aesModule import aesEncrypt, aesDecrypt
+from Managers.aesModule import aesEncrypt, aesDecrypt
 
 class PqEncryptionManager:    
-    """This class handles everything around key en/decapsulation and file en/decryption using pq-algorithms and AES.
+    """
+    This class handles everything around en/decapsulation and file en/decryption using  PQ algorithms (KEM scheme) and AES.
     Constructor:
         statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
     Available public methods:
@@ -46,24 +47,40 @@ class PqEncryptionManager:
     """
     
     def __init__(self, statisticsManager):
+        """
+        Constructor od the class:
+            statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
+        """
         self.__statisticsManager = statisticsManager
         
         # dictionary is a substitue for switch case, which is absent in Python
         self.encFuncDict = {
-            "McLiece": encapsulate_mceliece8192128,
+            "McEliece": encapsulate_mceliece8192128,
             "Saber": encapsulate_saber,
             "Kyber": encapsulate_kyber1024,
             "Nthrups": encapsulate_ntruhps2048509
         }
         
         self.decFuncDict = {
-            "McLiece": decapsulate_mceliece8192128,
+            "McEliece": decapsulate_mceliece8192128,
             "Saber": decapsulate_saber,
             "Kyber": decapsulate_kyber1024,
             "Nthrups": decapsulate_ntruhps2048509
         }
     
     def encryptFile(self, fileToEncrypt:bytes, publicKeyStore:tuple) -> (bytes, bytes):
+        """
+        This method provides encapsulation using PQ public key to generate ciphertext (needed for decapsulation process) and symmetric secret key used for the next AES-256 
+        encryption of the file. The method also provides measurements of encapsulation time for statictics.
+        
+        Args:
+            fileToEncrypt (bytes): File for the encryption - plaintext
+            publicKeyStore (tuple): PQ public key
+        
+        Returns:
+            bytes: Ciphertext
+            bytes: Encrypted data
+        """
         if publicKeyStore[2] != "Public":
             raise ValueError("Public key is needed for encryption.")
         
@@ -84,7 +101,7 @@ class PqEncryptionManager:
         aesTime = time.time() - start
 
         # log operations
-        self.__statisticsManager.addKemAesEntry(datetime.now(), publicKeyStore[1], "Encrypt", 256, len(fileToEncrypt), kemTime, aesTime)
+        self.__statisticsManager.addKemAesEntry(datetime.now(), publicKeyStore[1], "Encrypt", 256, len(fileToEncrypt), kemTime/1000, aesTime/1000)
         
         # obfuscate encrypted file
         encryptedFileObf = base64.b64encode(str(encryptedFile).encode())
@@ -92,6 +109,18 @@ class PqEncryptionManager:
         return ciphertext, encryptedFileObf
     
     def decryptFile(self, encryptedFileObf:bytes, ciphertext:bytes, privateKeyStore:tuple) -> bytes:
+        """
+        This method provides decapsulation using PQ private key and ciphertext to obtain symmetric secret key used for AES-256 decryption of the file. 
+        The method also records time needed for decapsulation which is logged to statisticsManager.
+        
+        Args:
+            encryptedFileObf (bytes): Encrypted file for decryption - cipher
+            ciphertext (bytes): Cipher text needed for decapsulation and obtaining symmetric secret key
+            privateKeyStore (tuple): PQ private key
+            
+        Returns:
+            bytes: Decrypted data
+        """
         if privateKeyStore[2] != "Private":
             raise ValueError("Private key is needed for decryption.")
         
@@ -115,7 +144,7 @@ class PqEncryptionManager:
         aesTime = time.time() - start
 
         # log operations and return decrypted file
-        self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, len(decryptedFile), kemTime, aesTime)
+        self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, len(decryptedFile), kemTime/1000, aesTime/1000)
         return decryptedFile
         
 # # TEST AREA

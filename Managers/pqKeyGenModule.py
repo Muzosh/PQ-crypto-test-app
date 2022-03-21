@@ -1,4 +1,5 @@
 # KEM
+
 from secrets import compare_digest
 # from pqcrypto.kem.firesaber import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem1344aes import generate_keypair, encrypt, decrypt
@@ -106,11 +107,24 @@ class PqKeyGenManager:
     """
        
     def __init__(self, passwordManager, statisticsManager):
+        """
+        Constructor of the class:
+            passwordManager (PasswordManager): existing instance of PasswordManager managing keyStores database
+            statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
+        """
         self.__passwordManager = passwordManager
         self.__statisticsManager = statisticsManager
 
-    # cols.Callable[[], [bytes]] specifies that methods takes a function (which returns bytes) as a argument so it can run it later
+    
     def __RunKeyGen(self, generateFunction:cols.Callable[[], [bytes]], alg:str, name:str):
+        """
+        Private method that is used for measuring time of keypair generation and adding to database.
+        
+        Args:
+            generateFunction (cols.Callable[[], [bytes]]): Specifies that methods takes a function (which returns bytes) as a argument so it can run it later
+            alg (str): Name of the PQ algorithm
+            name (str): Name that user set for keypair
+        """
         # get current datetime
         now = datetime.datetime.now()
         
@@ -123,31 +137,66 @@ class PqKeyGenManager:
         keyGenTime = time.time() - start
         
         # log operation and add two keys into database
-        self.__statisticsManager.addKeyGenEntry(now, alg, keyGenTime)
+        self.__statisticsManager.addKeyGenEntry(now, alg, keyGenTime/1000)
         self.__passwordManager.addKeyStore(nameText, alg, "Public", keyPair[0])
         self.__passwordManager.addKeyStore(nameText, alg, "Private", keyPair[1])
 
-    # KEM
+    # KEM keypair generation
     def generate_keypair_mceliece8192128(self, name=""):
-        self.__RunKeyGen(gen_mceliece, "McLiece", name)
+        """
+        Generation of McEliece keypair with
+            public key  - 1 357 824 B,
+            private key - 14 080 B.
+        """
+        self.__RunKeyGen(gen_mceliece, "McEliece", name)
 
     def generate_keypair_saber(self, name=""):
+        """
+        Generation of SABER keypair with
+            public key  - 992 B,
+            private key - 2 304 B.
+        """
         self.__RunKeyGen(gen_saber, "Saber", name)
 
     def generate_keypair_kyber1024(self, name=""):
+        """
+        Generation of Crystals-Kyber keypair with
+            public key  - 1 568 B,
+            private key - 3 168 B.
+        """
         self.__RunKeyGen(gen_kyber1024, "Kyber", name)
 
     def generate_keypair_ntruhps2048509(self, name=""):
+        """
+        Generation of NTRU-HPS keypair with
+            public key  - 699 B,
+            private key - 935 B.
+        """
         self.__RunKeyGen(gen_ntruhps2048509, "Nthrups", name)
 
-    # DSA
+    # DSA keypair generation
     def generate_keypair_dilithium4(self, name=""):
+        """
+        Generation of Crustals-Dilithium keypair with
+            public key  - 1 760 B,
+            private key - 3 856 B.
+        """
         self.__RunKeyGen(gen_dilithium4, "Dilithium", name)
 
     def generate_keypair_rainbowVc_classic(self, name=""):
+        """
+        Generation of Rainbow Vc Classic keypair with
+            public key  - 1 705 536 B,
+            private key - 1 227 104 B.
+        """
         self.__RunKeyGen(gen_rainbowVc_classic, "RainbowVc", name)
 
     def generate_keypair_sphincs_shake256_256s_simple(self, name=""):
+        """
+        Generation of SPHINCS keypair with
+            public key  - 64 B,
+            private key - 128 B.
+        """
         self.__RunKeyGen(gen_sphincs_shake256_256s_simple, "Sphincs", name)
 
 # # TEST AREA

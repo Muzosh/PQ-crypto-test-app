@@ -4,7 +4,8 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
 
 def aesEncrypt(bytes:bytes, symmetricKey:bytes) -> dict:
-    """Encrypts file using AES encryption method.
+    """
+    Encrypts file using AES-256 encryption method.
 
     Args:
         bytes (bytes): Data to be encrypted
@@ -34,7 +35,8 @@ def aesEncrypt(bytes:bytes, symmetricKey:bytes) -> dict:
     }
 
 def aesDecrypt(encryptedData:dict, symmetricKey:bytes):
-    """Decrypts file using AES decryption algorithm method.
+    """
+    Decrypts file using AES-256 decryption algorithm method.
 
     Args:
         encryptedData (dict): Dictionary containing ciphertext, salt, nonce and tag keys
