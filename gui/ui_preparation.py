@@ -1,7 +1,7 @@
 ################################################################################
 ##
 ## BY: WANDERSON M.PIMENTA
-## PROJECT MADE WITH: Qt Designer and PySide2
+## PROJECT MADE WITH: Qt Designer and PySide6
 ## V: 1.0.0
 ##
 ## This project can be used freely for all uses, as long as they maintain the
@@ -18,8 +18,8 @@ import os
 import sys
 import platform
 from os.path import dirname, abspath
-from PySide2 import QtCore, QtGui, QtWidgets
-from PySide2.QtCore import (
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtCore import (
     QCoreApplication,
     QPropertyAnimation,
     QDate,
@@ -34,7 +34,7 @@ from PySide2.QtCore import (
     Qt,
     QEvent,
 )
-from PySide2.QtGui import (
+from PySide6.QtGui import (
     QBrush,
     QColor,
     QConicalGradient,
@@ -49,9 +49,9 @@ from PySide2.QtGui import (
     QPixmap,
     QRadialGradient,
 )
-from PySide2.QtWidgets import *
-from Gui.ui_main import Ui_MainWindow
-from Gui.ui_styles import Style
+from PySide6.QtWidgets import *
+from ui_main import Ui_MainWindow
+from ui_styles import Style
 
 # Global CSS styles for components
 qLineDefault = "QLineEdit{border:2px solid #343b48;border-radius:15px;background-color:#343b48;color:#fff}QLineEdit:hover{background-color:#394150;border:2px solid #3d4656;color:#fff}QLineEdit:pressed{background-color:#232831;border:2px solid #2b323d;color:#fff}"
@@ -61,8 +61,8 @@ qPushButtonGreen = "QPushButton{border: 2px solid rgb(0, 170, 0);border-radius: 
 qPushButtonDisabled = "QPushButton{border:2px solid #000;color:#555;border-radius:15px;background-color:#000}"
 
 # Global path to a download folder / changed to C for .exe app
-# downloadsFolder = dirname(dirname(abspath(__file__))) + "/Downloads"
-downloadsFolder = "C:/Downloads"
+downloadsFolder = dirname(dirname(abspath(__file__))) + "/Downloads"
+# downloadsFolder = "C:/Downloads"
 if not os.path.exists(downloadsFolder):
     os.mkdir(downloadsFolder)
 
@@ -325,8 +325,12 @@ class MainWindow(QMainWindow):
     # Change login button text based on a database
     def updateLoginPageButtonText(self):
         # Path to the database
-        # __databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/keychain"
-        __databaseFolder = "C:/Database/keychain"
+        __databaseFolder = (
+            os.path.dirname(os.path.abspath(__file__))
+            + "/.."
+            + "/Database/keychain"
+        )
+        # __databaseFolder = "C:/Database/keychain"
 
         # Inserting a correct button text
         if not os.path.exists(__databaseFolder):
@@ -340,8 +344,8 @@ class MainWindow(QMainWindow):
         response = QFileDialog.getOpenFileName(
             parent=self,
             caption="Select a data file",
-            directory=os.getcwd(),
-            filter=file_filter,
+            dir=os.getcwd(),
+            # filter=file_filter,
         )
         return response[0]
 

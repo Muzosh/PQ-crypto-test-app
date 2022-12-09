@@ -17,7 +17,7 @@
 import os
 import sys
 import platform
-import Gui.files_rc
+import files_rc
 
 # Add project root directory to sys.path so it can find
 from os.path import dirname, abspath
@@ -25,7 +25,7 @@ from os.path import dirname, abspath
 sys.path.append(dirname(dirname(abspath(__file__))))
 
 # Imports all graphical elements
-from Gui.ui_preparation import *
+from ui_preparation import *
 
 # Main function for application
 if __name__ == "__main__":

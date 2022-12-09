@@ -22,8 +22,10 @@ class PasswordManager:
     """
 
     # database folder
-    __databaseFolder = "C:/Database"
-    # __databaseFolder = os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database"
+    # __databaseFolder = "C:/Database"
+    __databaseFolder = (
+        os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database"
+    )
 
     # file for keyStores
     __keyStoresFileName = __databaseFolder + "/secrets"
@@ -78,7 +80,9 @@ class PasswordManager:
         with open(self.__keyStoresFileName, "r") as file:
             # read file contents as string and convert that string into list type using json.loads()
             encryptedList = base64.b64decode(file.readline().encode()).decode()
-            keyStores = json.loads(str(encryptedList).replace("'", '"') or "[]")
+            keyStores = json.loads(
+                str(encryptedList).replace("'", '"') or "[]"
+            )
 
             # create list of keyStores - decrypt with aes and create (string, string, string bytes) tuple and add it to the list
             decryptedList = []

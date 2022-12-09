@@ -12,7 +12,7 @@ from Managers.pqEncryptionModule import PqEncryptionManager
 from Managers.pqKeyGenModule import PqKeyGenManager
 from Managers.pqSigningModule import PqSigningManager
 from Managers.statisticsModule import StatisticsManager
-from PySide2.QtCore import (
+from PySide6.QtCore import (
     QCoreApplication,
     QMetaObject,
     QObject,
@@ -23,7 +23,7 @@ from PySide2.QtCore import (
     Qt,
     QDir,
 )
-from PySide2.QtGui import (
+from PySide6.QtGui import (
     QBrush,
     QColor,
     QConicalGradient,
@@ -37,7 +37,7 @@ from PySide2.QtGui import (
     QPixmap,
     QRadialGradient,
 )
-from PySide2.QtWidgets import *
+from PySide6.QtWidgets import *
 from PyQt5.QtWidgets import QFileDialog
 
 
@@ -1680,7 +1680,7 @@ class Ui_MainWindow(object):
         font1.setFamily("Segoe UI")
         font1.setPointSize(10)
         font1.setBold(True)
-        font1.setWeight(75)
+        font1.setWeight(QFont.Weight(75))
         self.label_title_bar_top.setFont(font1)
         self.label_title_bar_top.setStyleSheet("background: transparent;\n" "")
         self.label_title_bar_top.setInputMethodHints(Qt.ImhNone)
@@ -1834,7 +1834,7 @@ class Ui_MainWindow(object):
         font3 = QFont()
         font3.setFamily("Segoe UI")
         font3.setBold(True)
-        font3.setWeight(75)
+        font3.setWeight(QFont.Weight(75))
         self.label_top_info_2.setFont(font3)
         self.label_top_info_2.setStyleSheet("color: rgb(98, 103, 111);")
         self.label_top_info_2.setInputMethodHints(Qt.ImhNone)
@@ -2023,7 +2023,7 @@ class Ui_MainWindow(object):
         font6.setFamily("Open Sans")
         font6.setPointSize(40)
         font6.setBold(True)
-        font6.setWeight(75)
+        font6.setWeight(QFont.Weight(75))
         self.login_headline_label.setFont(font6)
         self.login_headline_label.setStyleSheet("color:white;")
         self.login_headline_label.setInputMethodHints(Qt.ImhNone)
@@ -2146,7 +2146,7 @@ class Ui_MainWindow(object):
         font8.setFamily("Open Sans")
         font8.setPointSize(12)
         font8.setBold(True)
-        font8.setWeight(75)
+        font8.setWeight(QFont.Weight(75))
         self.change_pass_title.setFont(font8)
         self.change_pass_title.setAlignment(Qt.AlignCenter)
         self.change_pass_old_line = QLineEdit(self.change_pass_frame)
@@ -2804,7 +2804,7 @@ class Ui_MainWindow(object):
         font12.setFamily("Open Sans")
         font12.setPointSize(10)
         font12.setBold(True)
-        font12.setWeight(75)
+        font12.setWeight(QFont.Weight(75))
         self.line.setFont(font12)
         self.line.setStyleSheet("color:black;")
         self.line.setFrameShadow(QFrame.Plain)
@@ -2840,7 +2840,7 @@ class Ui_MainWindow(object):
         font13.setFamily("Open Sans")
         font13.setPointSize(10)
         font13.setBold(False)
-        font13.setWeight(50)
+        font13.setWeight(QFont.Weight(50))
         self.key_checkbox1.setFont(font13)
         self.key_checkbox1.setStyleSheet("")
         self.key_checkbox1.setAutoExclusive(True)
@@ -4850,7 +4850,7 @@ class Ui_MainWindow(object):
         font19.setFamily("Open Sans")
         font19.setPointSize(11)
         font19.setBold(True)
-        font19.setWeight(75)
+        font19.setWeight(QFont.Weight(75))
         self.about_info_box_label.setFont(font19)
         self.about_info_box_label.setLayoutDirection(Qt.LeftToRight)
         self.about_info_box_label.setAlignment(Qt.AlignCenter)
