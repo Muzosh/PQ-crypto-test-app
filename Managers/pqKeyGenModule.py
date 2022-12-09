@@ -1,6 +1,7 @@
 # KEM
 
 from secrets import compare_digest
+
 # from pqcrypto.kem.firesaber import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem1344aes import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem1344shake import generate_keypair, encrypt, decrypt
@@ -9,6 +10,7 @@ from secrets import compare_digest
 # from pqcrypto.kem.frodokem976aes import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem976shake import generate_keypair, encrypt, decrypt
 from pqcrypto.kem.kyber1024 import generate_keypair as gen_kyber1024
+
 # from pqcrypto.kem.kyber1024_90s import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.kyber512 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.kyber512_90s import generate_keypair, encrypt, decrypt
@@ -24,8 +26,10 @@ from pqcrypto.kem.kyber1024 import generate_keypair as gen_kyber1024
 # from pqcrypto.kem.mceliece6960119 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.mceliece6960119f import generate_keypair, encrypt, decrypt
 from pqcrypto.kem.mceliece8192128 import generate_keypair as gen_mceliece
+
 # from pqcrypto.kem.mceliece8192128f import generate_keypair, encrypt, decrypt
 from pqcrypto.kem.ntruhps2048509 import generate_keypair as gen_ntruhps2048509
+
 # from pqcrypto.kem.ntruhps2048677 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.ntruhps4096821 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.ntruhrss701 import generate_keypair, encrypt, decrypt
@@ -36,6 +40,7 @@ from pqcrypto.kem.saber import generate_keypair as gen_saber
 # from pqcrypto.sign.dilithium2 import generate_keypair, sign, verify
 # from pqcrypto.sign.dilithium3 import generate_keypair, sign, verify
 from pqcrypto.sign.dilithium4 import generate_keypair as gen_dilithium4
+
 # from pqcrypto.sign.falcon_1024 import generate_keypair, sign, verify
 # from pqcrypto.sign.falcon_512 import generate_keypair, sign, verify
 # from pqcrypto.sign.rainbowIa_classic import generate_keypair, sign, verify
@@ -44,7 +49,10 @@ from pqcrypto.sign.dilithium4 import generate_keypair as gen_dilithium4
 # from pqcrypto.sign.rainbowIIIc_classic import generate_keypair, sign, verify
 # from pqcrypto.sign.rainbowIIIc_cyclic import generate_keypair, sign, verify
 # from pqcrypto.sign.rainbowIIIc_cyclic_compressed import generate_keypair, sign, verify
-from pqcrypto.sign.rainbowVc_classic import generate_keypair as gen_rainbowVc_classic
+from pqcrypto.sign.rainbowVc_classic import (
+    generate_keypair as gen_rainbowVc_classic,
+)
+
 # from pqcrypto.sign.rainbowVc_cyclic import generate_keypair, sign, verify
 # from pqcrypto.sign.rainbowVc_cyclic_compressed import generate_keypair, sign, verify
 # from pqcrypto.sign.sphincs_haraka_128f_robust import generate_keypair, sign, verify
@@ -82,20 +90,23 @@ from pqcrypto.sign.rainbowVc_classic import generate_keypair as gen_rainbowVc_cl
 # from pqcrypto.sign.sphincs_shake256_256f_robust import generate_keypair, sign, verify
 # from pqcrypto.sign.sphincs_shake256_256f_simple import generate_keypair, sign, verify
 # from pqcrypto.sign.sphincs_shake256_256s_robust import generate_keypair, sign, verify
-from pqcrypto.sign.sphincs_shake256_256s_simple import generate_keypair as gen_sphincs_shake256_256s_simple
+from pqcrypto.sign.sphincs_shake256_256s_simple import (
+    generate_keypair as gen_sphincs_shake256_256s_simple,
+)
 
 import time
 import random
 import datetime
 import collections.abc as cols
 
-class PqKeyGenManager: 
+
+class PqKeyGenManager:
     """
     This class generates key pairs using PQ algorithms and saves them into the database. It is recommended to reload keyStores list after generating keyPair.
-    Constructor: 
+    Constructor:
         passwordManager (PasswordManager): existing instance of PasswordManager managing keyStores database
         statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
-    
+
     Available public methods:
         generate_keypair_mceliece8192128(name="") -> None
         generate_keypair_saber(name="") -> None
@@ -105,7 +116,7 @@ class PqKeyGenManager:
         generate_keypair_rainbowVc_classic(name="") -> None
         generate_keypair_sphincs_shake256_256s_simple(name="") -> None
     """
-       
+
     def __init__(self, passwordManager, statisticsManager):
         """
         Constructor of the class:
@@ -115,11 +126,12 @@ class PqKeyGenManager:
         self.__passwordManager = passwordManager
         self.__statisticsManager = statisticsManager
 
-    
-    def __RunKeyGen(self, generateFunction:cols.Callable[[], [bytes]], alg:str, name:str):
+    def __RunKeyGen(
+        self, generateFunction: cols.Callable[[], [bytes]], alg: str, name: str
+    ):
         """
         Private method that is used for measuring time of keypair generation and adding to database.
-        
+
         Args:
             generateFunction (cols.Callable[[], [bytes]]): Specifies that methods takes a function (which returns bytes) as a argument so it can run it later
             alg (str): Name of the PQ algorithm
@@ -127,17 +139,19 @@ class PqKeyGenManager:
         """
         # get current datetime
         now = datetime.datetime.now()
-        
+
         # set name - random integer is here for easy private/public key pairing, then date, then user specified name
-        nameText = "|"+ str(random.randint(0,999)) + "|" + str(now) + "|" + name
-        
+        nameText = (
+            "|" + str(random.randint(0, 999)) + "|" + str(now) + "|" + name
+        )
+
         # generate keypair and time it
         start = time.time()
         keyPair = generateFunction()
         keyGenTime = time.time() - start
-        
+
         # log operation and add two keys into database
-        self.__statisticsManager.addKeyGenEntry(now, alg, keyGenTime/1000)
+        self.__statisticsManager.addKeyGenEntry(now, alg, keyGenTime / 1000)
         self.__passwordManager.addKeyStore(nameText, alg, "Public", keyPair[0])
         self.__passwordManager.addKeyStore(nameText, alg, "Private", keyPair[1])
 
@@ -198,6 +212,7 @@ class PqKeyGenManager:
             private key - 128 B.
         """
         self.__RunKeyGen(gen_sphincs_shake256_256s_simple, "Sphincs", name)
+
 
 # # TEST AREA
 # # init classes

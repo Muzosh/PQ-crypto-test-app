@@ -19,8 +19,9 @@ import sys
 import platform
 import Gui.files_rc
 
-# Add project root directory to sys.path so it can find 
+# Add project root directory to sys.path so it can find
 from os.path import dirname, abspath
+
 sys.path.append(dirname(dirname(abspath(__file__))))
 
 # Imports all graphical elements
@@ -31,9 +32,9 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # Setup parameters
-    QtGui.QFontDatabase.addApplicationFont('fonts/segoeui.ttf')
-    QtGui.QFontDatabase.addApplicationFont('fonts/segoeuib.ttf')
-    QtGui.QIcon('favicon.ico')
+    QtGui.QFontDatabase.addApplicationFont("fonts/segoeui.ttf")
+    QtGui.QFontDatabase.addApplicationFont("fonts/segoeuib.ttf")
+    QtGui.QIcon("favicon.ico")
     window = MainWindow()
     ret = app.exec_()
 

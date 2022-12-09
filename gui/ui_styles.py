@@ -14,10 +14,10 @@
 ##
 ################################################################################
 
-class Style():
 
-    style_bt_standard = (
-    """
+class Style:
+
+    style_bt_standard = """
     QPushButton {
         background-image: ICON_REPLACE;
         background-position: left center;
@@ -48,4 +48,3 @@ class Style():
         border-left: 28px solid rgb(85, 170, 255);
     }
     """
-    )

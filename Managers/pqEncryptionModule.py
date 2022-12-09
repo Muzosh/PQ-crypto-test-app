@@ -1,4 +1,5 @@
 from secrets import compare_digest
+
 # from pqcrypto.kem.firesaber import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem1344aes import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem1344shake import generate_keypair, encrypt, decrypt
@@ -6,7 +7,11 @@ from secrets import compare_digest
 # from pqcrypto.kem.frodokem640shake import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem976aes import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.frodokem976shake import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.kyber1024 import encrypt as encapsulate_kyber1024, decrypt as decapsulate_kyber1024
+from pqcrypto.kem.kyber1024 import (
+    encrypt as encapsulate_kyber1024,
+    decrypt as decapsulate_kyber1024,
+)
+
 # from pqcrypto.kem.kyber1024_90s import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.kyber512 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.kyber512_90s import generate_keypair, encrypt, decrypt
@@ -21,13 +26,24 @@ from pqcrypto.kem.kyber1024 import encrypt as encapsulate_kyber1024, decrypt as 
 # from pqcrypto.kem.mceliece6688128f import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.mceliece6960119 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.mceliece6960119f import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.mceliece8192128 import encrypt as encapsulate_mceliece8192128, decrypt as decapsulate_mceliece8192128
+from pqcrypto.kem.mceliece8192128 import (
+    encrypt as encapsulate_mceliece8192128,
+    decrypt as decapsulate_mceliece8192128,
+)
+
 # from pqcrypto.kem.mceliece8192128f import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.ntruhps2048509 import encrypt as encapsulate_ntruhps2048509, decrypt as decapsulate_ntruhps2048509
+from pqcrypto.kem.ntruhps2048509 import (
+    encrypt as encapsulate_ntruhps2048509,
+    decrypt as decapsulate_ntruhps2048509,
+)
+
 # from pqcrypto.kem.ntruhps2048677 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.ntruhps4096821 import generate_keypair, encrypt, decrypt
 # from pqcrypto.kem.ntruhrss701 import generate_keypair, encrypt, decrypt
-from pqcrypto.kem.saber import encrypt as encapsulate_saber, decrypt as decapsulate_saber
+from pqcrypto.kem.saber import (
+    encrypt as encapsulate_saber,
+    decrypt as decapsulate_saber,
+)
 
 import time
 import base64
@@ -36,7 +52,8 @@ from datetime import datetime
 
 from Managers.aesModule import aesEncrypt, aesDecrypt
 
-class PqEncryptionManager:    
+
+class PqEncryptionManager:
     """
     This class handles everything around en/decapsulation and file en/decryption using  PQ algorithms (KEM scheme) and AES.
     Constructor:
@@ -45,108 +62,136 @@ class PqEncryptionManager:
         encryptFile(fileToEncrypt:bytes, publicKeyStore:tuple) -> (ciphertext:bytes, encryptedFileObf:bytes)
         decryptFile(encryptedFileObf:bytes, ciphertext:bytes, privateKeyStore:tuple) -> decryptedFile:bytes
     """
-    
+
     def __init__(self, statisticsManager):
         """
         Constructor od the class:
             statisticsManager (StatisticsManager): existing instance of StatisticsManager for data collection
         """
         self.__statisticsManager = statisticsManager
-        
+
         # dictionary is a substitue for switch case, which is absent in Python
         self.encFuncDict = {
             "McEliece": encapsulate_mceliece8192128,
             "Saber": encapsulate_saber,
             "Kyber": encapsulate_kyber1024,
-            "Nthrups": encapsulate_ntruhps2048509
+            "Nthrups": encapsulate_ntruhps2048509,
         }
-        
+
         self.decFuncDict = {
             "McEliece": decapsulate_mceliece8192128,
             "Saber": decapsulate_saber,
             "Kyber": decapsulate_kyber1024,
-            "Nthrups": decapsulate_ntruhps2048509
+            "Nthrups": decapsulate_ntruhps2048509,
         }
-    
-    def encryptFile(self, fileToEncrypt:bytes, publicKeyStore:tuple) -> (bytes, bytes):
+
+    def encryptFile(
+        self, fileToEncrypt: bytes, publicKeyStore: tuple
+    ) -> (bytes, bytes):
         """
-        This method provides encapsulation using PQ public key to generate ciphertext (needed for decapsulation process) and symmetric secret key used for the next AES-256 
+        This method provides encapsulation using PQ public key to generate ciphertext (needed for decapsulation process) and symmetric secret key used for the next AES-256
         encryption of the file. The method also provides measurements of encapsulation time for statictics.
-        
+
         Args:
             fileToEncrypt (bytes): File for the encryption - plaintext
             publicKeyStore (tuple): PQ public key
-        
+
         Returns:
             bytes: Ciphertext
             bytes: Encrypted data
         """
         if publicKeyStore[2] != "Public":
             raise ValueError("Public key is needed for encryption.")
-        
+
         # obtain encapsulation function based on algorithm
         try:
             encapsulationFunction = self.encFuncDict[publicKeyStore[1]]
         except KeyError:
-            raise ValueError("Wrong algorithm - probably chosen key for DSA algorithm")
-        
+            raise ValueError(
+                "Wrong algorithm - probably chosen key for DSA algorithm"
+            )
+
         # create ciphertext used for later secretkey recovery and secretkey used for aes encryption and time it
         start = time.time()
         ciphertext, secret_key = encapsulationFunction(publicKeyStore[3])
         kemTime = time.time() - start
-        
+
         # encrypt file with symmetric secretkey and time it
         start = time.time()
         encryptedFile = aesEncrypt(fileToEncrypt, secret_key)
         aesTime = time.time() - start
 
         # log operations
-        self.__statisticsManager.addKemAesEntry(datetime.now(), publicKeyStore[1], "Encrypt", 256, len(fileToEncrypt), kemTime/1000, aesTime/1000)
-        
+        self.__statisticsManager.addKemAesEntry(
+            datetime.now(),
+            publicKeyStore[1],
+            "Encrypt",
+            256,
+            len(fileToEncrypt),
+            kemTime / 1000,
+            aesTime / 1000,
+        )
+
         # obfuscate encrypted file
         encryptedFileObf = base64.b64encode(str(encryptedFile).encode())
-        
+
         return ciphertext, encryptedFileObf
-    
-    def decryptFile(self, encryptedFileObf:bytes, ciphertext:bytes, privateKeyStore:tuple) -> bytes:
+
+    def decryptFile(
+        self, encryptedFileObf: bytes, ciphertext: bytes, privateKeyStore: tuple
+    ) -> bytes:
         """
-        This method provides decapsulation using PQ private key and ciphertext to obtain symmetric secret key used for AES-256 decryption of the file. 
+        This method provides decapsulation using PQ private key and ciphertext to obtain symmetric secret key used for AES-256 decryption of the file.
         The method also records time needed for decapsulation which is logged to statisticsManager.
-        
+
         Args:
             encryptedFileObf (bytes): Encrypted file for decryption - cipher
             ciphertext (bytes): Cipher text needed for decapsulation and obtaining symmetric secret key
             privateKeyStore (tuple): PQ private key
-            
+
         Returns:
             bytes: Decrypted data
         """
         if privateKeyStore[2] != "Private":
             raise ValueError("Private key is needed for decryption.")
-        
+
         # obtain decapsulation function based on algorithm
         try:
             decapsulationFunction = self.decFuncDict[privateKeyStore[1]]
         except KeyError:
-            raise ValueError("Wrong algorithm - probably chosen key for DSA algorithm")
-        
+            raise ValueError(
+                "Wrong algorithm - probably chosen key for DSA algorithm"
+            )
+
         # derivate secretkey used for aes from ciphertext and public key of ciphertext's author and time it
         start = time.time()
         secret_key = decapsulationFunction(privateKeyStore[3], ciphertext)
         kemTime = time.time() - start
-        
+
         # Defuscate encrypted file
-        encryptedFile = json.loads(str(base64.b64decode(encryptedFileObf).decode()).replace("'", "\"") or "[]")
-        
+        encryptedFile = json.loads(
+            str(base64.b64decode(encryptedFileObf).decode()).replace("'", '"')
+            or "[]"
+        )
+
         # decrypt encryptedFile with secret key and time it
         start = time.time()
         decryptedFile = aesDecrypt(encryptedFile, secret_key)
         aesTime = time.time() - start
 
         # log operations and return decrypted file
-        self.__statisticsManager.addKemAesEntry(datetime.now(), privateKeyStore[1], "Decrypt", 256, len(decryptedFile), kemTime/1000, aesTime/1000)
+        self.__statisticsManager.addKemAesEntry(
+            datetime.now(),
+            privateKeyStore[1],
+            "Decrypt",
+            256,
+            len(decryptedFile),
+            kemTime / 1000,
+            aesTime / 1000,
+        )
         return decryptedFile
-        
+
+
 # # TEST AREA
 # # imports and init
 # from statisticsModule import StatisticsManager
@@ -165,7 +210,7 @@ class PqEncryptionManager:
 # # Clear secrets
 # with open(os.path.dirname(os.path.abspath(__file__)) + "/.." + "/Database/secrets", 'w') as file:
 #     file.write("")
-    
+
 # # Generate keypair which will be used to encrypt and decrypt image
 # p.generate_keypair_saber("myName1")
 
